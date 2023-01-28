@@ -1,0 +1,20 @@
+• Queries for history of edits to an article, with filters for:
+◇time period
+		As a historian, I want to compare the oldest version of an article to a newer version so that I can track cultural changes over time.
+
+◇ keyword
+	As a celebrity's PR manager, I want to track when/how frequently a certain keyword has been included in edits for my client's page so that I can guide them on how to handle a controversy involving that keyword.
+
+◇ type of edit (vandalism, punctuation, etc.)
+	As a developer of an application that utilizes this API, I want to get data about vandalism-edits across all of Wikipedia, so that I can build a website that visualizes the most vandalized articles.
+	As a domain expert, I want to search through reversions so that I can see how often false information is being spread about this topic.
+
+• Queries for history of edits by a user, with filters for:
+◇ time period
+	As a wikipedia developer, I want to check how frequently a user has made edits over a recent time period so that I can mark their user page as having a certain activity level.
+
+◇ keyword
+	As a wikipedia moderator, I want to search a user's edits for a problematic keyword so that I can limit their account in the case that they're a detriment to the site/community.
+
+• Queries for the oldest or newest version of an article, or for the version of that article at any arbitrary point in time.
+	As a historian, I want to compare the oldest version of an article to a newer version so that I can track cultural changes over time.
