@@ -24,4 +24,24 @@
 
 # Structure <br/>
 
+<ul>
+<li> API
+<ul>
+<li> app.py - define endpoints
+<li> articleHistory.py 
+<li> userHistory.py
+<li> tagHistory.py
+</ul>
+<li> Scraper
+<ul>
+<li> historyScraper.py
+<li> diffScraper.py
+</ul>
+<li> Data
+<ul>
+<li> article.py
+<li> edit.py
+<li> user.py
+</ul>
+</ul>
 
