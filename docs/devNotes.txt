@@ -1,9 +1,19 @@
 feature implementations strategies:
 	get a list of revisions
-		https://api.wikimedia.org/wiki/API_reference/Core/Revisions/Get_page_history	
+		* https://api.wikimedia.org/wiki/API_reference/Core/Revisions/Get_page_history	
 	get details about a revision
-		https://api.wikimedia.org/wiki/API_reference/Core/Revisions/Get_revision	
+		* https://api.wikimedia.org/wiki/API_reference/Core/Revisions/Get_revision	
 	compare two revisions
-		https://www.mediawiki.org/wiki/API:Compare#API_documentation	
+		* https://www.mediawiki.org/wiki/API:Compare#API_documentation	
 	visualization
-		https://stackoverflow.com/questions/8637153/how-to-return-images-in-flask-response	
+		* returning an image through the API:
+		  https://stackoverflow.com/questions/8637153/how-to-return-images-in-flask-response	
+		  rendering client-side within the GUI:
+		  Established JavaScript libraries for client-side visualization:
+			D3.js: A powerful and flexible library for creating data-driven visualizations.
+			Highcharts: A popular library for creating charts and graphs.
+			Plotly.js: A library for creating interactive visualizations with a wide range of chart types.
+			Chart.js: A simple and lightweight library for creating charts with a modern look and feel.
+
+
+	
