@@ -5,6 +5,8 @@ on: [push]
 
 jobs:
   build:
+    permissions:
+      statuses: write
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -28,8 +30,6 @@ jobs:
     # Added by amminer -
     # see https://docs.github.com/en/actions/learn-github-actions
     - name: Update status check
-      permissions:
-        statuses: write
       uses: ouzi-dev/commit-status-updater@v2
       with:
         status: "${{ job.status }}"
