@@ -21,6 +21,10 @@ def get_revisions(title):
 
     This is exploratory/prototype code which will likely be
     abstracted away into a RevisionHistory class.
+    i.e. initiate a RevisionHistory with a title,
+    RevisionHistory will have list attribute storing Revisions,
+    as well as methods for initializing and/or filtering that list?
+    query it using its methods for 
     """
     url = "https://api.wikimedia.org/core/v1/wikipedia/en/page/"\
         + "<title>/history".replace("<title>", title)
