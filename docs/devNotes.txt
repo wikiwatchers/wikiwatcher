@@ -1,0 +1,3 @@
+feature implementations strategies:
+	visualization
+		https://stackoverflow.com/questions/8637153/how-to-return-images-in-flask-response	
