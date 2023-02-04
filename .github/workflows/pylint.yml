@@ -28,7 +28,6 @@ jobs:
     # Added by amminer -
     # see https://docs.github.com/en/actions/learn-github-actions
     - name: Update status check
-      if: always()
-        uses: ouzi-dev/commit-status-updater@v2
-        with:
-          status: "${{ job.status }}"
+      uses: ouzi-dev/commit-status-updater@v2
+      with:
+        status: "${{ job.status }}"
