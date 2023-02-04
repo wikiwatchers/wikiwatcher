@@ -11,6 +11,7 @@ jobs:
         python-version: ["3.8", "3.9", "3.10"]
     steps:
     - uses: actions/checkout@v3
+    - uses: ouzi-dev/commit-status-updater@v2
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
@@ -27,9 +28,7 @@ jobs:
     # Added by amminer -
     # see https://docs.github.com/en/actions/learn-github-actions
     - name: Update status check
-      uses: ouzi-dev/commit-status-updater@v1.0.7
-      with:
-        status: failure
-        description: pylint check failed
-        url: https://github.com/wikiwatchers/WikiWatcher/blob/${{ github.event.head_ref }}/pylint-results.txt
-      if: ${{ failure() }}#
+      if: always()
+        uses: ouzi-dev/commit-status-updater@v2
+        with:
+          status: "${{ job.status }}"
