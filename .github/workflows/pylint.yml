@@ -27,7 +27,7 @@ jobs:
     # Added by amminer -
     # see https://docs.github.com/en/actions/learn-github-actions
     - name: Update status check
-      uses: actions/commit-status-updater@v2
+      uses: ouzi-dev/commit-status-updater@v1.0.7
       with:
         context: pylint
         state: failure
