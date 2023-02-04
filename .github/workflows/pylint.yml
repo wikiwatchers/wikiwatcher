@@ -29,10 +29,7 @@ jobs:
     - name: Update status check
       uses: ouzi-dev/commit-status-updater@v1.0.7
       with:
-        context: pylint
-        state: failure
+        status: failure
         description: pylint check failed
-        target-url: https://github.com/wikiwatchers/WikiWatcher/blob/${{ github.event.head_ref }}/pylint-results.txt
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        url: https://github.com/wikiwatchers/WikiWatcher/blob/${{ github.event.head_ref }}/pylint-results.txt
       if: ${{ failure() }}#
