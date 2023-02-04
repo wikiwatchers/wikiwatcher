@@ -1,6 +1,7 @@
 feature implementations strategies:
 	get a list of revisions
 		* https://api.wikimedia.org/wiki/API_reference/Core/Revisions/Get_page_history	
+		* https://genomevolution.org/wiki/api.php?action=help&modules=query%2Brevisions 
 	get details about a revision
 		* https://api.wikimedia.org/wiki/API_reference/Core/Revisions/Get_revision	
 	compare two revisions
