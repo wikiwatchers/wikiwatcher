@@ -26,7 +26,7 @@ jobs:
     # Edited by amminer
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py') > pylint-results.txt
+        pylint $(git ls-files '*.py')
     # Added by amminer -
     # see https://docs.github.com/en/actions/learn-github-actions
     - name: Update status check
