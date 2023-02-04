@@ -1,3 +1,9 @@
 feature implementations strategies:
+	get a list of revisions
+		https://api.wikimedia.org/wiki/API_reference/Core/Revisions/Get_page_history	
+	get details about a revision
+		https://api.wikimedia.org/wiki/API_reference/Core/Revisions/Get_revision	
+	compare two revisions
+		https://www.mediawiki.org/wiki/API:Compare#API_documentation	
 	visualization
 		https://stackoverflow.com/questions/8637153/how-to-return-images-in-flask-response	
