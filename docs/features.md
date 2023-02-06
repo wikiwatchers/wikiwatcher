@@ -37,28 +37,38 @@
 </ul>
 
 # Structure <br/>
-
 <ul>
-<li> API directory
+/
 <ul>
-	<li> app.py - define endpoints, template responses?
-	<li> articleHistory.py 
-	<li> userHistory.py
-	<li> tagHistory.py
-	</ul>
-<li> Scraper directory
+    <li>README.md</li>
+    <li>app.py</li>
+    <li>// several hidden/config files and directories e.x. .gitignore, .pylintrc</li>
+    <li>src/</li>
 	<ul>
-	<li> historyScraper.py
-	<li> diffScraper.py
-	<li> potentially more here...
+        <li>revision.py</li>
+            // contains revision class, acts as data structure for properties of a single revision & has methods for getting the content of that revision (has to query its article; does not store the diff in as a property of the class), potentially more methods
+        <li>revisionHistory.py</li>
+            // base class for storing a collection of revisions, with a filter method; contains overlapping filter implementation of subclasses below
+        <li>articleHistory.py</li>
+            // stores collection of revisions for an article, with filter method implementation specific to articleHistory (is there any?)
+        <li>userHistory.py</li>
+            // stores collection of revisions for a user, with filter method implementation specific to userHistory (is there any?)
 	</ul>
-<li> Data directory
+    <li>tests/</li>
 	<ul>
-	<li> article.py
-	<li> edit.py
-	<li> user.py
+        <li>test_revision.py</li> // details of contents tbd
+        <li>test_revisionHistory.py</li> // details of contents tbd
+        <li>test_articleHistory.py</li> // details of contents tbd
+        <li>test_userHistory.py</li> // details of contents tbd
+	</ul>
+    <li>docs/</li>
+	<ul>
+        <li>devNotes.txt</li>
+        <li>features.md</li>
+        <li>requirements.txt</li>
+	</ul>
+    <li>venv/</li>
+	<ul>
+        // in .gitignore; contains per-development-environment files
+	</ul>
 </ul>
-</ul>
-
-<p>These source code directories will be in the project's root directory, but may be moved into a /src subdirectory in the future if the need arises.</p>
-<p>Template JSON responses may also get their own folder/file(s) at a later date if it is determined that this would be useful.</p>
