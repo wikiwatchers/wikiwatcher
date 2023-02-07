@@ -67,8 +67,4 @@
         <li>features.md</li>
         <li>requirements.txt</li>
 	</ul>
-    <li>venv/</li>
-	<ul>
-        // in .gitignore; contains per-development-environment files
-	</ul>
 </ul>
