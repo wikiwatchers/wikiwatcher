@@ -4,7 +4,7 @@ Heavily WIP
 """
 import requests as r
 from flask import Flask
-from flask import request
+# from flask import request
 app = Flask("WikiWatcher")
 
 
@@ -26,16 +26,16 @@ def get_revisions(title):
     i.e. initiate a RevisionHistory with a title,
     RevisionHistory will have list attribute storing Revisions,
     as well as methods for initializing and/or filtering that list?
-    query it using its methods for 
+    query it using its methods for...
     """
     # construct target URL
     url = "https://api.wikimedia.org/core/v1/wikipedia/en/page/"\
         + "<title>/history".replace("<title>", title)
     # prepare to translate parameters
-    fromdate = request.args.get("fromDate")
-    todate = request.args.get("toDate")
-    fromID = None
-    toID = None
+    # from_date = request.args.get("fromDate")
+    # to_date = request.args.get("toDate")
+    from_id = None
+    to_id = None
     # match datetimes to IDs
     # processing_revisions = r.get(url=url, timeout=5)
     # for p_revision in processing_revisions.json()["revisions"]:
@@ -43,11 +43,11 @@ def get_revisions(title):
     # if p_revision[]
     # prepare request to Wikimedia API
     params = {
-        "older_than": toID,
-        "newer_than": fromID
+        "older_than": to_id,
+        "newer_than": from_id
     }
     for param in params.copy():  # Dict must not change during iteration
-        if params[param] == None:
+        if params[param] is None:
             params.pop(param)
     # send request to Wikimedia API
     revisions = r.get(url=url, params=params, timeout=5)
