@@ -22,66 +22,73 @@ class Revision():
         self.tags: list[str] = None
         self.comment: str = None
         self.parentId: int = None
-        # present in Pagehistory but not Usercontribs
+        # present in Pagehistory but not userContribs
         self.size: int = None
 
-    def assign_contents(self, pages):
-
-        revisions = pages["revisions"][0]
-
-        self.json = pages
-        self.id = revisions["revid"]
-        self.title = pages["title"]
-        self.timestamp = revisions["timestamp"]
-        self.pageId = pages["pageid"]
-        self.user = User(revisions["user"], revisions["userid"])
-        self.minor = revisions["minor"]
-        self.tags = revisions["tags"]
-        self.parentId = revisions["parentid"]
-        self.size = revisions["size"]
-        self.comment = revisions["comment"]
 
 
-    def get_contents(self, title):
-        """ Returns the content of the page at this revision
-        Hits mediawiki.org API with
-        "action": "query",
-        "prop": "revisions",
-        "rvprop": "content"
-        """
+
+
+    def get_contents(self, title='None', username='None'): #start and end time stamps???
+        #Returns the content of the page at this revision
 
         S = requests.Session()
 
         URL = "https://www.wikipedia.org/w/api.php"
 
         PARAMS = {
+            #params for Revisions API
+            #https://www.mediawiki.org/wiki/API:Revisions
             "action": "query",
             "prop": "revisions",
             "titles": title,
-            "rvprop": "timestamp|user|userid|comment|content|tags|ids|size|flags",
+            "rvprop": "comment|content|flags|ids|size|tags|timestamp|user|userid",
             "rvslots": "main",
             "formatversion": "2",
             "format": "json",
+            #params for AllRevisions API
+            #https://www.mediawiki.org/wiki/API:Allrevisions
+            "arvuser": username,
+            "arvprop": "comment|flags|ids|size|tags|timestamp|user|userid",
+            "list": "allrevisions"
+
         }
 
         R = S.get(url=URL, params=PARAMS)
-        DATA = R.json()
+        data = R.json()
 
-        PAGES = DATA["query"]["pages"]
+        if(title != 'None'):
+            pageRevisions = data["query"]["pages"]
+            self.json = pageRevisions[0] #first revision in the list
+            print(json.dumps(self.json, indent=1))
 
-        #assign contents of PAGES to the object
-        self.assign_contents(PAGES[0])
-
-        #print(json.dumps(PAGES, indent=1))
-
-
-
+        else:
+            userRevisions = data["query"]["allrevisions"]
+            self.json = userRevisions[0] #first revision in the list
+            print(json.dumps(self.json, indent=1))
 
 
     def get_diff(self, toId: int = None):
         """ Returns the difference between this revision and its parent 
         in this revision's article's history, unless a toId is specified in
         which case this revision is compared with toId.
+        """
+
+        S = requests.Session()
+
+        URL = "https://en.wikipedia.org/w/api.php"
+
+        PARAMS = {
+            'action':"compare",
+            'format':"json",
+            'fromtitle':'Template:Unsigned',
+            'totitle':'Template:UnsignedIP'
+        }
+
+        R = S.get(url=URL, params=PARAMS)
+        DATA = R.json()
+
+        print(DATA)
         """
         if toId is None:  # compare with parent
             if self.parentId is None:  # articleHistory, handle elsewhere?
@@ -90,3 +97,4 @@ class Revision():
                 pass  # TODO
         else:  # compare self to toid, hit getrevision endpoint
             pass  # TODO
+            """
