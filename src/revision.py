@@ -1,6 +1,7 @@
-from datetime import datetime
-import requests
+#from datetime import datetime
 import json
+import requests
+
 
 
 class User():
@@ -16,12 +17,12 @@ class Revision():
         self.id: int = None
         self.title: str = None
         self.timestamp: datetime = None
-        self.pageId: int = None
+        self.page_id: int = None
         self.user: User = None
         self.minor: bool = None
         self.tags: list[str] = None
         self.comment: str = None
-        self.parentId: int = None
+        self.parent_id: int = None
         # present in Pagehistory but not userContribs
         self.size: int = None
 
@@ -32,11 +33,11 @@ class Revision():
     def get_contents(self, title='None', username='None'): #start and end time stamps???
         #Returns the content of the page at this revision
 
-        S = requests.Session()
+        s = requests.Session()
 
-        URL = "https://www.wikipedia.org/w/api.php"
+        url = "https://www.wikipedia.org/w/api.php"
 
-        PARAMS = {
+        params = {
             #params for Revisions API
             #https://www.mediawiki.org/wiki/API:Revisions
             "action": "query",
@@ -54,41 +55,41 @@ class Revision():
 
         }
 
-        R = S.get(url=URL, params=PARAMS)
-        data = R.json()
+        r = s.get(url=url, params=params)
+        data = r.json()
 
-        if(title != 'None'):
-            pageRevisions = data["query"]["pages"]
-            self.json = pageRevisions[0] #first revision in the list
+        if title != 'None':
+            page_revisions = data["query"]["pages"]
+            self.json = page_revisions[0] #first revision in the list
             print(json.dumps(self.json, indent=1))
 
         else:
-            userRevisions = data["query"]["allrevisions"]
-            self.json = userRevisions[0] #first revision in the list
+            user_revisions = data["query"]["allrevisions"]
+            self.json = user_revisions[0] #first revision in the list
             print(json.dumps(self.json, indent=1))
 
 
-    def get_diff(self, toId: int = None):
+    def get_diff(self, to_id: int = None):
         """ Returns the difference between this revision and its parent 
         in this revision's article's history, unless a toId is specified in
         which case this revision is compared with toId.
         """
 
-        S = requests.Session()
+        s = requests.Session()
 
-        URL = "https://en.wikipedia.org/w/api.php"
+        url = "https://en.wikipedia.org/w/api.php"
 
-        PARAMS = {
+        params = {
             'action':"compare",
             'format':"json",
             'fromtitle':'Template:Unsigned',
             'totitle':'Template:UnsignedIP'
         }
 
-        R = S.get(url=URL, params=PARAMS)
-        DATA = R.json()
+        r = s.get(url=url, params=params)
+        data = r.json()
 
-        print(DATA)
+        print(data)
         """
         if toId is None:  # compare with parent
             if self.parentId is None:  # articleHistory, handle elsewhere?
