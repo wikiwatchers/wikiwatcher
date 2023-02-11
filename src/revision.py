@@ -34,35 +34,19 @@ class Revision():
 
         url = "https://www.wikipedia.org/w/api.php"
 
+        #check that object contains the correct parameters
+
         params = {
-            #params for Revisions API
-            #https://www.mediawiki.org/wiki/API:Revisions
-            "action": "query",
+            "action": "parse",
             "format": "json",
-            "prop": "revisions",
-            "titles": title,
-            "rvprop": "comment|content|flags|ids|size|tags|timestamp|user|userid",
-            "rvslots": "main",
-            "formatversion": "2",
-            #params for AllRevisions API
-            #https://www.mediawiki.org/wiki/API:Allrevisions
-            "arvuser": username,
-            "arvprop": "comment|content|flags|ids|size|tags|timestamp|user|userid",
-            "list": "allrevisions"
+            "oldid": "1136319438", #self.revision_id,
+            "prop": "text|links|templates|images|externallinks|sections|revid|displaytitle|iwlinks",
+            "formatversion": "2"
         }
 
         request = session.get(url=url, params=params)
         data = request.json()
-
-        if title != 'None': #page history
-            page_revisions = data["query"]["pages"]
-            self.json = page_revisions[0] #first revision in the list
-
-        else: #user history
-            user_revisions = data["query"]["allrevisions"]
-            self.json = user_revisions[0] #first revision in the list
-            
-        print(json.dumps(self.json, indent=1))
+        print(data)
 
     def get_diff(self, to_id: int = None):
         """ Returns the difference between this revision and its parent 
