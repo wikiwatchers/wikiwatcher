@@ -48,9 +48,9 @@ class Revision():
         data = request.json()
         print(data)
 
-    def check_to_id(to_id):
+    def check_to_id(self, to_id):
         if to_id is None:
-            return self.parent_id, self.revision_id
+            return self.revision_id, self.parent_id
         else:
             return self.revision_id, to_id
 
