@@ -3,12 +3,14 @@ from datetime import datetime
 import json
 import requests
 
+# pylint: disable=R0903
 class User():
     '''defines a wikipedia user by name and id number'''
     def __init__(self, name: str, id_num: int) -> None:
         self.name: str = name
         self.id_num: int = id_num
 
+# pylint: disable=R0902
 class Revision():
     '''revision object holds json revision info'''
     def __init__(self, title=None, user=None) -> None:
@@ -56,7 +58,6 @@ class Revision():
             page_revisions = data["query"]["pages"]
             self.json = page_revisions[0] #first revision in the list
 
-
         else: #user history
             user_revisions = data["query"]["allrevisions"]
             self.json = user_revisions[0] #first revision in the list
@@ -76,7 +77,7 @@ class Revision():
         fromrev = None
         torev = None
 
-        if toId is None:  # compare with parent
+        if to_id is None:  # compare with parent
             fromrev = self.parent_id
             torev = self.revision_id
         else:  # compare self to to_id, hit getrevision endpoint
