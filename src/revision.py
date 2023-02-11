@@ -1,6 +1,5 @@
 '''defines revision base class'''
 from datetime import datetime
-import json
 import requests
 
 # pylint: disable=R0903
@@ -13,7 +12,7 @@ class User():
 # pylint: disable=R0902
 class Revision():
     '''revision object holds json revision info'''
-    def __init__(self, title=None, user=None) -> None:
+    def __init__(self) -> None:
         # possible params
         self.json: dict = None
         self.revision_id: int = None
@@ -27,44 +26,43 @@ class Revision():
         self.parent_id: int = None
         self.size: int = None
 
-    def get_contents(self, title='None', username='None'): #start and end time stamps???
+    def get_contents(self): #start and end time stamps???
         ''' Returns the content of the page at this revision'''
 
         session = requests.Session()
 
         url = "https://www.wikipedia.org/w/api.php"
 
-        #check that object contains the correct parameters
-
         params = {
             "action": "parse",
             "format": "json",
-            "oldid": "1136319438", #self.revision_id,
+            "oldid": self.revision_id,
             "prop": "text|links|templates|images|externallinks|sections|revid|displaytitle|iwlinks",
             "formatversion": "2"
         }
-
-        request = session.get(url=url, params=params)
+        try:
+            request = session.get(url=url, params=params)
+        except Exception as exc:
+            raise SystemExit("Revision ID missing") from exc
         data = request.json()
         print(data)
 
     def check_to_id(self, to_id):
+        '''returns fromrev and torev args to parameters in get_diff'''
         if to_id is None:
             return self.revision_id, self.parent_id
-        else:
-            return self.revision_id, to_id
+        return self.revision_id, to_id
 
     def get_diff(self, to_id: int = None):
         """ Returns the difference between this revision and its parent 
         in this revision's article's history, unless a toId is specified in
         which case this revision is compared with toId.
         """
-
         session = requests.Session()
 
         url = "https://en.wikipedia.org/w/api.php"
 
-        fromrev, torev = check_to_id(to_id)
+        fromrev, torev = self.check_to_id(to_id)
 
         params = {
             #params for Compare API
@@ -81,4 +79,3 @@ class Revision():
         data = request.json()
 
         print(data)
-        
