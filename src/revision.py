@@ -48,6 +48,12 @@ class Revision():
         data = request.json()
         print(data)
 
+    def check_to_id(to_id):
+        if to_id is None:
+            return self.parent_id, self.revision_id
+        else:
+            return self.revision_id, to_id
+
     def get_diff(self, to_id: int = None):
         """ Returns the difference between this revision and its parent 
         in this revision's article's history, unless a toId is specified in
@@ -58,15 +64,7 @@ class Revision():
 
         url = "https://en.wikipedia.org/w/api.php"
 
-        fromrev = None
-        torev = None
-
-        if to_id is None:  # compare with parent
-            fromrev = self.parent_id
-            torev = self.revision_id
-        else:  # compare self to to_id, hit getrevision endpoint
-            fromrev = self.revision_id
-            torev = to_id
+        fromrev, torev = check_to_id(to_id)
 
         params = {
             #params for Compare API
