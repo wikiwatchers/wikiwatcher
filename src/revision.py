@@ -3,17 +3,15 @@ from datetime import datetime
 import json
 import requests
 
-
 class User():
     '''defines a wikipedia user by name and id number'''
     def __init__(self, name: str, id_num: int) -> None:
         self.name: str = name
         self.id_num: int = id_num
 
-
 class Revision():
     '''revision object holds json revision info'''
-    def __init__(self) -> None:
+    def __init__(self, title=None, user=None) -> None:
         # possible params
         self.json: dict = None
         self.revision_id: int = None
@@ -38,16 +36,16 @@ class Revision():
             #params for Revisions API
             #https://www.mediawiki.org/wiki/API:Revisions
             "action": "query",
+            "format": "json",
             "prop": "revisions",
             "titles": title,
             "rvprop": "comment|content|flags|ids|size|tags|timestamp|user|userid",
             "rvslots": "main",
             "formatversion": "2",
-            "format": "json",
             #params for AllRevisions API
             #https://www.mediawiki.org/wiki/API:Allrevisions
             "arvuser": username,
-            "arvprop": "comment|flags|ids|size|tags|timestamp|user|userid",
+            "arvprop": "comment|content|flags|ids|size|tags|timestamp|user|userid",
             "list": "allrevisions"
         }
 
@@ -57,31 +55,43 @@ class Revision():
         if title != 'None': #page history
             page_revisions = data["query"]["pages"]
             self.json = page_revisions[0] #first revision in the list
-            print(json.dumps(self.json, indent=1))
+
 
         else: #user history
             user_revisions = data["query"]["allrevisions"]
             self.json = user_revisions[0] #first revision in the list
-            print(json.dumps(self.json, indent=1))
-
+            
+        print(json.dumps(self.json, indent=1))
 
     def get_diff(self, to_id: int = None):
         """ Returns the difference between this revision and its parent 
         in this revision's article's history, unless a toId is specified in
         which case this revision is compared with toId.
         """
-        
+
         session = requests.Session()
 
         url = "https://en.wikipedia.org/w/api.php"
 
+        fromrev = None
+        torev = None
+
+        if toId is None:  # compare with parent
+            fromrev = self.parent_id
+            torev = self.revision_id
+        else:  # compare self to to_id, hit getrevision endpoint
+            fromrev = self.revision_id
+            torev = to_id
+
         params = {
+            #params for Compare API
+            #https://www.mediawiki.org/wiki/API:Compare
             'action':"compare",
             'format':"json",
             'fromtitle': self.title,
             'totitle': self.title,
-            'fromrev': self.parent_id,
-            'torev': self.revision_id
+            'fromrev': fromrev,
+            'torev': torev
         }
 
         request = session.get(url=url, params=params)
@@ -89,12 +99,3 @@ class Revision():
 
         print(data)
         
-        """
-        if toId is None:  # compare with parent
-            if self.parentId is None:  # articleHistory, handle elsewhere?
-                pass  # raise an exception to be caught in articleHistory? TODO
-            else:  # userHistory, handle here
-                pass  # TODO
-        else:  # compare self to toid, hit getrevision endpoint
-            pass  # TODO
-            """
