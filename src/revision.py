@@ -7,7 +7,6 @@ import mwparserfromhell as mwp
 
 URL = "https://www.wikipedia.org/w/api.php"
 
-# pylint: disable=R0902
 class Revision():
     '''revision object parses json revision info into consistent '''
 
