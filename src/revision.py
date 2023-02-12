@@ -2,6 +2,7 @@
 from datetime import datetime
 import json
 import requests
+from bs4 import BeautifulSoup as bs
 import mwparserfromhell as mwp
 
 URL = "https://www.wikipedia.org/w/api.php"
@@ -18,23 +19,24 @@ class Revision():
         for attr in attrs:
             try:
                 vars(self)[attr] = self.json[attr]
-            except Exception as e:
-                print(e) # TODO: do something more useful (log?)
+            except KeyError as err:
+                print(err) # do something more useful (log?)
 
     def init_to_none(self):
+        '''sets up class data members and initializes them to None '''
         self.pageid: int = None
         self.title: str = None
         self.revid: int = None
         self.parentid: int = None
         self.minor: bool = None
-        self.user: jtr = None
+        self.user: str = None
         self.userid: int = None
-        self.timestamp: datetime = None
+        self.timestamp: str | None = None
         self.size: int = None
         self.comment: str = None
         self.tags: list[str] = None
 
-    def get_contents(self):  # start and end time stamps???
+    def get_content(self):  # start and end time stamps???
         ''' Returns the content of the page at this revision'''
 
         session = requests.Session()
@@ -45,28 +47,22 @@ class Revision():
             "oldid": self.revid,
             "prop": "text",
         }
-        if self.revid is not None:
-            request = session.get(url=URL, params=params)
-        else:
+        if self.revid is None:
             raise Exception("Revision ID missing")
+        request = session.get(url=URL, params=params)
         data = request.json()['parse']['text']['*']
-        return mwp.parse(data)
-
-    def check_to_id(self, to_id):
-        '''returns fromrev and torev args to parameters in get_diff'''
-        if to_id is None:
-            return self.revid, self.parentid
-        return self.revid, to_id
+        return str(mwp.parse(data))
 
     def get_diff(self, to_id: int = None):
-        """ Returns the difference between this revision and its parent 
+        ''' Returns the difference between this revision and its parent
         in this revision's article's history, unless a toId is specified in
         which case this revision is compared with toId.
-        """
+        '''
+        if to_id is None:
+            if self.parentid is None:
+                raise Exception("Revision parent ID missing")
+            to_id = self.parentid
         session = requests.Session()
-
-        fromrev, torev = self.check_to_id(to_id)
-
         params = {
             # params for Compare API
             # https://www.mediawiki.org/wiki/API:Compare
@@ -74,11 +70,42 @@ class Revision():
             'format': "json",
             'fromtitle': self.title,
             'totitle': self.title,
-            'fromrev': fromrev,
-            'torev': torev
+            'fromrev': self.revid,
+            'torev': to_id
         }
+        wp_response = session.get(url=URL, params=params).json()
+        # turn this into some nice json
+        # {
+        #   <fromid>: {
+        #       'added': [
+        #           ...
+        #       ],
+        #       'deleted': [
+        #           ...
+        #       ]
+        #   },
+        #   <toid>: {
+        #       'added': [
+        #           ...
+        #       ],
+        #       'deleted': [
+        #           ...
+        #       ]
+        #   }
+        # }
+        return str(bs(wp_response['compare']['*'], features='lxml'))
 
-        request = session.get(url=URL, params=params)
-        data = request.json()
-
-        print(data)
+    def timestamp_to_datetime(self):
+        '''Converts the timestamp into a python-friendly datetime object
+        for use in collections of revisions
+        '''
+        if self.timestamp is None:
+            raise Exception("Revision timestamp missing")
+        year = int(self.timestamp[0:4])
+        month = int(self.timestamp[5:7])
+        day = int(self.timestamp[8:10])
+        hour = int(self.timestamp[11:13])
+        minute = int(self.timestamp[14:16])
+        second = int(self.timestamp[17:19])
+        ret = datetime(year, month, day, hour, minute, second)
+        return ret

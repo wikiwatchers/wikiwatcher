@@ -1,3 +1,4 @@
+'''Tests for source code'''
 import sys
 import os
 sys.path.append(
