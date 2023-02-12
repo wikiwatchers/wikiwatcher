@@ -4,7 +4,7 @@ import json
 import requests
 from revision import Revision, URL, datetime
 with open('tests/queries.json', 'r', encoding='utf-8') as q:
-    tparams = json.load(q)
+    TPARAMS = json.load(q)
 
 # pylint: disable=W0603,W0602
 
@@ -12,8 +12,8 @@ T_REV = None
 
 def test_revision_init():
     '''Tests initialization of a single example revision'''
-    global T_REV
-    j = requests.get(URL, tparams).json()
+    global T_REV, TPARAMS
+    j = requests.get(URL, TPARAMS).json()
     revisionjson = j['query']['allrevisions'][0]['revisions'][0]
     revisionjson['pageid'] = j['query']['allrevisions'][0]['pageid']
     revisionjson['title'] = j['query']['allrevisions'][0]['title']

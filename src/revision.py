@@ -31,7 +31,7 @@ class Revision():
         self.minor: bool = None
         self.user: str = None
         self.userid: int = None
-        self.timestamp: str | None = None
+        self.timestamp: str = None
         self.size: int = None
         self.comment: str = None
         self.tags: list[str] = None
@@ -48,7 +48,7 @@ class Revision():
             "prop": "text",
         }
         if self.revid is None:
-            raise Exception("Revision ID missing")
+            raise AttributeError("Revision ID missing")
         request = session.get(url=URL, params=params)
         data = request.json()['parse']['text']['*']
         return str(mwp.parse(data))
@@ -60,7 +60,7 @@ class Revision():
         '''
         if to_id is None:
             if self.parentid is None:
-                raise Exception("Revision parent ID missing")
+                raise AttributeError("Revision parent ID missing")
             to_id = self.parentid
         session = requests.Session()
         params = {
@@ -100,7 +100,7 @@ class Revision():
         for use in collections of revisions
         '''
         if self.timestamp is None:
-            raise Exception("Revision timestamp missing")
+            raise AttributeError("Revision timestamp missing")
         year = int(self.timestamp[0:4])
         month = int(self.timestamp[5:7])
         day = int(self.timestamp[8:10])
