@@ -1,7 +1,6 @@
 '''defines user revisions class'''
-from datetime import datetime
-from revision import Revision, User
 import requests
+from revision import Revision, User
 
 class UserRevisions():
     '''User revision object holds a list of user's revisions'''
@@ -11,8 +10,8 @@ class UserRevisions():
         self.user: User = None
         self.revisions: list[Revision] = None
 
-def get_contents(self): 
-        ''' notes '''
+    def get_contents(self): 
+        '''notes'''
 
         session = requests.Session()
 
