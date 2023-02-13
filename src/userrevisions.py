@@ -7,16 +7,11 @@ import mwparserfromhell as mwp
 URL = "https://www.wikipedia.org/w/api.php"
 
 class UserRevisions():
-    '''revision object parses json revision info into consistent '''
+    '''userrevision object parses json user contributions into consistent '''
 
     def __init__(self, initjson: dict) -> None:
         self.json: dict = initjson
         self.init_to_none()
-        for attr in [key for key in vars(self).keys() if key != 'json']:
-            try:
-                vars(self)[attr] = self.json[attr]
-            except KeyError as err:
-                print(err) # do something more useful? (log?)
 
     def init_to_none(self):
         '''sets up class data members and initializes them to None '''
@@ -25,7 +20,7 @@ class UserRevisions():
         self.username: str = None
 
     def get_content(self):  # start and end time stamps???
-        ''' Returns the content of the page at this revision'''
+        ''' Returns list of user's contributions '''
 
         session = requests.Session()
 
