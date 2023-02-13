@@ -14,8 +14,10 @@ class Revision():
         self.json: dict = initjson
         self.init_to_none()
         for attr in [key for key in vars(self).keys() if key != 'json']:
-            try: vars(self)[attr] = self.json[attr]
-            except KeyError as err: print(err) # do something more useful? (log?)
+            try:
+                vars(self)[attr] = self.json[attr]
+            except KeyError as err:
+                print(err) # do something more useful? (log?)
 
     def init_to_none(self):
         '''sets up class data members and initializes them to None '''
