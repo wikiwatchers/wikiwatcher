@@ -10,7 +10,7 @@ class UserRevisions():
         self.user: User = None
         self.revisions: list[Revision] = None
 
-    def get_contents(self): 
+    def get_contents(self):
         '''notes'''
 
         session = requests.Session()
