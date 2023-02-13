@@ -1,82 +1,91 @@
 '''defines revision base class'''
 from datetime import datetime
+import json
 import requests
+from bs4 import BeautifulSoup as bs
+import mwparserfromhell as mwp
 
-# pylint: disable=R0903
-class User():
-    '''defines a wikipedia user by name and id number'''
-    def __init__(self, name: str, id_num: int) -> None:
-        self.name: str = name
-        self.id_num: int = id_num
+URL = "https://www.wikipedia.org/w/api.php"
 
-# pylint: disable=R0902
 class Revision():
-    '''revision object holds json revision info'''
-    def __init__(self) -> None:
-        # possible params
-        self.json: dict = None
-        self.revision_id: int = None
-        self.title: str = None
-        self.timestamp: datetime = None
-        self.page_id: int = None
-        self.user: User = None
-        self.minor: bool = None
-        self.tags: list[str] = None
-        self.comment: str = None
-        self.parent_id: int = None
-        self.size: int = None
+    '''revision object parses json revision info into consistent '''
 
-    def get_contents(self): #start and end time stamps???
+    def __init__(self, initjson: dict) -> None:
+        self.json: dict = initjson
+        self.init_to_none()
+        for attr in [key for key in vars(self).keys() if key != 'json']:
+            try:
+                vars(self)[attr] = self.json[attr]
+            except KeyError as err:
+                print(err) # do something more useful? (log?)
+
+    def init_to_none(self):
+        '''sets up class data members and initializes them to None '''
+        self.pageid: int = None
+        self.title: str = None
+        self.revid: int = None
+        self.parentid: int = None
+        self.minor: bool = None
+        self.user: str = None
+        self.userid: int = None
+        self.timestamp: str = None
+        self.size: int = None
+        self.comment: str = None
+        self.tags: list[str] = None
+
+    def get_content(self):  # start and end time stamps???
         ''' Returns the content of the page at this revision'''
 
         session = requests.Session()
 
-        url = "https://www.wikipedia.org/w/api.php"
-
         params = {
             "action": "parse",
             "format": "json",
-            "oldid": self.revision_id,
-            "prop": "text|links|templates|images|externallinks|sections|revid|displaytitle|iwlinks",
-            "formatversion": "2"
+            "oldid": self.revid,
+            "prop": "text",
         }
-        try:
-            request = session.get(url=url, params=params)
-        except Exception as exc:
-            raise SystemExit("Revision ID missing") from exc
-        data = request.json()
-        print(data)
-
-    def check_to_id(self, to_id):
-        '''returns fromrev and torev args to parameters in get_diff'''
-        if to_id is None:
-            return self.revision_id, self.parent_id
-        return self.revision_id, to_id
+        if self.revid is None:
+            raise AttributeError("Revision ID missing")
+        request = session.get(url=URL, params=params)
+        data = request.json()['parse']['text']['*']
+        return str(mwp.parse(data))
 
     def get_diff(self, to_id: int = None):
-        """ Returns the difference between this revision and its parent 
+        ''' Returns the difference between this revision and its parent
         in this revision's article's history, unless a toId is specified in
         which case this revision is compared with toId.
-        """
+        '''
+        if to_id is None:
+            if self.parentid is None:
+                raise AttributeError("Revision parent ID missing")
+            to_id = self.parentid
         session = requests.Session()
-
-        url = "https://en.wikipedia.org/w/api.php"
-
-        fromrev, torev = self.check_to_id(to_id)
-
         params = {
-            #params for Compare API
-            #https://www.mediawiki.org/wiki/API:Compare
-            'action':"compare",
-            'format':"json",
+            # params for Compare API
+            # https://www.mediawiki.org/wiki/API:Compare
+            'action': "compare",
+            'format': "json",
             'fromtitle': self.title,
             'totitle': self.title,
-            'fromrev': fromrev,
-            'torev': torev
+            'fromrev': self.revid,
+            'torev': to_id
         }
+        wp_response = session.get(url=URL, params=params).json()
+        # Can we return something more user-friendly?
+        # Automatically color ins and del tags?
+        return str(bs(wp_response['compare']['*'], features='lxml'))
 
-        request = session.get(url=url, params=params)
-        data = request.json()
-
-        print(data)
-        
+    def timestamp_to_datetime(self):
+        '''Converts the timestamp into a python-friendly datetime object
+        for use in collections of revisions
+        '''
+        if self.timestamp is None:
+            raise AttributeError("Revision timestamp missing")
+        year = int(self.timestamp[0:4])
+        month = int(self.timestamp[5:7])
+        day = int(self.timestamp[8:10])
+        hour = int(self.timestamp[11:13])
+        minute = int(self.timestamp[14:16])
+        second = int(self.timestamp[17:19])
+        ret = datetime(year, month, day, hour, minute, second)
+        return ret
