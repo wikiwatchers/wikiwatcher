@@ -11,8 +11,7 @@ def test_userrevision_init():
     '''Tests userrevision init'''
     global T_UREVS, TPARAMS
     j = requests.get(URL, TPARAMS).json()
-    print(j)
     userrevjson = j["query"]["usercontribs"]
     T_UREVS = UserRevisions(userrevjson)
-    print(T_UREVS)
     assert T_UREVS.revisions[0].user == 'Jimbo Wales'
+    assert T_UREVS.revisions[0].userid == 24
