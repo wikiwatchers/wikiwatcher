@@ -54,6 +54,28 @@ def get_revisions(title):
     # print(json.dumps(revisions.json(), indent=1))
     return revisions.json()["revisions"]
 
+# URLs for our endpoints should share similar patterns:
+# /<x>userRevisions/<username>
+@app.route("/userRevisions/<username>")
+def get_user_revisions(username):
+    url = "https://www.wikipedia.org/w/api.php"
+
+    params = {
+        "action": "query",
+        "format": "json",
+        "list": "usercontribs",
+        "formatversion": "2",
+        "ucuser": username
+    }
+    for param in params.copy():  # Dict must not change during iteration
+        if params[param] is None:
+            params.pop(param)
+    # send request to Wikimedia API
+    revisions = r.get(url=url, params=params, timeout=5)
+    # print(json.dumps(revisions.json(), indent=1))
+    return revisions.json()["query"]["usercontribs"]
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

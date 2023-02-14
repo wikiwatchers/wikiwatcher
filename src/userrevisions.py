@@ -35,5 +35,6 @@ class UserRevisions():
         if self.username is None:
             raise AttributeError("User name missing")
         request = session.get(url=URL, params=params)
+        print(request)
         data = request.json()['parse']['text']['*']
         return str(mwp.parse(data))
