@@ -3,11 +3,10 @@ import requests
 from revision import Revision
 import mwparserfromhell as mwp
 
-
 URL = "https://www.wikipedia.org/w/api.php"
 
 class UserRevisions():
-    '''userrevision object parses json user contributions into consistent '''
+    '''userrevision object parses json user contributions '''
 
     def __init__(self, initjson: dict) -> None:
         self.json: dict = initjson
@@ -26,8 +25,8 @@ class UserRevisions():
         self.userid: int = None
         self.username: str = None
 
-    def get_content(self):  # start and end time stamps???
-        ''' Returns the content of the page at this revision'''
+    def get_revisions(self):
+        ''' Gets user revisions '''
 
         session = requests.Session()
 
