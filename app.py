@@ -59,8 +59,7 @@ def get_revisions(title):
 # /<x>userRevisions/<username>
 @app.route("/userRevisions/<username>")
 def get_user_revisions(username):
-    """ /userRevisions/username 
-    
+    """ /userRevisions/username
     Another exploratory code section where we will implement an endpoint for User Revisions
     """
     url = "https://www.wikipedia.org/w/api.php"
