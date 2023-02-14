@@ -12,6 +12,19 @@ class UserRevisions():
     def __init__(self, initjson: dict) -> None:
         self.json: dict = initjson
         self.init_to_none()
+        self.revisions = []
+        print("init json:")
+        for i in initjson:
+            print("this:")
+            #print(i)
+            revisionjson = i
+            revisionjson['pageid'] = i['pageid']
+            revisionjson['title'] = i['title']
+            print("revisionjson:")
+            print(revisionjson)
+            this_revision = Revision(revisionjson)
+            print(this_revision.pageid)
+            self.revisions.append(this_revision)
 
     def init_to_none(self):
         '''sets up class data members and initializes them to None '''
@@ -19,22 +32,4 @@ class UserRevisions():
         self.userid: int = None
         self.username: str = None
 
-    def get_content(self):  # start and end time stamps???
-        ''' Returns list of user's contributions '''
-
-        session = requests.Session()
-
-        params = {
-            "action": "query",
-            "format": "json",
-            "list": "usercontribs",
-            "formatversion": "2",
-            #"ucuser": "Jimbo%20Wales"
-            "ucuser": self.username
-        }
-        if self.username is None:
-            raise AttributeError("User name missing")
-        request = session.get(url=URL, params=params)
-        print(request)
-        data = request.json()['parse']['text']['*']
-        return str(mwp.parse(data))
+    
