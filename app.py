@@ -66,10 +66,10 @@ def get_user_revisions(username):
     url = "https://www.wikipedia.org/w/api.php"
 
     params = {
+        "formatversion": "2",
+        "list": "usercontribs",
         "action": "query",
         "format": "json",
-        "list": "usercontribs",
-        "formatversion": "2",
         "ucuser": username
     }
     for param in params.copy():  # Dict must not change during iteration
