@@ -5,6 +5,7 @@ Heavily WIP
 import requests as r
 from flask import Flask
 # from flask import request
+# from userrevisions import UserRevisions
 app = Flask("WikiWatcher")
 
 
@@ -58,6 +59,10 @@ def get_revisions(title):
 # /<x>userRevisions/<username>
 @app.route("/userRevisions/<username>")
 def get_user_revisions(username):
+    """ /userRevisions/username 
+    
+    Another exploratory code section where we will implement an endpoint for User Revisions
+    """
     url = "https://www.wikipedia.org/w/api.php"
 
     params = {
@@ -72,10 +77,9 @@ def get_user_revisions(username):
             params.pop(param)
     # send request to Wikimedia API
     revisions = r.get(url=url, params=params, timeout=5)
+    # revisions = UserRevision(params)
     # print(json.dumps(revisions.json(), indent=1))
     return revisions.json()["query"]["usercontribs"]
-
-
 
 if __name__ == "__main__":
     app.run(debug=True)

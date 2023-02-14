@@ -26,4 +26,21 @@ class UserRevisions():
         self.userid: int = None
         self.username: str = None
 
-    
+    def get_content(self):  # start and end time stamps???
+        ''' Returns the content of the page at this revision'''
+
+        session = requests.Session()
+
+        params = {
+            "action": "query",
+            "format": "json",
+            "list": "usercontribs",
+            "formatversion": "2",
+            "ucuser": self.username
+        }
+        if self.username is None:
+            raise AttributeError("User name missing")
+        request = session.get(url=URL, params=params)
+        data = request.json()['query']['usercontribs']
+        return str(mwp.parse(data))
+        
