@@ -4,9 +4,8 @@ Heavily WIP
 """
 import __init__
 import sys
-from flask import Flask
+from flask import Flask, request
 from markdown import markdown
-from flask import request
 from src.revision import URL
 from src.userrevisions import UserRevisions
 try:
@@ -17,23 +16,25 @@ except ModuleNotFoundError as modError:
 app = Flask("WikiWatcher")
 
 def validate_tagstring(tagstring):
+    """ ensures user passed a list of tags to endpoint """
     # how should we handle bad input?
     assert tagstring[0] == "["
     assert tagstring[-1] == "]"
 
 def parse_tags(tagstring):
+    """ parses user tag string-list into python list """
     tagstring = tagstring[1:-1]
     return tagstring.split(",")
 
 @app.route("/")
 def index():
     """display readme for now - may put a GUI here later on"""
-    with open("README.md", "r") as readme:
+    with open("README.md", "r", encoding="utf-8") as readme:
         ret = markdown(readme.read())
     return ret
 
-@app.route("/revisionHistory/<title>")
-def get_revisions(title):
+@app.route("/articleRevisions/<title>")
+def get_article_revisions(title):
     """ /revisionHistory/<title>?fromdate=<>&todate=<>&keyword=<>&tags=<>&keyword=<> """
     # gather user inputs
     rvstart: str = request.args.get("fromDate", type=str)
@@ -50,13 +51,13 @@ def get_revisions(title):
         ret = revisions
     else:
         ret = "-1" # placeholder - we should discuss what to do in this case?
-    
+
     return ret
 
 @app.route("/userRevisions/<username>")
 def get_user_revisions(username):
     """ /revisionHistory/<username>?fromdate=<>&todate=<>&keyword=<>&tags=<>&keyword=<> """
-    pass
+    return username # to do
 
 if __name__ == "__main__":
     app.run(debug=True)
