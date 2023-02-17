@@ -2,83 +2,61 @@
 Defines endpoints of the API
 Heavily WIP
 """
-import requests as r
+import __init__
+import sys
 from flask import Flask
-# from flask import request
-# from userrevisions import UserRevisions
+from markdown import markdown
+from flask import request
+from src.revision import URL
+from src.userrevisions import UserRevisions
+try:
+    from src.articlerevisions import ArticleRevisions
+except ModuleNotFoundError as modError:
+    print(modError, "Waiting to merge")
+#import src.articlerevisions
 app = Flask("WikiWatcher")
 
+def validate_tagstring(tagstring):
+    # how should we handle bad input?
+    assert tagstring[0] == "["
+    assert tagstring[-1] == "]"
+
+def parse_tags(tagstring):
+    tagstring = tagstring[1:-1]
+    return tagstring.split(",")
 
 @app.route("/")
 def index():
-    """Temporary test code - may put a UI here at some point?"""
-    return "Test Flask response"
+    """display readme for now - may put a GUI here later on"""
+    with open("README.md", "r") as readme:
+        ret = markdown(readme.read())
+    return ret
 
-
-# URLs for our endpoints should share similar patterns:
-# /<x>History/<title/name>?fromdate=<fromdate>&todate=<>&keyword=<>&tag=<>
 @app.route("/revisionHistory/<title>")
 def get_revisions(title):
-    """ /revisionHistory/TITLE?fromdate=_&todate=_&keyword=_&tag=_
+    """ /revisionHistory/<title>?fromdate=<>&todate=<>&keyword=<>&tags=<>&keyword=<> """
+    # gather user inputs
+    rvstart: str = request.args.get("fromDate", type=str)
+    rvend: str = request.args.get("toDate", default=None, type=str)
+    tags: list[str] = parse_tags(request.args.get("tags", default=None, type=str))
+    keyword: str = request.args.get("keyword", default=None, type=str)
+    # gather and filter revisions
+    if "src.articlerevisions" in sys.modules:
+        revisions = ArticleRevisions(title, rvstart, rvend, tags)
+        if tags:
+            revisions.filter_by_tags(tags)
+        if keyword:
+            revisions.filter_by_keyword(keyword)
+        ret = revisions
+    else:
+        ret = "-1" # placeholder - we should discuss what to do in this case?
+    
+    return ret
 
-
-    This is exploratory/prototype code which will likely be
-    abstracted away into a RevisionHistory class.
-    i.e. initiate a RevisionHistory with a title,
-    RevisionHistory will have list attribute storing Revisions,
-    as well as methods for initializing and/or filtering that list?
-    query it using its methods for...
-    """
-    # construct target URL
-    url = "https://api.wikimedia.org/core/v1/wikipedia/en/page/"\
-        + "<title>/history".replace("<title>", title)
-    # prepare to translate parameters
-    # from_date = request.args.get("fromDate")
-    # to_date = request.args.get("toDate")
-    from_id = None
-    to_id = None
-    # match datetimes to IDs
-    # processing_revisions = r.get(url=url, timeout=5)
-    # for p_revision in processing_revisions.json()["revisions"]:
-    # pass
-    # if p_revision[]
-    # prepare request to Wikimedia API
-    params = {
-        "older_than": to_id,
-        "newer_than": from_id
-    }
-    for param in params.copy():  # Dict must not change during iteration
-        if params[param] is None:
-            params.pop(param)
-    # send request to Wikimedia API
-    revisions = r.get(url=url, params=params, timeout=5)
-    # print(json.dumps(revisions.json(), indent=1))
-    return revisions.json()["revisions"]
-
-# URLs for our endpoints should share similar patterns:
-# /<x>userRevisions/<username>
 @app.route("/userRevisions/<username>")
 def get_user_revisions(username):
-    """ /userRevisions/username
-    Another exploratory code section where we will implement an endpoint for User Revisions
-    """
-    url = "https://www.wikipedia.org/w/api.php"
-
-    params = {
-        "formatversion": "2",
-        "list": "usercontribs",
-        "action": "query",
-        "format": "json",
-        "ucuser": username
-    }
-    for param in params.copy():  # Dict must not change during iteration
-        if params[param] is None:
-            params.pop(param)
-    # send request to Wikimedia API
-    revisions = r.get(url=url, params=params, timeout=5)
-    # revisions = UserRevision(params)
-    # print(json.dumps(revisions.json(), indent=1))
-    return revisions.json()["query"]["usercontribs"]
+    """ /revisionHistory/<username>?fromdate=<>&todate=<>&keyword=<>&tags=<>&keyword=<> """
+    pass
 
 if __name__ == "__main__":
     app.run(debug=True)

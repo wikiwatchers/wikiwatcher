@@ -1,6 +1,6 @@
 '''defines user revisions class'''
 import requests
-from revision import Revision
+from src.revision import Revision
 import mwparserfromhell as mwp
 
 URL = "https://www.wikipedia.org/w/api.php"

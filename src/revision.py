@@ -46,7 +46,7 @@ class Revision():
         }
         if self.revid is None:
             raise AttributeError("Revision ID missing")
-        request = session.get(url=URL, params=params)
+        request = session.get(url=URL, params=params, timeout=5)
         data = request.json()['parse']['text']['*']
         return str(mwp.parse(data))
 
