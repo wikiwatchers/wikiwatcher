@@ -9,7 +9,7 @@ with open('user_test.json', 'r', encoding='utf-8') as q:
 
 T_UREVS = None
 
-def test_userHistory_init():
+def test_userhistory_init():
     '''Tests user history init'''
     global T_UREVS, TPARAMS
     j = requests.get(URL, TPARAMS).json()
@@ -18,6 +18,6 @@ def test_userHistory_init():
     assert T_UREVS.history.revisions[0].user == 'Jimbo Wales'
     assert T_UREVS.history.revisions[0].userid == 24
 
-def test_userHistory_keyword():
+def test_userhistory_keyword():
     '''Tests user history with keyword'''
     assert 0 == 0
