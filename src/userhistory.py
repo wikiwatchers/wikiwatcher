@@ -1,12 +1,12 @@
-'''defines user revisions class'''
+'''defines user history class'''
 import requests
 from revision import Revision
 import mwparserfromhell as mwp
 
 URL = "https://www.wikipedia.org/w/api.php"
 
-class UserRevisions():
-    '''userrevision object parses json user contributions '''
+class UserHistory():
+    '''userhistory object parses json user contributions '''
 
     def __init__(self, initjson: dict) -> None:
         self.json: dict = initjson
@@ -24,9 +24,10 @@ class UserRevisions():
         self.revisions: list[Revision] = None
         self.userid: int = None
         self.username: str = None
+        self.keyword: str = None
 
     def get_revisions(self):
-        ''' Gets user revisions '''
+        ''' Gets user history revisions '''
 
         session = requests.Session()
 
@@ -40,6 +41,8 @@ class UserRevisions():
         if self.username is None:
             raise AttributeError("User name missing")
         request = session.get(url=URL, params=params)
+        # if self.keyword is not None:
+            # Do filtering with keyword
         data = request.json()['query']['usercontribs']
         return str(mwp.parse(data))
         

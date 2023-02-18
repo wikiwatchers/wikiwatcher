@@ -55,12 +55,11 @@ def get_revisions(title):
     # print(json.dumps(revisions.json(), indent=1))
     return revisions.json()["revisions"]
 
-# URLs for our endpoints should share similar patterns:
-# /<x>userRevisions/<username>
-@app.route("/userRevisions/<username>")
-def get_user_revisions(username):
-    """ /userRevisions/username
-    Another exploratory code section where we will implement an endpoint for User Revisions
+# /<x>userHistory/<username>
+@app.route("/userHistory/<username>")
+def get_user_history(username):
+    """ /userHistory/username
+    Another exploratory code section where we will implement an endpoint for User History
     """
     url = "https://www.wikipedia.org/w/api.php"
 
