@@ -2,6 +2,7 @@
 import datetime
 import requests
 from history import history
+from exceptions import BadRequestException
 import mwparserfromhell as mwp
 
 URL = "https://www.wikipedia.org/w/api.php"
@@ -32,7 +33,7 @@ class UserHistory():
             "ucuser": self.username
         }
         if self.username is None:
-            raise AttributeError("User name missing")
+            raise BadRequestException("User name missing")
         request = session.get(url=URL, params=params)
         # if self.keyword is not None:
             # Do filtering with keyword
