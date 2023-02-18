@@ -7,20 +7,8 @@ class history:
         self.user = user
         self.keyword = keyword
         self.tags = tags
-        self.start_year = start_year
-        self.start_month = start_month
-        self.start_day = start_day
-        self.start_hour = start_hour
-        self.start_minute = start_minute
-        self.start_second = start_second
-        self.end_year = end_year
-        self.end_month = end_month
-        self.end_minute = end_minute
-        self.end_hour = end_hour
-        self.end_minute = end_minute
-        self.end_second = end_second
-
-        format_timestamp()
+        self.format_timestamp(start_year, start_month, start_day, start_hour, start_minute, 
+        start_second, end_year, end_month, end_day, end_hour, end_minute, end_second)
 
     def init_to_none(self):
         '''sets up class data members and initalizes to none'''
@@ -29,18 +17,8 @@ class history:
         self.user: str = None
         self.keyword: str = None
         self.tags: list[str] = None
-        self.start_year: int = None
-        self.start_month: int = None
-        self.start_day: int = None
-        self.start_hour: int = None
-        self.start_minute: int = None
-        self.start_second: int = None
-        self.end_year: int = None
-        self.end_month: int = None
-        self.end_minute: int = None
-        self.end_hour: int = None
-        self.end_minute: int = None
-        self.end_second: int = None
+        self.arvstart: str = None 
+        self.arvend: str = None
         self.revisions: list[Revision] = None
 
     def format_timestamp(self):
