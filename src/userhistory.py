@@ -1,6 +1,7 @@
 '''defines user history class'''
+import datetime
 import requests
-from revision import Revision
+from history import history
 import mwparserfromhell as mwp
 
 URL = "https://www.wikipedia.org/w/api.php"
@@ -11,23 +12,15 @@ class UserHistory():
     def __init__(self, initjson: dict) -> None:
         self.json: dict = initjson
         self.init_to_none()
-        self.revisions = []
-        for i in initjson:
-            revisionjson = i
-            revisionjson['pageid'] = i['pageid']
-            revisionjson['title'] = i['title']
-            this_revision = Revision(revisionjson)
-            self.revisions.append(this_revision)
 
     def init_to_none(self):
         '''sets up class data members and initializes them to None '''
-        self.revisions: list[Revision] = None
+        self.history: history = None
         self.userid: int = None
         self.username: str = None
-        self.keyword: str = None
 
-    def get_revisions(self):
-        ''' Gets user revisions '''
+    def get_history(self):
+        ''' Gets user history '''
 
         session = requests.Session()
 
@@ -45,21 +38,5 @@ class UserHistory():
             # Do filtering with keyword
         data = request.json()['query']['usercontribs']
         return str(mwp.parse(data))
-
-    def filter(self, keyword, tags, rvstart, rvend):
-        ''' Filters user revisions '''
-        if keyword is not None:
-            return keyword
-        if tags is not None:
-            return tags
-        if rvstart is not None:
-            return rvstart
-        if rvend is not None:
-            return rvend
-        return
-
-    def format_timestamp(self):
-        ''' Formats timestamp '''
-        return
 
         

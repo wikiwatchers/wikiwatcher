@@ -15,8 +15,8 @@ def test_userHistory_init():
     j = requests.get(URL, TPARAMS).json()
     userrevjson = j["query"]["usercontribs"]
     T_UREVS = UserHistory(userrevjson)
-    assert T_UREVS.revisions[0].user == 'Jimbo Wales'
-    assert T_UREVS.revisions[0].userid == 24
+    assert T_UREVS.history.revisions[0].user == 'Jimbo Wales'
+    assert T_UREVS.history.revisions[0].userid == 24
 
 def test_userHistory_keyword():
     '''Tests user history with keyword'''
