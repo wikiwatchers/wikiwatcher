@@ -27,7 +27,7 @@ class UserHistory():
         self.keyword: str = None
 
     def get_revisions(self):
-        ''' Gets user history revisions '''
+        ''' Gets user revisions '''
 
         session = requests.Session()
 
@@ -45,4 +45,21 @@ class UserHistory():
             # Do filtering with keyword
         data = request.json()['query']['usercontribs']
         return str(mwp.parse(data))
+
+    def filter(self, keyword, tags, rvstart, rvend):
+        ''' Filters user revisions '''
+        if keyword is not None:
+            return keyword
+        if tags is not None:
+            return tags
+        if rvstart is not None:
+            return rvstart
+        if rvend is not None:
+            return rvend
+        return
+
+    def format_timestamp(self):
+        ''' Formats timestamp '''
+        return
+
         
