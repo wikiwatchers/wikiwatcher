@@ -1,6 +1,6 @@
-""" API/App.py
-Defines endpoints of the API
-Heavily WIP
+""" app.py
+Defines endpoints of our API
+Handles interactions with our users, does not handle interactions with external APIs
 """
 import __init__
 import sys
@@ -35,20 +35,19 @@ def index():
 
 @app.route("/articleRevisions/<title>")
 def get_article_revisions(title):
-    """ /revisionHistory/<title>?fromdate=<>&todate=<>&keyword=<>&tags=<>&keyword=<> """
+    """ /revisionHistory/<title>?... """
     # gather user inputs
-    rvstart: str = request.args.get("fromDate", type=str)
-    rvend: str = request.args.get("toDate", default=None, type=str)
     tags: list[str] = parse_tags(request.args.get("tags", default=None, type=str))
     keyword: str = request.args.get("keyword", default=None, type=str)
+    user: str = request.args.get("user", default=None, type=str)
     # gather and filter revisions
     if "src.articlerevisions" in sys.modules:
-        revisions = ArticleRevisions(title, rvstart, rvend, tags)
-        if tags:
-            revisions.filter_by_tags(tags)
-        if keyword:
-            revisions.filter_by_keyword(keyword)
-        ret = revisions
+        revisions = ArticleRevisions(titles=title,
+                                     startyear=startyear, startmonth=startmonth, startday=startday,
+                                     starthour=starthour, startminute=startminute, startsecond=startsecond,
+                                     endyear=endyear, endmonth=endmonth, endday=endday,
+                                     endhour=endhour, endminute=endminute, endsecond=endsecond,
+                                     tags=tags, user=user, keyword=keyword)
     else:
         ret = "-1" # placeholder - we should discuss what to do in this case?
 
