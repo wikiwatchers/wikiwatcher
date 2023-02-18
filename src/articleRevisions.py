@@ -1,38 +1,42 @@
 from Revision import Revision, User
 from datetime import datetime
+import requests
 
-class ArticleRevisions(self, titles, tags[], rvstart, rvend=None):
+class ArticleRevisions(self, titles, user, keyword, tags[], rvstart, rvend=None):
     def __init__(self):
         self.init_to_none()
         self.titles = titles
+        self.user = user
+        self.keyword = keyword
         self.tags[] = tags[]
+
+        format_timestamp()
         self.rvstart = rvstart
         self.rvend = rvend #if None, pull single revision from rvstart
         self.revisions: list[Revision] = None
+        
+        #call api
+        #parse into revisions objects
+        #filter
 
     def init_to_none(self):
         '''sets up class data members and initalizes to none'''
-        self.revisions: list[Revision] = None
         self.titles: string = None
+        self.user: str = None
+        self.keyword: str = None
         self.tags: list[str] = None
         self.rvstart: datetime = None
         self.rvend: datetime = None
         self.revisions: list[Revision] = None
 
-    def filter_by_timestamp(self):
+    def format_timestamp():
         pass
 
-    def filter_by_keyword(self, keyword):
-        '''filters revisions by keyword'''
-        pass
-
-    def filter_by_tags(self, tags[]): #list of strings
-        '''filters revisions by tags'''
+    def filter(self, user, keyword, tags[], rvstart, rvend=None):
         pass
     
     def get_article_revisions(self):
         '''pulls down an article's revision history from the API'''
-        import requests
 
         session = requests.Session()
 
@@ -55,3 +59,5 @@ class ArticleRevisions(self, titles, tags[], rvstart, rvend=None):
 
         for rev in all_revisions:
             print(rev)
+
+        
