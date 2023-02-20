@@ -9,7 +9,7 @@ from revision import Revision, URL, datetime
 def test_revision_init():
     """Tests initialization of a single revision
     mocks behavior to be implemented in collection classes """
-    with open("tests/resources/wikipedia_responses.json") as file:
+    with open("tests/resources/wikipedia_responses.json", 'r', encoding='utf-8') as file:
         known_response = file.read()
         response_json = json.loads(known_response)["query"]
         known_revision_json = response_json["pages"][0]["revisions"][0]
@@ -38,19 +38,14 @@ def test_get_content():
         f_content = "".join(in_file.readlines())
         assert f_content == content
 
-'''
-def test_get_diff():
-    """Tests get_diff method against known correct output"""
-    pass
+#def test_get_diff():
+    #"""Tests get_diff method against known correct output"""
+    #pass
     # get_diff should return json of changes
     #print(rev_diff)
-'''
 
-'''
-def test_timestamp_to_datetime():
-    """Tests get_timestamp method against known correct output"""
-    pass
-'''
+#def test_timestamp_to_datetime():
+    #"""Tests get_timestamp method against known correct output"""
 
 if __name__ == '__main__':
     #print("run python -m pytest")

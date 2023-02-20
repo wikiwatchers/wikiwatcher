@@ -69,10 +69,10 @@ def get_article_history(title):
     if "src.articlehistory" in sys.modules:
         revisions = ArticleHistory(titles=title,
                                      startyear=startyear, startmonth=startmonth, startday=startday,
-                                     starthour=starthour, startminute=startminute, startsecond=startsecond,
-                                     endyear=endyear, endmonth=endmonth, endday=endday,
-                                     endhour=endhour, endminute=endminute, endsecond=endsecond,
-                                     tags=tags, rvuser=rvuser, keyword=keyword)
+                                     starthour=starthour, startminute=startminute,
+                                     startsecond=startsecond, endyear=endyear, endmonth=endmonth,
+                                     endday=endday, endhour=endhour, endminute=endminute,
+                                     endsecond=endsecond, tags=tags, rvuser=rvuser, keyword=keyword)
         ret = json.dumps(revisions.revisions)
     else:
         ret = "-1" # placeholder
@@ -109,10 +109,10 @@ def get_user_history(username):
     if "src.userhistory" in sys.modules:
         revisions = UserHistory(user=username,
                                 startyear=startyear, startmonth=startmonth, startday=startday,
-                                starthour=starthour, startminute=startminute, startsecond=startsecond,
-                                endyear=endyear, endmonth=endmonth, endday=endday,
-                                endhour=endhour, endminute=endminute, endsecond=endsecond,
-                                tags=tags, titles=titles, keyword=keyword)
+                                starthour=starthour, startminute=startminute,
+                                startsecond=startsecond, endyear=endyear, endmonth=endmonth,
+                                endday=endday, endhour=endhour, endminute=endminute,
+                                endsecond=endsecond, tags=tags, titles=titles, keyword=keyword)
         ret = json.dumps(revisions.revisions)
     else:
         ret = "-1" # placeholder
@@ -142,7 +142,7 @@ def get_revision(title):
     return ret
 
 @app.route("/compareRevisions/<title>")
-def get_revision(title):
+def get_difference(title):
     """ /getRevision/<title>?...
     Returns the difference between two revisions a and b.
     Takes a mandatory argument for article title, as well as
@@ -166,7 +166,7 @@ def get_revision(title):
     if "src.articlehistory" in sys.modules:
         revisions = ArticleHistory(titles=title,
                                    startyear=startyear, startmonth=startmonth,
-                                   startday=startday, starthour=starhour,
+                                   startday=startday, starthour=starthour,
                                    startminute=startminute, startsecond=startsecond,
                                    endyear=endyear, endmonth=endmonth,
                                    endday=endday, endhour=endhour,
