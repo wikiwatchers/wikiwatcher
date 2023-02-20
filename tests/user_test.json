@@ -1,7 +1,0 @@
-{
-    "action": "query",
-    "format": "json",
-    "list": "usercontribs",
-    "formatversion": "2",
-    "ucuser": "Jimbo Wales"
-}
