@@ -1,8 +1,10 @@
+'''test for article history subclass'''
 import pytest
 from history import History
 from article_history import ArticleHistory
 
 def test___init__():
+    '''tests initalization'''
     art = ArticleHistory("Techno", "Rio65trio")
     assert art.titles == "Techno"
     assert art.user == "Rio65trio"
