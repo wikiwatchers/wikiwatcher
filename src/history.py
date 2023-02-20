@@ -1,13 +1,5 @@
-""" REMOVE THIS ON MERGE """
+""" REMOVE ON MERGE defines a base class for user and article histories"""
 from src.exceptions import BadRequestException
-
-class ArticleRevisions:
-    """ REMOVE THIS ON MERGE """
-
-    def __init__(self, titles=None) -> None:
-        """ REMOVE THIS ON MERGE """
-        self.titles = titles
-        print(f"temp testing, {titles}")
 
 def format_timestamp(year, month, day, hour, minute, second):
     """ cats our user's requested date/time values into a wikipedia-friendly string
