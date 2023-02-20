@@ -28,9 +28,11 @@ class ArticleHistory(History):
         super().init_to_none()
         self.pageid: int = None
 
+    '''
     def filter(self, user, keyword, tags, arvstart, arvend=None):
-        '''filters article revisions using various arguments'''
+        #filters article revisions using various arguments
         pass
+    '''
     
     def call_api(self):
         '''pulls down an article's revision history from the API'''
