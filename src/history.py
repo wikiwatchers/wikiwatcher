@@ -1,12 +1,8 @@
 '''contains history base class attributes and timestamp modification'''
+
 from revision import Revision
+from src.exceptions import BadRequestException
 
-#pylint: disable=W0107,C0103,R0913,W0613
-def format_timestamp(y,m,d,h,minute,s):
-    '''REMOVE THIS ON MERGE'''
-    pass
-
-#pylint: disable=R0913,R0914,E1111,E1121,C0303
 class History:
     '''history base class initalization'''
     def __init__(self, titles=None, user=None, keyword=None, tags=None, 
@@ -33,3 +29,17 @@ class History:
         self.rvstart: str = None 
         self.rvend: str = None
         self.revisions: list[Revision] = None
+
+def format_timestamp(year, month, day, hour, minute, second):
+    """ cats our user's requested date/time values into a wikipedia-friendly string
+    and validates that user gave us a correct date/time """
+    if year:
+        ret = str(year)
+    else:
+        raise BadRequestException("invalid date/time specification")
+    ret += str(month).rjust(2, "0") if month else "01"
+    ret += str(day).rjust(2, "0") if day else "01"
+    ret += str(hour).rjust(2, "0") if hour else "00"
+    ret += str(minute).rjust(2, "0") if minute else "00"
+    ret += str(second).rjust(2, "0") if second else "01"
+    return ret

@@ -1,6 +1,6 @@
 '''defines revision base class'''
 from datetime import datetime
-import json
+import regex as re
 import requests
 from bs4 import BeautifulSoup as bs
 import mwparserfromhell as mwp
@@ -46,9 +46,10 @@ class Revision():
         }
         if self.revid is None:
             raise AttributeError("Revision ID missing")
-        request = session.get(url=URL, params=params)
+        request = session.get(url=URL, params=params, timeout=5)
         data = request.json()['parse']['text']['*']
-        return str(mwp.parse(data))
+        ret = mwp.parse(data)
+        return str(''.join(ret).replace("\n", ""))
 
     def get_diff(self, to_id: int = None):
         ''' Returns the difference between this revision and its parent
