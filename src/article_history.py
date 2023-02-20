@@ -64,7 +64,7 @@ class ArticleHistory(History):
             self.pageid = self.json["pageid"]
 
             for each_revision in self.json["revisions"]:
-                self.revisions.append(each_revision)
+                self.revisions.append(Revision(each_revision))
             
         except KeyError:
             print("Data not found")
