@@ -7,11 +7,13 @@ import mwparserfromhell as mwp
 
 URL = "https://www.wikipedia.org/w/api.php"
 
-class UserHistory():
+class UserHistory(History):
     '''userhistory object parses json user contributions '''
 
     def __init__(self, username, keyword=None, article=None):
         self.init_to_none()
+        super().__init__(self, username, keyword, article)
+
         self.username = username
         self.keyword = keyword
         self.article = article
