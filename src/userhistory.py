@@ -10,13 +10,16 @@ URL = "https://www.wikipedia.org/w/api.php"
 class UserHistory():
     '''userhistory object parses json user contributions '''
 
-    def __init__(self, initjson: dict) -> None:
-        self.json: dict = initjson
+    def __init__(self, username, user=None, keyword=None, article=None):
+        
         self.init_to_none()
+        self.username = username
+        self.get_history()
+        #filter here
 
     def init_to_none(self):
         '''sets up class data members and initializes them to None '''
-        self.history: history = None
+        self.revisions: revisions = None
         self.userid: int = None
         self.username: str = None
 
@@ -34,10 +37,17 @@ class UserHistory():
         }
         if self.username is None:
             raise BadRequestException("User name missing")
-        request = session.get(url=URL, params=params)
-        # if self.keyword is not None:
-            # Do filtering with keyword
-        data = request.json()['query']['usercontribs']
-        return str(mwp.parse(data))
 
+        request = session.get(url=URL, params=params)
+        data = request.json()['query']['usercontribs']
+
+        try:
+            self.json = data
+            for revision in self.json:
+                self.revisions.append(revision)
+        except BadRequestException:
+            print("No revisions")
+        
+
+        return str(mwp.parse(data))
         
