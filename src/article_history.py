@@ -14,15 +14,14 @@ class ArticleHistory(History):
                 end_minute=None, end_second=None):
         
         self.init_to_none()
-        super().__init__(titles, user=None, keyword=None, tags=None,
-                        start_year=None, start_month=None, start_day=None, 
-                        start_hour=None, start_minute=None, start_second=None,
-                        end_year=None, end_month=None, end_day=None, 
-                        end_hour=None, end_minute=None, end_second=None)
+        super().__init__(titles, user, keyword, tags,
+                        start_year, start_month, start_day, 
+                        start_hour, start_minute, start_second,
+                        end_year, end_month, end_day, 
+                        end_hour, end_minute, end_second)
 
         self.call_api()
-        self.parse_json()
-        #filter
+        #filter()
 
     def init_to_none(self):
         '''sets up class data members and initalizes to none'''
@@ -33,13 +32,6 @@ class ArticleHistory(History):
         '''filters article revisions using various arguments'''
         pass
     
-    def parse_json(self):
-        '''parses returned json into revision list'''
-        self.pageid = self.json[0]["pageid"]
-
-        for page in self.json:
-            self.revisions.append(page["revisions"])
-
     def call_api(self):
         '''pulls down an article's revision history from the API'''
         self.revisions = []
@@ -49,14 +41,16 @@ class ArticleHistory(History):
 
         params = {
             "action": "query",
+            "format": "json",
             "prop": "revisions",
+            "continue": "||",
             "titles": self.titles,
             "rvprop": "comment|ids|flags|size|timestamp|user|userid",
+            "rvslots": "*",
             "formatversion": "2",
             "rvuser": self.user,
             "rvstart": self.rvstart,
-            "rvend": self.rvend,
-            "format": "json"
+            "rvend": self.rvend
         }
 
         rev = session.get(url=url, params=params)
@@ -64,7 +58,24 @@ class ArticleHistory(History):
 
         try:
             pages = data["query"]["pages"]
-            self.json = pages
+            self.json = pages[0]
+            self.pageid = self.json["pageid"]
+
+            for each_revision in self.json["revisions"]:
+                self.revisions.append(each_revision)
             
         except KeyError:
             print("Data not found")
+
+if __name__ == "__main__":
+    
+    from article_history import ArticleHistory
+
+    art = ArticleHistory("Techno","Rio65trio")
+    #art.rvstart = "20231215"
+    #art.rvend = "20231219"
+    #print(art.json)
+
+    for each in art.revisions:
+        print(each)
+        print()
