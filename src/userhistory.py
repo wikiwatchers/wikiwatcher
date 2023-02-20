@@ -1,33 +1,32 @@
-'''defines user revisions class'''
+'''defines user history class'''
+import datetime
 import requests
-from src.revision import Revision
+from history import History
+from exceptions import BadRequestException
 import mwparserfromhell as mwp
 
 URL = "https://www.wikipedia.org/w/api.php"
 
-class UserRevisions():
-    '''userrevision object parses json user contributions '''
+class UserHistory(History):
+    '''userhistory object parses json user contributions '''
 
-    def __init__(self, initjson: dict) -> None:
-        self.json: dict = initjson
+    def __init__(self, username, keyword=None, article=None):
         self.init_to_none()
-        self.revisions = []
-        for i in initjson:
-            revisionjson = i
-            revisionjson['pageid'] = i['pageid']
-            revisionjson['title'] = i['title']
-            this_revision = Revision(revisionjson)
-            self.revisions.append(this_revision)
+        super().__init__(username, keyword, article)
+
+        self.username = username
+        self.keyword = keyword
+        self.article = article
+        self.get_history()
+        #filter here
 
     def init_to_none(self):
         '''sets up class data members and initializes them to None '''
-        self.revisions: list[Revision] = None
-        self.userid: int = None
         self.username: str = None
 
-    def get_revisions(self):
-        ''' Gets user revisions '''
-
+    def get_history(self):
+        ''' Gets user history '''
+        self.revisions = []
         session = requests.Session()
 
         params = {
@@ -38,8 +37,19 @@ class UserRevisions():
             "ucuser": self.username
         }
         if self.username is None:
-            raise AttributeError("User name missing")
+            raise BadRequestException("User name missing")
+
         request = session.get(url=URL, params=params)
+
         data = request.json()['query']['usercontribs']
+
+        try:
+            self.json = data
+            for revision in self.json:
+                self.revisions.append(revision)
+        except BadRequestException:
+            print("No revisions")
+
+        print(self.revisions[0])
         return str(mwp.parse(data))
         

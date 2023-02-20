@@ -1,19 +1,29 @@
 '''Tests for class user revision'''
 import json
 import requests
-from userrevisions import UserRevisions,  URL
-with open('user_test.json', 'r', encoding='utf-8') as q:
-    TPARAMS = json.load(q)
 
-# pylint: disable=W0603,W0602
+from userHistory import UserHistory,  URL
 
-T_UREVS = None
+def test_userhistory_init():
+    '''Tests user history init'''
+    user_contribs = UserHistory("Jimbo Wales")
 
-def test_userrevision_init():
-    '''Tests userrevision init'''
-    global T_UREVS, TPARAMS
-    j = requests.get(URL, TPARAMS).json()
-    userrevjson = j["query"]["usercontribs"]
-    T_UREVS = UserRevisions(userrevjson)
-    assert T_UREVS.revisions[0].user == 'Jimbo Wales'
-    assert T_UREVS.revisions[0].userid == 24
+    assert user_contribs.revisions[0]['user'] == 'Jimbo Wales'
+    assert user_contribs.revisions[0]['userid'] == 24
+    assert len(user_contribs.revisions) == 10
+
+    another_user_contribs = UserHistory("RobinHood70")
+
+    assert another_user_contribs.revisions[0]['user'] == 'RobinHood70'
+    assert another_user_contribs.revisions[0]['userid'] == 4859457
+    assert len(another_user_contribs.revisions) == 10
+
+def test_userhistory_keyword():
+    '''Tests user history with keyword - TO DO after filtering'''
+    keyword = "Talk:Archives of Venice"
+
+    user_contribs = UserHistory('Jimbo Wales', keyword)
+
+    print(user_contribs.revisions[8])
+
+    assert user_contribs.revisions[8]['title'] == keyword
