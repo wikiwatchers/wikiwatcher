@@ -1,6 +1,7 @@
 '''Tests for class user revision'''
 import json
 import requests
+
 from userHistory import UserHistory,  URL
 
 def test_userhistory_init():

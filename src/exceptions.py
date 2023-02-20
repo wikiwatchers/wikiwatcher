@@ -1,5 +1,6 @@
-'''exceptions class'''
-#pylint: disable=W0107
+""" Defines exceptions for application-wide error handling """
+
 class BadRequestException(BaseException):
-    '''bad exception class'''
-    pass # all we need?
+    """ to be raised throughout codebase
+    upon discovery of bad user inputs
+    """
