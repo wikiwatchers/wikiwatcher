@@ -1,8 +1,8 @@
 '''contains history base class attributes and timestamp modification'''
 from revision import Revision
 
-#pylint: disable=W0107
-def format_timestamp(y,m,d,h,min,s):
+#pylint: disable=W0107,C0103,R0913,W0613
+def format_timestamp(y,m,d,h,minute,s):
     '''REMOVE THIS ON MERGE'''
     pass
 
