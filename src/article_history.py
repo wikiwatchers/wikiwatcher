@@ -27,7 +27,7 @@ class ArticleHistory(History):
         '''sets up class data members and initalizes to none'''
         super().init_to_none()
         self.pageid: int = None
-
+    #pylint:disable=W0105
     '''
     def filter(self, user, keyword, tags, arvstart, arvend=None):
         #filters article revisions using various arguments
