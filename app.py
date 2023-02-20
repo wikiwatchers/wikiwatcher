@@ -118,6 +118,12 @@ def get_user_history(username):
         ret = "-1" # placeholder
     return ret
 
+@app.route("/getRevision/<title>")
+def get_revision(title):
+    """ /getRevision/<title>?...
+    Returns the contents of a single revision.
+    Takes a mandatory argument for article title, as well as
+    a mandatory year parameter and optional month, day, hour, minute, and second
     """
     startyear: int = request.args.get("startyear", default=None, type=int)
     startmonth: int = request.args.get("startmonth", default=None, type=int)
