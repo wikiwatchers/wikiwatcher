@@ -12,7 +12,7 @@ class UserHistory(History):
 
     def __init__(self, username, keyword=None, article=None):
         self.init_to_none()
-        super().__init__(self, username, keyword, article)
+        super().__init__(username, keyword, article)
 
         self.username = username
         self.keyword = keyword
