@@ -10,10 +10,9 @@ URL = "https://www.wikipedia.org/w/api.php"
 class UserHistory():
     '''userhistory object parses json user contributions '''
 
-    def __init__(self, username, user=None, keyword=None, article=None):
+    def __init__(self, username, keyword=None, article=None):
         self.init_to_none()
         self.username = username
-        self.user = user
         self.keyword = keyword
         self.article = article
         self.get_history()
@@ -21,7 +20,6 @@ class UserHistory():
 
     def init_to_none(self):
         '''sets up class data members and initializes them to None '''
-        self.userid: int = None
         self.username: str = None
 
     def get_history(self):
@@ -40,6 +38,7 @@ class UserHistory():
             raise BadRequestException("User name missing")
 
         request = session.get(url=URL, params=params)
+
         data = request.json()['query']['usercontribs']
 
         try:
