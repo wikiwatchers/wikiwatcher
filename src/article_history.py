@@ -66,16 +66,3 @@ class ArticleHistory(History):
             
         except KeyError:
             print("Data not found")
-
-if __name__ == "__main__":
-    
-    from article_history import ArticleHistory
-
-    art = ArticleHistory("Techno","Rio65trio")
-    #art.rvstart = "20231215"
-    #art.rvend = "20231219"
-    #print(art.json)
-
-    for each in art.revisions:
-        print(each)
-        print()
