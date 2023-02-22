@@ -1,31 +1,30 @@
 '''defines the collection class for article history'''
 import requests
-from revision import Revision
 from datetime import datetime
-from history import format_timestamp,History
+from src.revision import Revision
+from src.history import format_timestamp,History
 
 #pylint: disable=C0303,R0913,R0914
 class ArticleHistory(History):
     '''article revision collection class'''
     def __init__(self, titles, user=None, keyword=None, tags=None,
-                start_year=None, start_month=None, start_day=None, 
-                start_hour=None, start_minute=None, start_second=None, 
-                end_year=None, end_month=None, end_day=None, end_hour=None, 
-                end_minute=None, end_second=None):
-        
+                startyear=None, startmonth=None, startday=None, 
+                starthour=None, startminute=None, startsecond=None, 
+                endyear=None, endmonth=None, endday=None, endhour=None, 
+                endminute=None, endsecond=None):
+        super().init_to_none()
         self.init_to_none()
         super().__init__(titles, user, keyword, tags,
-                        start_year, start_month, start_day, 
-                        start_hour, start_minute, start_second,
-                        end_year, end_month, end_day, 
-                        end_hour, end_minute, end_second)
+                        startyear, startmonth, startday, 
+                        starthour, startminute, startsecond,
+                        endyear, endmonth, endday, 
+                        endhour, endminute, endsecond)
 
         self.call_api()
         #filter()
 
     def init_to_none(self):
         '''sets up class data members and initalizes to none'''
-        super().init_to_none()
         self.pageid: int = None
     #pylint:disable=W0105
     '''

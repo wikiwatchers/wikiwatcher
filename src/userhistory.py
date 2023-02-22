@@ -1,8 +1,8 @@
 '''defines user history class'''
 import datetime
 import requests
-from history import History
-from exceptions import BadRequestException
+from src.history import History
+from src.exceptions import BadRequestException
 import mwparserfromhell as mwp
 
 URL = "https://www.wikipedia.org/w/api.php"
@@ -11,6 +11,7 @@ class UserHistory(History):
     '''userhistory object parses json user contributions '''
 
     def __init__(self, username, keyword=None, article=None):
+        super().init_to_none()
         self.init_to_none()
         super().__init__(username, keyword, article)
 

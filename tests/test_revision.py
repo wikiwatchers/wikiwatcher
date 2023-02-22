@@ -38,12 +38,18 @@ def test_get_content():
         f_content = "".join(in_file.readlines())
         assert f_content == content
 
-#def test_get_diff():
-    #"""Tests get_diff method against known correct output"""
-    #pass
-    # get_diff should return json of changes
-    #print(rev_diff)
+def test_get_diff():
+    """Tests get_diff method against known correct output"""
+    test_revision = Revision({})
+    test_revision.revid = 1127195995
+    test_revision.parentid =1126322774 
+    diff = test_revision.get_diff()
+    diff = diff[0:diff.index("<!-")] # remove variable timestamp cmt
+    with open('tests/resources/revision-get_diff.html', 'r', encoding='utf-8') as in_file:
+        f_diff = "".join(in_file.readlines())
+        assert f_diff == diff
+    print(diff)
 
 if __name__ == '__main__':
     #print("run python -m pytest")
-    test_get_content()
+    test_get_diff()

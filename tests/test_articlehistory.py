@@ -35,3 +35,6 @@ def test_format_timestamp():
     # full datetime
     assert format_timestamp(2008, 6, 7, 4, 1, 30) == '20080607040130'
     # partials to do
+
+if __name__ == "__main__":
+    test___init__()

@@ -9,14 +9,8 @@ from flask import Flask, request
 from markdown import markdown
 from src.revision import URL
 from src.userhistory import UserHistory
-try:
-    from src.articlehistory import ArticleHistory
-except ModuleNotFoundError as modError:
-    print(modError, "Waiting to merge")
-try:
-    from src.articlehistory import ArticleRevisions
-except ModuleNotFoundError as modError:
-    print(modError, "Waiting to merge")
+from src.articlehistory import ArticleHistory
+from src.articlehistory import ArticleHistory
 #import src.articlerevisions
 app = Flask("WikiWatcher")
 
@@ -28,6 +22,8 @@ def validate_tagstring(tagstring):
 
 def parse_tags(tagstring):
     """ parses user tag string-list into python list """
+    if tagstring is None:
+        return None
     tagstring = tagstring[1:-1]
     return tagstring.split(",")
 
@@ -52,7 +48,7 @@ def get_article_history(title):
     # gather user inputs
     tags: list[str] = parse_tags(request.args.get("tags", default=None, type=str))
     keyword: str = request.args.get("keyword", default=None, type=str)
-    rvuser: str = request.args.get("user", default=None, type=str)
+    user: str = request.args.get("user", default=None, type=str)
     startyear: int = request.args.get("startyear", default=None, type=int)
     startmonth: int = request.args.get("startmonth", default=None, type=int)
     startday: int = request.args.get("startday", default=None, type=int)
@@ -66,17 +62,13 @@ def get_article_history(title):
     endminute: int = request.args.get("endminute", default=None, type=int)
     endsecond: int = request.args.get("endsecond", default=None, type=int)
     # gather and filter revisions
-    if "src.articlehistory" in sys.modules:
-        revisions = ArticleHistory(titles=title,
-                                     startyear=startyear, startmonth=startmonth, startday=startday,
-                                     starthour=starthour, startminute=startminute,
-                                     startsecond=startsecond, endyear=endyear, endmonth=endmonth,
-                                     endday=endday, endhour=endhour, endminute=endminute,
-                                     endsecond=endsecond, tags=tags, rvuser=rvuser, keyword=keyword)
-        ret = json.dumps(revisions.revisions)
-    else:
-        ret = "-1" # placeholder
-    return ret
+    revisions = ArticleHistory(titles=title,
+                                    startyear=startyear, startmonth=startmonth, startday=startday,
+                                    starthour=starthour, startminute=startminute,
+                                    startsecond=startsecond, endyear=endyear, endmonth=endmonth,
+                                    endday=endday, endhour=endhour, endminute=endminute,
+                                    endsecond=endsecond, tags=tags, user=user, keyword=keyword)
+    return json.dumps(revisions.revisions)
 
 @app.route("/userHistory/<username>")
 def get_user_history(username):

@@ -73,7 +73,7 @@ class Revision():
         wp_response = session.get(url=URL, params=params).json()
         # Can we return something more user-friendly?
         # Automatically color ins and del tags?
-        return str(bs(wp_response['compare']['*'], features='lxml'))
+        return str(mwp.parse(wp_response['compare']['*']))
 
     def timestamp_to_datetime(self):
         '''Converts the timestamp into a python-friendly datetime object
