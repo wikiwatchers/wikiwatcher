@@ -1,7 +1,7 @@
 '''defines the collection class for article history'''
 import requests
 from datetime import datetime
-from src.revision import Revision
+from src.revision import Revision, URL
 from src.history import format_timestamp,History
 
 #pylint: disable=C0303,R0913,R0914
@@ -38,23 +38,21 @@ class ArticleHistory(History):
         self.revisions = []
         session = requests.Session()
 
-        url = "https://en.wikipedia.org/w/api.php"
-
         params = {
             "action": "query",
             "format": "json",
             "prop": "revisions",
-            "continue": "||",
             "titles": self.titles,
             "rvprop": "comment|ids|flags|size|timestamp|user|userid",
-            "rvslots": "*",
             "formatversion": "2",
             "rvuser": self.user,
             "rvstart": self.rvstart,
             "rvend": self.rvend
         }
+        if self.rvstart is None:
+            params["rvlimit"] = "10"
 
-        rev = session.get(url=url, params=params)
+        rev = session.get(url=URL, params=params)
         data = rev.json()
 
         try:

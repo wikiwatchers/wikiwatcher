@@ -1,5 +1,6 @@
 '''contains history base class attributes and timestamp modification'''
 
+import json
 from src.revision import Revision
 from src.exceptions import BadRequestException
 
@@ -31,6 +32,14 @@ class History:
         self.rvstart: str = None
         self.rvend: str = None
         self.revisions: list[Revision] = None
+
+    def revisions_as_json(self) -> str:
+        ret = [rev.json for rev in self.revisions]
+        ret_json = json.dumps(ret)
+        # adding break tags makes this invalid json!
+        # just for display/testing
+        ret_json = ret_json.replace("},", "},<br/>")
+        return ret_json
 
 def format_timestamp(year, month=None, day=None,
                      hour=None, minute=None, second=None):

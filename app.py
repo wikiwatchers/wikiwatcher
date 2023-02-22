@@ -68,7 +68,7 @@ def get_article_history(title):
                                     startsecond=startsecond, endyear=endyear, endmonth=endmonth,
                                     endday=endday, endhour=endhour, endminute=endminute,
                                     endsecond=endsecond, tags=tags, user=user, keyword=keyword)
-    return json.dumps(revisions.revisions)
+    return revisions.revisions_as_json()
 
 @app.route("/userHistory/<username>")
 def get_user_history(username):
@@ -98,16 +98,13 @@ def get_user_history(username):
     endminute: int = request.args.get("endminute", default=None, type=int)
     endsecond: int = request.args.get("endsecond", default=None, type=int)
     # gather and filter revisions
-    if "src.userhistory" in sys.modules:
-        revisions = UserHistory(user=username,
-                                startyear=startyear, startmonth=startmonth, startday=startday,
-                                starthour=starthour, startminute=startminute,
-                                startsecond=startsecond, endyear=endyear, endmonth=endmonth,
-                                endday=endday, endhour=endhour, endminute=endminute,
-                                endsecond=endsecond, tags=tags, titles=titles, keyword=keyword)
-        ret = json.dumps(revisions.revisions)
-    else:
-        ret = "-1" # placeholder
+    revisions = UserHistory(user=username,
+                            startyear=startyear, startmonth=startmonth, startday=startday,
+                            starthour=starthour, startminute=startminute,
+                            startsecond=startsecond, endyear=endyear, endmonth=endmonth,
+                            endday=endday, endhour=endhour, endminute=endminute,
+                            endsecond=endsecond, tags=tags, titles=titles, keyword=keyword)
+    ret = json.dumps(revisions.revisions)
     return ret
 
 @app.route("/getRevision/<title>")
