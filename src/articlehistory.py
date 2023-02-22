@@ -20,27 +20,19 @@ class ArticleHistory(History):
                         endyear, endmonth, endday, 
                         endhour, endminute, endsecond)
 
-        self.call_api()
+        self.call_wikipedia_api()
         #filter()
 
     def init_to_none(self):
         '''sets up class data members and initalizes to none'''
         self.pageid: int = None
-    #pylint:disable=W0105
-    '''
-    def filter(self, user, keyword, tags, arvstart, arvend=None):
-        #filters article revisions using various arguments
-        pass
-    '''
-    
-    def call_api(self):
+
+    def call_wikipedia_api(self):
         '''pulls down an article's revision history from the API'''
         self.revisions = []
         session = requests.Session()
 
         params = {
-            "action": "query",
-            "format": "json",
             "prop": "revisions",
             "titles": self.titles,
             "rvprop": "comment|ids|flags|size|timestamp|user|userid",
@@ -48,7 +40,7 @@ class ArticleHistory(History):
             "rvuser": self.user,
             "rvstart": self.rvstart,
             "rvend": self.rvend
-        }
+        } | self.base_params
         if self.rvstart is None:
             params["rvlimit"] = "10"
 
@@ -65,3 +57,4 @@ class ArticleHistory(History):
             
         except KeyError:
             print("Data not found")
+    

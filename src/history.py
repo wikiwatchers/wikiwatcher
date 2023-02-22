@@ -21,6 +21,7 @@ class History:
         if not end_year is None:
             self.rvend =  format_timestamp(end_year, end_month, end_day,
                                             end_hour, end_minute, end_second)
+        self.base_params = { "action": "query", "format": "json" }
 
     def init_to_none(self):
         '''sets up class data members and initalizes to none'''
@@ -34,6 +35,10 @@ class History:
         self.revisions: list[Revision] = None
 
     def revisions_as_json(self) -> str:
+        """ returns internal revisions list as a JSON string
+         where revisions are separated by newlines for readability """
+        if self.revisions is None:
+            return None # raise error?
         ret = [rev.json for rev in self.revisions]
         ret_json = json.dumps(ret)
         # adding break tags makes this invalid json!
@@ -41,10 +46,18 @@ class History:
         ret_json = ret_json.replace("},", "},<br/>")
         return ret_json
 
+    def filter(self, keyword:str):
+        """ Applies filters to internal revisions list
+        which cannot be applied on initial request to Wikipedia API
+        """
+        print(f"TODO filter {self.revisions}"
+            + f"to only those whose contents contain {keyword}")
+
 def format_timestamp(year, month=None, day=None,
                      hour=None, minute=None, second=None):
     """ cats our user's requested date/time values into a wikipedia-friendly string
-    and validates that user gave us a correct date/time """
+    and validates that user gave us a correct date/time
+    """
     if year:
         ret = str(year)
     else:

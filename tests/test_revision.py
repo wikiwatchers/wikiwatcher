@@ -42,7 +42,7 @@ def test_get_diff():
     """Tests get_diff method against known correct output"""
     test_revision = Revision({})
     test_revision.revid = 1127195995
-    test_revision.parentid =1126322774 
+    test_revision.parentid =1126322774
     diff = test_revision.get_diff()
     diff = diff[0:diff.index("<!-")] # remove variable timestamp cmt
     with open('tests/resources/revision-get_diff.html', 'r', encoding='utf-8') as in_file:

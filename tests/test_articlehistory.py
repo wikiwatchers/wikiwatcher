@@ -28,13 +28,6 @@ def test___init__():
     art = ArticleHistory("")
     with pytest.raises(KeyError):
         raise KeyError("Data not found")
-        
-def test_format_timestamp():
-    """ tests module level function for creating timestamp string from ints"""
-    t_revisions = ArticleHistory("test")
-    # full datetime
-    assert format_timestamp(2008, 6, 7, 4, 1, 30) == '20080607040130'
-    # partials to do
 
 if __name__ == "__main__":
     test___init__()

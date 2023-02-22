@@ -18,15 +18,15 @@ class UserHistory(History):
         self.username = username
         self.keyword = keyword
         self.article = article
-        self.get_history()
+        self.call_wikipedia_api()
         #filter here
 
     def init_to_none(self):
         '''sets up class data members and initializes them to None '''
         self.username: str = None
 
-    def get_history(self):
-        ''' Gets user history '''
+    def call_wikipedia_api(self):
+        ''' pulls down user's edit history from Wikipedia API '''
         self.revisions = []
         session = requests.Session()
 
@@ -36,7 +36,7 @@ class UserHistory(History):
             "list": "usercontribs",
             "formatversion": "2",
             "ucuser": self.username
-        }
+        } | self.base_params
         if self.username is None:
             raise BadRequestException("User name missing")
 
@@ -53,4 +53,3 @@ class UserHistory(History):
 
         print(self.revisions[0])
         return str(mwp.parse(data))
-        
