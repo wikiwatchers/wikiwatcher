@@ -44,9 +44,6 @@ def test_get_content():
     # get_diff should return json of changes
     #print(rev_diff)
 
-#def test_timestamp_to_datetime():
-    #"""Tests get_timestamp method against known correct output"""
-
 if __name__ == '__main__':
     #print("run python -m pytest")
     test_get_content()

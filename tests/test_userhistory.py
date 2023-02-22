@@ -1,8 +1,9 @@
 '''Tests for class user revision'''
+import __init__
 import json
 import requests
 
-from userHistory import UserHistory,  URL
+from userhistory import UserHistory
 
 def test_userhistory_init():
     '''Tests user history init'''

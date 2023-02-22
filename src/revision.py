@@ -1,6 +1,5 @@
 '''defines revision base class'''
 from datetime import datetime
-import regex as re
 import requests
 from bs4 import BeautifulSoup as bs
 import mwparserfromhell as mwp
