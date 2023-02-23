@@ -1,0 +1,1 @@
+pylint src tests app.py
