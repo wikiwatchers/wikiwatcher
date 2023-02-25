@@ -69,20 +69,15 @@ class ArticleHistory(History):
 
             "rvend": self.rvend,
         } | self.base_params
-        if self.rvstart is None:
-            params["rvlimit"] = "10"  # change to 500
 
         rev = session.get(url=URL, params=params)
         data = rev.json()
 
-        try:
-            pages = data["query"]["pages"]
-            self.json = pages[0]
-            self.pageid = self.json["pageid"]
-            for each_revision in self.json["revisions"]:
-                each_revision["pageid"] = self.pageid
-                each_revision["title"] = self.titles
-                self.revisions.append(Revision(each_revision))
-
-        except KeyError:
-            print("Data matching specified parameters not found")
+        pages = data["query"]["pages"]
+        self.json = pages[0]
+        self.pageid = self.json["pageid"]
+        for each_revision in self.json["revisions"]:
+            each_revision["pageid"] = self.pageid
+            each_revision["title"] = self.titles
+            self.revisions.append(Revision(each_revision))
+        print("Data matching specified parameters not found")
