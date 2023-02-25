@@ -20,19 +20,6 @@ class UserHistory(History):
                         endminute, endsecond, tags, titles, keyword)
 
         self.user = user
-        '''self.startyear = startyear
-        self.startmonth = startmonth
-        self.startday = startday
-        self.starthour = starthour
-        self.startminute = startminute
-        self.startsecond = startsecond
-
-        self.endyear = endyear
-        self.endmonth = endmonth
-        self.endday = endday
-        self.endhour = endhour
-        self.endminute = endminute
-        self.endsecond = endsecond'''
 
         self.call_wikipedia_api()
         #filter here
@@ -44,12 +31,6 @@ class UserHistory(History):
     def call_wikipedia_api(self):
         ''' pulls down user's edit history from Wikipedia API '''
         self.revisions = []
-        '''self.rvstart = format_timestamp(self.startyear, self.startmonth,
-                                        self.startday, self.starthour,
-                                        self.startminute, self.startsecond)
-        self.rvend = format_timestamp(self.endyear, self.endmonth,
-                                        self.endday, self.endhour,
-                                        self.endminute, self.endsecond)'''
         session = requests.Session()
 
         params = {
