@@ -11,13 +11,13 @@ class UserHistory(History):
     def __init__(self, user, startyear=None, startmonth=None, startday=None,
                 starthour=None, startminute=None, startsecond=None,
                 endyear=None, endmonth=None, endday=None, endhour=None,
-                endminute=None, endsecond=None, tags=None, titles=None, keywords=None):
+                endminute=None, endsecond=None, tags=None, titles=None, keyword=None):
         super().init_to_none()
         self.init_to_none()
         super().__init__(user, startyear, startmonth, startday,
                         starthour, startminute, startsecond,
-                        endyear, endmonth, endday,
-                        endhour, endminute, endsecond, tags, titles, keywords)
+                        endyear, endmonth, endday, endhour,
+                        endminute, endsecond, tags, titles, keyword)
 
         self.user = user
         self.call_wikipedia_api()
