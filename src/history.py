@@ -22,7 +22,12 @@ class History:
         if not end_year is None:
             self.rvend =  format_timestamp(end_year, end_month, end_day,
                                             end_hour, end_minute, end_second)
-        self.base_params = { "action": "query", "format": "json" }
+        self.base_params = {
+            "action": "query",
+            "format": "json",
+            "formatversion": "2",
+            "rvdir": "newer"
+        }
 
     def init_to_none(self):
         '''sets up class data members and initalizes to none'''
@@ -60,8 +65,8 @@ def validate_datetime_params(bad_datetime:Exception, year, month, day, hour, min
     try:
         datetime(year=year, month=month or 1, day=day or 1,
                  hour=hour or 0, minute=minute or 0, second=second or 0)
-    except ValueError:
-        raise bad_datetime
+    except ValueError as val_err:
+        raise bad_datetime from val_err
 
 def format_timestamp(year, month=None, day=None,
                      hour=None, minute=None, second=None):
@@ -79,7 +84,7 @@ def format_timestamp(year, month=None, day=None,
     for param in [month, day, hour, minute, second]:
         if no_more_params and not param is None:
             raise bad_datetime
-        elif not param is None:
+        if not param is None:
             ret += str(param).rjust(2, "0")
         else:
             no_more_params = True
