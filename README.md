@@ -14,7 +14,9 @@
 		<li>startsecond</li>
 		startx parameters specify a date and time which acts as a lower bound on the timestamp of retrieved revisions.
 		Date/time parameters, if specified, must be supported by all units of time greater than themselves - <br/>
-		i.e. if a month is specified, a year must also be specified. If a day is specified, a month and a year must also be specified, etc.
+		i.e. if a month is specified, a year must also be specified. If a day is specified, a month and a year must also be specified, etc.<br/>
+		Times are to be specified in 24-hour format, from hour 0 through 23.<br/>
+		If a time is before the first existing edit or after the present day, the nearest valid date/time will be used.
 		<li>endyear</li>
 		<li>endmonth</li>
 		<li>endday</li>

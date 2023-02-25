@@ -1,6 +1,7 @@
 '''contains history base class attributes and timestamp modification'''
 
 import json
+from datetime import datetime
 from src.revision import Revision
 from src.exceptions import BadRequestException
 
@@ -53,18 +54,39 @@ class History:
         print(f"TODO filter {self.revisions}"
             + f"to only those whose contents contain {keyword}")
 
+def validate_datetime_params(bad_datetime:Exception, year, month, day, hour, minute, second):
+    """ ensures all datetime params fall into valid ranges (ex hours 0 through 23) """
+    # could this entirely replace the order-validation in format_timestamp?
+    try:
+        datetime(year=year, month=month or 1, day=day or 1,
+                 hour=hour or 0, minute=minute or 0, second=second or 0)
+    except ValueError:
+        raise bad_datetime
+
 def format_timestamp(year, month=None, day=None,
                      hour=None, minute=None, second=None):
     """ cats our user's requested date/time values into a wikipedia-friendly string
     and validates that user gave us a correct date/time
     """
+    bad_datetime = BadRequestException("invalid date/time specification")
+    no_more_params = False
+    validate_datetime_params(bad_datetime, year, month, day, hour, minute, second)
     if year:
         ret = str(year)
     else:
-        raise BadRequestException("invalid date/time specification")
-    ret += str(month).rjust(2, "0") if month else "01"
-    ret += str(day).rjust(2, "0") if day else "01"
-    ret += str(hour).rjust(2, "0") if hour else "00"
-    ret += str(minute).rjust(2, "0") if minute else "00"
-    ret += str(second).rjust(2, "0") if second else "01"
+        raise bad_datetime
+    index = 0
+    for param in [month, day, hour, minute, second]:
+        if no_more_params and not param is None:
+            raise bad_datetime
+        elif not param is None:
+            ret += str(param).rjust(2, "0")
+        else:
+            no_more_params = True
+            if index in [2, 3, 4]: # hour minute and second should default to 0
+                ret += "00"
+            else: # all other params default to 1
+                ret += "01"
+        index += 1
+    print(ret)
     return ret
