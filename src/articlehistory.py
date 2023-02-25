@@ -36,10 +36,9 @@ class ArticleHistory(History):
             "prop": "revisions",
             "titles": self.titles,
             "rvprop": "comment|ids|flags|size|timestamp|user|userid",
-            "formatversion": "2",
             "rvuser": self.user,
             "rvstart": self.rvstart,
-            "rvend": self.rvend
+            "rvend": self.rvend,
         } | self.base_params
         if self.rvstart is None:
             params["rvlimit"] = "10"
