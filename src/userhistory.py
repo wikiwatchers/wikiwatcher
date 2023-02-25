@@ -9,7 +9,6 @@ URL = "https://www.wikipedia.org/w/api.php"
 
 class UserHistory(History):
     '''userhistory object parses json user contributions '''
-
     def __init__(self, username, keyword=None, article=None):
         super().init_to_none()
         self.init_to_none()

@@ -10,8 +10,7 @@ from markdown import markdown
 from src.revision import URL
 from src.userhistory import UserHistory
 from src.articlehistory import ArticleHistory
-from src.articlehistory import ArticleHistory
-#import src.articlerevisions
+
 app = Flask("WikiWatcher")
 
 def validate_tagstring(tagstring):
