@@ -33,14 +33,14 @@ class ArticleHistory(History):
         self.pageid: int = None
 
     def filter_by_keyword(self):
-        for i in range(len(self.revisions)):
-            if self.revisions[i].contains_keyword(self.keyword) == False:
-                self.revisions.pop(i)
+        for rev in self.revisions.copy():
+            if rev.contains_keyword(self.keyword) == False:
+                self.revisions.remove(rev)
 
     def filter_by_tags(self):
-        for i in range(len(self.revisions)):
-            if self.revisions[i].contains_tag(self.tags) == False:
-                self.revisions.pop(i)
+        for rev in self.revisions.copy():
+            if rev.contains_tag(self.tags) == False:
+                self.revisions.remove(rev)
 
     def filter(self):
         if self.tags != None:
@@ -62,7 +62,7 @@ class ArticleHistory(History):
         params = {
             "prop": "revisions",
             "titles": self.titles,
-            "rvprop": "comment|ids|flags|size|timestamp|user|userid",
+            "rvprop": "comment|ids|flags|size|tags|timestamp|user|userid",
             "rvuser": self.user,
             "rvstart": self.rvstart,
             "rvend": self.rvend,
@@ -70,7 +70,7 @@ class ArticleHistory(History):
 
         } | self.base_params
         if self.rvstart is None:
-            params["rvlimit"] = "10"
+            params["rvlimit"] = "10"  # change to 500
 
         rev = session.get(url=URL, params=params)
         data = rev.json()
@@ -80,6 +80,8 @@ class ArticleHistory(History):
             self.json = pages[0]
             self.pageid = self.json["pageid"]
             for each_revision in self.json["revisions"]:
+                each_revision["pageid"] = self.pageid
+                each_revision["title"] = self.titles
                 self.revisions.append(Revision(each_revision))
 
         except KeyError:
