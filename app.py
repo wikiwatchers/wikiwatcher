@@ -102,7 +102,7 @@ def get_user_history(username):
                             startsecond=startsecond, endyear=endyear, endmonth=endmonth,
                             endday=endday, endhour=endhour, endminute=endminute,
                             endsecond=endsecond, tags=tags, titles=titles, keyword=keyword)
-    ret = json.dumps(revisions.revisions)
+    ret = revisions.revisions_as_json()
     return ret
 
 @app.route("/getRevision/<title>")

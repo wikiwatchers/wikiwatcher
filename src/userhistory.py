@@ -43,13 +43,12 @@ class UserHistory(History):
             raise BadRequestException("User name missing")
 
         request = session.get(url=URL, params=params)
-
-        data = request.json()['query']['usercontribs']
+        data = request.json()
 
         try:
-            self.json = data
-            for revision in self.json:
-                self.revisions.append(revision)
+            self.json = data['query']['usercontribs']
+            for each_revision in self.json:
+                self.revisions.append(Revision(each_revision))
         except BadRequestException:
             print("Data not found")
 
