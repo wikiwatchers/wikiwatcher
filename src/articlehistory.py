@@ -3,11 +3,10 @@ import requests
 from datetime import datetime
 # from src.revision import Revision, URL
 # from src.history import format_timestamp,History
-from revision import Revision, URL
-from history import format_timestamp, History
+from src.revision import Revision, URL
+from src.history import format_timestamp, History
 
 # pylint: disable=C0303,R0913,R0914
-
 
 class ArticleHistory(History):
     '''article revision collection class'''
