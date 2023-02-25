@@ -6,6 +6,7 @@ from revision import Revision, URL, datetime
 
 # pylint: disable=W0603,W0602
 
+
 def test_revision_init():
     """Tests initialization of a single revision
     mocks behavior to be implemented in collection classes """
@@ -28,28 +29,48 @@ def test_revision_init():
     assert test_revision.user == "Ss112"
     assert test_revision.userid == 1286970
 
+
+def test_contains_tag():
+    test_revision = Revision({})
+    test_revision.tags = ["Reverted", "wikieditor"]
+    assert test_revision.contains_tag(["Reverted"]) == True
+    test_revision.tags = []
+    assert test_revision.contains_tag(["Reverted"]) == False
+    assert test_revision.contains_tag([""]) == False
+    test_revision.tags.append("wikieditor")
+    assert test_revision.contains_tag(["wikieditor"]) == True
+    assert test_revision.contains_tag(["wikieditor", "somethingelse"]) == False
+    test_revision.tags.append("Techno")
+    test_revision.tags.append("somethingelse")
+    assert test_revision.contains_tag(["wikieditor", "somethingelse"]) == True
+    test_revision.tags = []
+    assert test_revision.contains_tag(["wikieditor", "somethingelse"]) == False
+
+
 def test_get_content():
     """ Tests get_content method against known correct output """
     test_revision = Revision({})
     test_revision.revid = 1127195995
     content = test_revision.get_content()
-    content = content[0:content.index('<!')] # remove variable mwparser cmt
+    content = content[0:content.index('<!')]  # remove variable mwparser cmt
     with open('tests/resources/revision-get_contents.html', 'r', encoding='utf-8') as in_file:
         f_content = "".join(in_file.readlines())
         assert f_content == content
+
 
 def test_get_diff():
     """Tests get_diff method against known correct output"""
     test_revision = Revision({})
     test_revision.revid = 1127195995
-    test_revision.parentid =1126322774
+    test_revision.parentid = 1126322774
     diff = test_revision.get_diff()
-    diff = diff[0:diff.index("<!-")] # remove variable timestamp cmt
+    diff = diff[0:diff.index("<!-")]  # remove variable timestamp cmt
     with open('tests/resources/revision-get_diff.html', 'r', encoding='utf-8') as in_file:
         f_diff = "".join(in_file.readlines())
         assert f_diff == diff
     print(diff)
 
+
 if __name__ == '__main__':
-    #print("run python -m pytest")
+    # print("run python -m pytest")
     test_get_diff()

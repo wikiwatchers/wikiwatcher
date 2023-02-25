@@ -33,17 +33,14 @@ class Revision():
         self.comment: str = None
         self.tags: list[str] = None
 
+    # pylint:disable=E1135
     def contains_tag(self, tag_list):
-        if self.tags == None:
-            return False
-        for each_tag in tag_list:
-            for obj_tag in self.tags:
-                if each_tag == obj_tag:
-                    return True
-        return False
+        '''checks if a revision contains any tags from the parameter list of tags'''
+        return all(item in self.tags for item in tag_list)
 
     def contains_keyword(self, keyword):
-        content = self.get_content()
+        '''checks if a revision contains any keywords inside of the revision content'''
+        content = self.get_diff()
         if content.find(keyword) > 0:
             return True
         return False
