@@ -1,28 +1,31 @@
 '''defines user history class'''
 import datetime
 import requests
-from src.history import History
+from src.revision import Revision, URL
+from src.history import format_timestamp,History
 from src.exceptions import BadRequestException
 import mwparserfromhell as mwp
 
-URL = "https://www.wikipedia.org/w/api.php"
-
 class UserHistory(History):
     '''userhistory object parses json user contributions '''
-    def __init__(self, username, keyword=None, article=None):
+    def __init__(self, user, startyear=None, startmonth=None, startday=None,
+                starthour=None, startminute=None, startsecond=None,
+                endyear=None, endmonth=None, endday=None, endhour=None,
+                endminute=None, endsecond=None, tags=None, titles=None, keywords=None):
         super().init_to_none()
         self.init_to_none()
-        super().__init__(username, keyword, article)
+        super().__init__(user, startyear, startmonth, startday,
+                        starthour, startminute, startsecond,
+                        endyear, endmonth, endday,
+                        endhour, endminute, endsecond, tags, titles, keywords)
 
-        self.username = username
-        self.keyword = keyword
-        self.article = article
+        self.user = user
         self.call_wikipedia_api()
         #filter here
 
     def init_to_none(self):
         '''sets up class data members and initializes them to None '''
-        self.username: str = None
+        self.user: str = None
 
     def call_wikipedia_api(self):
         ''' pulls down user's edit history from Wikipedia API '''
@@ -34,9 +37,9 @@ class UserHistory(History):
             "format": "json",
             "list": "usercontribs",
             "formatversion": "2",
-            "ucuser": self.username
+            "ucuser": self.user
         } | self.base_params
-        if self.username is None:
+        if self.user is None:
             raise BadRequestException("User name missing")
 
         request = session.get(url=URL, params=params)
@@ -48,7 +51,6 @@ class UserHistory(History):
             for revision in self.json:
                 self.revisions.append(revision)
         except BadRequestException:
-            print("No revisions")
+            print("Data not found")
 
-        print(self.revisions[0])
         return str(mwp.parse(data))
