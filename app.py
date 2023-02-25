@@ -97,7 +97,7 @@ def get_user_history(username):
     endminute: int = request.args.get("endminute", default=None, type=int)
     endsecond: int = request.args.get("endsecond", default=None, type=int)
     # gather and filter revisions
-    revisions = UserHistory(user=username, startyear=startyear, startmonth=startmonth, 
+    revisions = UserHistory(user=username, startyear=startyear, startmonth=startmonth,
                             startday=startday, starthour=starthour, startminute=startminute,
                             startsecond=startsecond, endyear=endyear, endmonth=endmonth,
                             endday=endday, endhour=endhour, endminute=endminute,
