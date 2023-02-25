@@ -1,10 +1,10 @@
 '''defines the collection class for article history'''
 import requests
 from datetime import datetime
-# from src.revision import Revision, URL
-# from src.history import format_timestamp,History
-from revision import Revision, URL
-from history import format_timestamp, History
+from src.revision import Revision, URL
+from src.history import format_timestamp, History
+# from revision import Revision, URL
+# from history import format_timestamp, History
 
 # pylint: disable=C0303,R0913,R0914
 
@@ -33,26 +33,30 @@ class ArticleHistory(History):
         self.pageid: int = None
 
     def filter_by_keyword(self):
+        '''filters list of revisions by keyword'''
         for rev in self.revisions.copy():
-            if rev.contains_keyword(self.keyword) == False:
+            if rev.contains_keyword(self.keyword) is False:
                 self.revisions.remove(rev)
 
     def filter_by_tags(self):
+        '''filters list of revisions by tags'''
         for rev in self.revisions.copy():
-            if rev.contains_tag(self.tags) == False:
+            if rev.contains_tag(self.tags) is False:
                 self.revisions.remove(rev)
 
     def filter(self):
-        if self.tags != None:
+        '''calls filter helper functions'''
+        if self.tags is not None:
             self.filter_by_tags()
-        if self.keyword != None:
+        if self.keyword is not None:
             self.filter_by_keyword()
 
         if len(self.revisions) == 0:
+            # throw exception instead??
             print("No revisions found matching your search parameters")
 
-        for each_revision in self.revisions:
-            print(each_revision.json)
+        # for each_revision in self.revisions:
+        #    print(each_revision.json)
 
     def call_wikipedia_api(self):
         '''pulls down an article's revision history from the API'''
@@ -70,7 +74,7 @@ class ArticleHistory(History):
 
         } | self.base_params
         if self.rvstart is None:
-            params["rvlimit"] = "500"
+            params["rvlimit"] = "10"
 
         rev = session.get(url=URL, params=params)
         data = rev.json()
@@ -85,4 +89,4 @@ class ArticleHistory(History):
                 self.revisions.append(Revision(each_revision))
 
         except KeyError:
-            print("Data matching specified parameters not found")
+            print("Error accessing API with given parameters")
