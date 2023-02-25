@@ -64,11 +64,11 @@ def get_article_history(title):
     # gather and filter revisions
     try:
         revisions = ArticleHistory(titles=title,
-                                        startyear=startyear, startmonth=startmonth, startday=startday,
-                                        starthour=starthour, startminute=startminute,
-                                        startsecond=startsecond, endyear=endyear, endmonth=endmonth,
-                                        endday=endday, endhour=endhour, endminute=endminute,
-                                        endsecond=endsecond, tags=tags, user=user, keyword=keyword)
+                                   startyear=startyear, startmonth=startmonth, startday=startday,
+                                   starthour=starthour, startminute=startminute,
+                                   startsecond=startsecond, endyear=endyear, endmonth=endmonth,
+                                   endday=endday, endhour=endhour, endminute=endminute,
+                                   endsecond=endsecond, tags=tags, user=user, keyword=keyword)
         return revisions.revisions_as_json()
     except BadRequestException as bre:
         return "<h1>Bad Request</h1>" + str(bre), 400
@@ -84,6 +84,8 @@ def get_user_history(username):
         starting & ending year, month, day, hour, minute, and second
             to filter revisions by datetime
     """
+    # temporarily disabling some pylint errors while waiting for class userhistory
+    #pylint: disable=E1123,E1120
     # gather user inputs
     tags: list[str] = parse_tags(request.args.get("tags", default=None, type=str))
     keyword: str = request.args.get("keyword", default=None, type=str)
