@@ -6,6 +6,8 @@ from src.history import format_timestamp,History
 from src.exceptions import BadRequestException
 import mwparserfromhell as mwp
 
+# pylint: disable=C0303,R0913,R0914
+
 class UserHistory(History):
     '''userhistory object parses json user contributions '''
     def __init__(self, user, startyear=None, startmonth=None, startday=None,
@@ -47,11 +49,7 @@ class UserHistory(History):
             self.filter_by_keyword()
 
         if len(self.revisions) == 0:
-            # throw exception instead??
             print("No revisions found matching your search parameters")
-
-        # for each_revision in self.revisions:
-        #    print(each_revision.json)
 
     def call_wikipedia_api(self):
         ''' pulls down user's edit history from Wikipedia API '''
