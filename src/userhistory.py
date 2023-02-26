@@ -14,12 +14,11 @@ class UserHistory(History):
                 endminute=None, endsecond=None, tags=None, titles=None, keyword=None):
         super().init_to_none()
         self.init_to_none()
-        super().__init__(user, startyear, startmonth, startday,
-                        starthour, startminute, startsecond,
-                        endyear, endmonth, endday, endhour,
-                        endminute, endsecond, tags, titles, keyword)
-
-        self.user = user
+        super().__init__(titles, user, keyword, tags,
+                         startyear, startmonth, startday,
+                         starthour, startminute, startsecond,
+                         endyear, endmonth, endday,
+                         endhour, endminute, endsecond)
 
         self.call_wikipedia_api()
         self.filter()
@@ -64,6 +63,7 @@ class UserHistory(History):
             "format": "json",
             "list": "usercontribs",
             "formatversion": "2",
+            "ucprop": "comment|ids|flags|size|tags|timestamp|user|userid",
             "ucuser": self.user,
             "ucstart": self.rvstart,
             "ucend" : self.rvend
