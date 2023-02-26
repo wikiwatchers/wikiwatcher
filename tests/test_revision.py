@@ -31,20 +31,21 @@ def test_revision_init():
 
 
 def test_contains_tag():
+    '''tests contain tag function inside revision class'''
     test_revision = Revision({})
     test_revision.tags = ["Reverted", "wikieditor"]
-    assert test_revision.contains_tag(["Reverted"]) == True
+    assert test_revision.contains_tag(["Reverted"]) is True
     test_revision.tags = []
-    assert test_revision.contains_tag(["Reverted"]) == False
-    assert test_revision.contains_tag([""]) == False
+    assert test_revision.contains_tag(["Reverted"]) is False
+    assert test_revision.contains_tag([""]) is False
     test_revision.tags.append("wikieditor")
-    assert test_revision.contains_tag(["wikieditor"]) == True
-    assert test_revision.contains_tag(["wikieditor", "somethingelse"]) == False
+    assert test_revision.contains_tag(["wikieditor"]) is True
+    assert test_revision.contains_tag(["wikieditor", "somethingelse"]) is False
     test_revision.tags.append("Techno")
     test_revision.tags.append("somethingelse")
-    assert test_revision.contains_tag(["wikieditor", "somethingelse"]) == True
+    assert test_revision.contains_tag(["wikieditor", "somethingelse"]) is True
     test_revision.tags = []
-    assert test_revision.contains_tag(["wikieditor", "somethingelse"]) == False
+    assert test_revision.contains_tag(["wikieditor", "somethingelse"]) is False
 
 
 def test_get_content():
