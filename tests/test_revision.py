@@ -4,9 +4,6 @@ import json
 import requests
 from revision import Revision, URL, datetime
 
-# pylint: disable=W0603,W0602
-
-
 def test_revision_init():
     """Tests initialization of a single revision
     mocks behavior to be implemented in collection classes """
@@ -56,6 +53,7 @@ def test_get_content():
     content = content[0:content.index('<!')]  # remove variable mwparser cmt
     with open('tests/resources/revision-get_contents.html', 'r', encoding='utf-8') as in_file:
         f_content = "".join(in_file.readlines())
+        f_content = f_content.replace("\\\\", "\\")
         assert f_content == content
 
 
@@ -69,9 +67,9 @@ def test_get_diff():
     with open('tests/resources/revision-get_diff.html', 'r', encoding='utf-8') as in_file:
         f_diff = "".join(in_file.readlines())
         assert f_diff == diff
-    print(diff)
 
 
 if __name__ == '__main__':
-    # print("run python -m pytest")
     test_get_diff()
+    print("run python -m pytest")
+
