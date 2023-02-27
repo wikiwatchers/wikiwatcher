@@ -10,6 +10,7 @@ from markdown import markdown
 from src.revision import URL
 from src.userhistory import UserHistory
 from src.articlehistory import ArticleHistory
+from src.exceptions import BadRequestException
 
 app = Flask("WikiWatcher")
 
@@ -61,13 +62,16 @@ def get_article_history(title):
     endminute: int = request.args.get("endminute", default=None, type=int)
     endsecond: int = request.args.get("endsecond", default=None, type=int)
     # gather and filter revisions
-    revisions = ArticleHistory(titles=title,
-                                    startyear=startyear, startmonth=startmonth, startday=startday,
-                                    starthour=starthour, startminute=startminute,
-                                    startsecond=startsecond, endyear=endyear, endmonth=endmonth,
-                                    endday=endday, endhour=endhour, endminute=endminute,
-                                    endsecond=endsecond, tags=tags, user=user, keyword=keyword)
-    return revisions.revisions_as_json()
+    try:
+        revisions = ArticleHistory(titles=title,
+                                   startyear=startyear, startmonth=startmonth, startday=startday,
+                                   starthour=starthour, startminute=startminute,
+                                   startsecond=startsecond, endyear=endyear, endmonth=endmonth,
+                                   endday=endday, endhour=endhour, endminute=endminute,
+                                   endsecond=endsecond, tags=tags, user=user, keyword=keyword)
+        return revisions.revisions_as_json()
+    except BadRequestException as bre:
+        return "<h1>Bad Request</h1>" + str(bre), 400
 
 @app.route("/userHistory/<username>")
 def get_user_history(username):
@@ -80,6 +84,8 @@ def get_user_history(username):
         starting & ending year, month, day, hour, minute, and second
             to filter revisions by datetime
     """
+    # temporarily disabling some pylint errors while waiting for class userhistory
+    #pylint: disable=E1123,E1120
     # gather user inputs
     tags: list[str] = parse_tags(request.args.get("tags", default=None, type=str))
     keyword: str = request.args.get("keyword", default=None, type=str)
@@ -97,14 +103,16 @@ def get_user_history(username):
     endminute: int = request.args.get("endminute", default=None, type=int)
     endsecond: int = request.args.get("endsecond", default=None, type=int)
     # gather and filter revisions
-    revisions = UserHistory(user=username,
-                            startyear=startyear, startmonth=startmonth, startday=startday,
-                            starthour=starthour, startminute=startminute,
-                            startsecond=startsecond, endyear=endyear, endmonth=endmonth,
-                            endday=endday, endhour=endhour, endminute=endminute,
-                            endsecond=endsecond, tags=tags, titles=titles, keyword=keyword)
-    ret = json.dumps(revisions.revisions)
-    return ret
+    try:
+        revisions = UserHistory(user=username,
+                                startyear=startyear, startmonth=startmonth, startday=startday,
+                                starthour=starthour, startminute=startminute,
+                                startsecond=startsecond, endyear=endyear, endmonth=endmonth,
+                                endday=endday, endhour=endhour, endminute=endminute,
+                                endsecond=endsecond, tags=tags, titles=titles, keyword=keyword)
+        return revisions.revisions_as_json()
+    except BadRequestException as bre:
+        return "<h1>Bad Request</h1>" + str(bre), 400
 
 @app.route("/getRevision/<title>")
 def get_revision(title):
@@ -119,15 +127,15 @@ def get_revision(title):
     starthour: int = request.args.get("starthour", default=None, type=int)
     startminute: int = request.args.get("startminute", default=None, type=int)
     startsecond: int = request.args.get("startsecond", default=None, type=int)
-    if "src.articlehistory" in sys.modules:
+    try:
         revisions = ArticleHistory(titles=title,
-                                   startyear=startyear, startmonth=startmonth,
-                                   startday=startday, starthour=starthour,
-                                   startminute=startminute, startsecond=startsecond)
-        ret = json.dumps({"content": revisions.revisions[0].get_content()})
-    else:
-        ret = -1
-    return ret
+                                    startyear=startyear, startmonth=startmonth,
+                                    startday=startday, starthour=starthour,
+                                    startminute=startminute, startsecond=startsecond)
+        ret = json.dumps(revisions.revisions[0].get_content())
+        return ret
+    except BadRequestException as bre:
+        return "<h1>Bad Request</h1>" + str(bre), 400
 
 @app.route("/compareRevisions/<title>")
 def get_difference(title):
@@ -151,20 +159,18 @@ def get_difference(title):
     endhour: int = request.args.get("endhour", default=None, type=int)
     endminute: int = request.args.get("endminute", default=None, type=int)
     endsecond: int = request.args.get("endsecond", default=None, type=int)
-    if "src.articlehistory" in sys.modules:
+    try:
         revisions = ArticleHistory(titles=title,
-                                   startyear=startyear, startmonth=startmonth,
-                                   startday=startday, starthour=starthour,
-                                   startminute=startminute, startsecond=startsecond,
-                                   endyear=endyear, endmonth=endmonth,
-                                   endday=endday, endhour=endhour,
-                                   endminute=endminute, endsecond=endsecond)
-        ret = json.dumps({"diff":
-            revisions.revisions[0].get_diff(revisions.revisions[-1].revid)
-        })
-    else:
-        ret = -1
-    return ret
+                                    startyear=startyear, startmonth=startmonth,
+                                    startday=startday, starthour=starthour,
+                                    startminute=startminute, startsecond=startsecond,
+                                    endyear=endyear, endmonth=endmonth,
+                                    endday=endday, endhour=endhour,
+                                    endminute=endminute, endsecond=endsecond)
+        ret = json.dumps(revisions.revisions[0].get_diff(revisions.revisions[-1].revid))
+        return ret
+    except BadRequestException as bre:
+        return "<h1>Bad Request</h1>" + str(bre), 400
 
 if __name__ == "__main__":
     app.run(debug=True)
