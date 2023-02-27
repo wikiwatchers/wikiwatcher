@@ -2,8 +2,8 @@
 
 import json
 from datetime import datetime
-from src.revision import Revision
-from src.exceptions import BadRequestException
+from revision import Revision
+from exceptions import BadRequestException
 
 
 class History:
@@ -22,14 +22,14 @@ class History:
             self.rvstart = format_timestamp(start_year, start_month, start_day,
                                             start_hour, start_minute, start_second)
         if not end_year is None:
-            self.rvend = format_timestamp(end_year, end_month, end_day,
-                                          end_hour, end_minute, end_second)
+            self.rvend =  format_timestamp(end_year, end_month, end_day,
+                                            end_hour, end_minute, end_second)
         self.base_params = {
            "action": "query",
             "format": "json",
             "formatversion": "2",
             "rvdir": "newer"
-       }
+        }
 
     def init_to_none(self):
         '''sets up class data members and initalizes to none'''
@@ -76,7 +76,6 @@ class History:
             if rev.contains_tag(self.tags) is False:
                 self.revisions.remove(rev)
 
-# pylint:disable=W0707
 def validate_datetime_params(bad_datetime: Exception, year, month, day, hour, minute, second):
     """ ensures all datetime params fall into valid ranges (ex hours 0 through 23) """
     # could this entirely replace the order-validation in format_timestamp?
@@ -86,7 +85,6 @@ def validate_datetime_params(bad_datetime: Exception, year, month, day, hour, mi
     except ValueError as val_err:
         raise bad_datetime from val_err
 
-# pylint:disable=R1720
 def format_timestamp(year, month=None, day=None,
                      hour=None, minute=None, second=None):
     """ cats our user's requested date/time values into a wikipedia-friendly string

@@ -1,12 +1,10 @@
 '''defines user history class'''
 import datetime
 import requests
-from src.revision import Revision, URL
-from src.history import format_timestamp,History
-from src.exceptions import BadRequestException
+from revision import Revision, URL
+from history import format_timestamp,History
+from exceptions import BadRequestException
 import mwparserfromhell as mwp
-
-# pylint: disable=C0303,R0913,R0914
 
 class UserHistory(History):
     ''' UserHistory object parses json user contributions '''
