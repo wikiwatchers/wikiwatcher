@@ -29,28 +29,6 @@ class UserHistory(History):
         '''sets up class data members and initializes them to None '''
         self.user: str = None
 
-    def filter_by_keyword(self):
-        '''filters list of revisions by keyword'''
-        for rev in self.revisions.copy():
-            if rev.contains_keyword(self.keyword) is False:
-                self.revisions.remove(rev)
-
-    def filter_by_tags(self):
-        '''filters list of revisions by tags'''
-        for rev in self.revisions.copy():
-            if rev.contains_tag(self.tags) is False:
-                self.revisions.remove(rev)
-
-    def filter(self):
-        '''calls filter helper functions'''
-        if self.tags is not None:
-            self.filter_by_tags()
-        if self.keyword is not None:
-            self.filter_by_keyword()
-
-        if len(self.revisions) == 0:
-            print("No revisions found matching your search parameters")
-
     def call_wikipedia_api(self):
         ''' pulls down user's edit history from Wikipedia API '''
         self.revisions = []

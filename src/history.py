@@ -54,12 +54,27 @@ class History:
         ret_json = ret_json.replace("},", "},<br/>")
         return ret_json
 
-    def filter(self, keyword: str):
-        """ Applies filters to internal revisions list
-        which cannot be applied on initial request to Wikipedia API
-        """
-        print(f"TODO filter {self.revisions}"
-              + f"to only those whose contents contain {keyword}")
+    def filter(self):
+        '''calls filter helper functions'''
+        if self.tags is not None:
+            self.filter_by_tags()
+        if self.keyword is not None:
+            self.filter_by_keyword()
+
+        if len(self.revisions) == 0:
+            print("No revisions found matching your search parameters")
+  
+    def filter_by_keyword(self):
+        '''filters list of revisions by keyword'''
+        for rev in self.revisions.copy():
+            if rev.contains_keyword(self.keyword) is False:
+                self.revisions.remove(rev)
+
+    def filter_by_tags(self):
+        '''filters list of revisions by tags'''
+        for rev in self.revisions.copy():
+            if rev.contains_tag(self.tags) is False:
+                self.revisions.remove(rev)
 
 # pylint:disable=W0707
 def validate_datetime_params(bad_datetime: Exception, year, month, day, hour, minute, second):
@@ -100,3 +115,4 @@ def format_timestamp(year, month=None, day=None,
         index += 1
     print(ret)
     return ret
+
