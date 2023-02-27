@@ -22,14 +22,14 @@ class History:
             self.rvstart = format_timestamp(start_year, start_month, start_day,
                                             start_hour, start_minute, start_second)
         if not end_year is None:
-            self.rvend = format_timestamp(end_year, end_month, end_day,
-                                          end_hour, end_minute, end_second)
+            self.rvend =  format_timestamp(end_year, end_month, end_day,
+                                            end_hour, end_minute, end_second)
         self.base_params = {
            "action": "query",
             "format": "json",
             "formatversion": "2",
             "rvdir": "newer"
-       }
+        }
 
     def init_to_none(self):
         '''sets up class data members and initalizes to none'''
