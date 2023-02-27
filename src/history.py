@@ -2,8 +2,8 @@
 
 import json
 from datetime import datetime
-from src.revision import Revision
-from src.exceptions import BadRequestException
+from revision import Revision
+from exceptions import BadRequestException
 
 
 class History:
