@@ -54,14 +54,6 @@ class History:
         ret_json = ret_json.replace("},", "},<br/>")
         return ret_json
 
-    def filter(self, keyword: str):
-        """ Applies filters to internal revisions list
-        which cannot be applied on initial request to Wikipedia API
-        """
-        print(f"TODO filter {self.revisions}"
-              + f"to only those whose contents contain {keyword}")
-
-# pylint:disable=W0707
 def validate_datetime_params(bad_datetime: Exception, year, month, day, hour, minute, second):
     """ ensures all datetime params fall into valid ranges (ex hours 0 through 23) """
     # could this entirely replace the order-validation in format_timestamp?
@@ -71,7 +63,6 @@ def validate_datetime_params(bad_datetime: Exception, year, month, day, hour, mi
     except ValueError as val_err:
         raise bad_datetime from val_err
 
-# pylint:disable=R1720
 def format_timestamp(year, month=None, day=None,
                      hour=None, minute=None, second=None):
     """ cats our user's requested date/time values into a wikipedia-friendly string
