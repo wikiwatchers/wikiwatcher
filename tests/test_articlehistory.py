@@ -2,7 +2,7 @@
 import __init__
 import pytest
 from articlehistory import ArticleHistory, format_timestamp
-
+from history import History
 
 def test___init__():
     '''tests initalization'''
@@ -30,10 +30,10 @@ def test___init__():
     with pytest.raises(KeyError):
         raise KeyError("Data not found")
 
-
 def test_filter_by_tags():
     '''tests filter by tags function'''
-    art = ArticleHistory("Techno", None, None, ["mobile edit"])
+    art = ArticleHistory("Techno", None, None, ["mobile edit"],
+                         2023, 1, 1, None, None, None, 2023, 1, 30)
     assert art.titles == "Techno"
     assert art.user is None
     assert art.keyword is None
@@ -54,7 +54,8 @@ def test_filter_by_tags():
     assert art3.tags == [""]
     assert len(art3.revisions) == 0
 
-    art4 = ArticleHistory("Cat", "Greatgiant19", None, ["mw-reverted"])
+    art4 = ArticleHistory("Cat", "Greatgiant19", None, ["mw-reverted"],
+                          2023, 2, 1, None, None, None, 2023, 2, 30)
     assert art4.titles == "Cat"
     assert art4.user == "Greatgiant19"
     assert art4.keyword is None
@@ -71,7 +72,8 @@ def test_filter_by_keyword():
     assert art.tags is None
     assert len(art.revisions) != 0
 
-    art2 = ArticleHistory("Techno", "Rio65trio", "techno")
+    art2 = ArticleHistory("Techno", "Rio65trio", "techno",
+                          2022,12,1,None,None,None,2022,12,30)
     assert art2.titles == "Techno"
     assert art2.user == "Rio65trio"
     assert art2.keyword == "techno"
@@ -86,7 +88,8 @@ def test_filter_by_keyword():
     assert len(art3.revisions) == 0
 
     art4 = ArticleHistory("Techno", "185.216.15.213",
-                          "techno", ["mw-reverted"])
+                          "techno", ["mw-reverted"], 2022,11,1,
+                          None, None, None, 2022,11,30)
     assert art4.titles == "Techno"
     assert art4.user == "185.216.15.213"
     assert art4.keyword == "techno"

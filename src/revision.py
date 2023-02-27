@@ -6,8 +6,6 @@ import mwparserfromhell as mwp
 
 URL = "https://www.wikipedia.org/w/api.php"
 
-
-
 class Revision():
     '''revision object parses json revision info into consistent '''
 
@@ -34,7 +32,6 @@ class Revision():
         self.comment: str = None
         self.tags: list[str] = None
 
-    # pylint:disable=E1135
     def contains_tag(self, tag_list):
         '''checks if a revision contains any tags from the parameter list of tags'''
         return all(item in self.tags for item in tag_list)

@@ -6,8 +6,6 @@ from src.history import format_timestamp,History
 from src.exceptions import BadRequestException
 import mwparserfromhell as mwp
 
-# pylint: disable=C0303,R0913,R0914
-
 class UserHistory(History):
     ''' UserHistory object parses json user contributions '''
     def __init__(self, user, startyear=None, startmonth=None, startday=None,
