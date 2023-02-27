@@ -56,5 +56,3 @@ class UserHistory(History):
                 self.revisions.append(Revision(each_revision))
         except BadRequestException:
             print("Data not found")
-
-        return str(mwp.parse(data))
