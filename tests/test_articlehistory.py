@@ -99,7 +99,7 @@ def test_filter_by_keyword():
     assert len(art3.revisions) == 0
 
     art4 = ArticleHistory(titles="Techno", user="185.216.15.213",
-                          keyword="techno", tags=["mw-reverted"], 
+                          keyword="techno", tags=["mw-reverted"],
                           startyear=2022, startmonth=11, startday=1,
                           endyear=2022, endmonth=11, endday=30)
     assert art4.titles == "Techno"
