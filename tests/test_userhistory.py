@@ -1,8 +1,5 @@
-'''Tests for class user revision'''
+''' Tests for user history class '''
 import __init__
-import json
-import requests
-
 from userhistory import UserHistory
 
 def test_userhistory_init():
@@ -25,4 +22,3 @@ def test_userhistory_keyword_filter():
 
     assert user_history.user == "Jimbo Wales"
     assert user_history.keyword == "Duplicate page"
-

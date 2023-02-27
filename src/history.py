@@ -63,7 +63,7 @@ class History:
 
         if len(self.revisions) == 0:
             print("No revisions found matching your search parameters")
-  
+ 
     def filter_by_keyword(self):
         '''filters list of revisions by keyword'''
         for rev in self.revisions.copy():
@@ -115,4 +115,3 @@ def format_timestamp(year, month=None, day=None,
         index += 1
     print(ret)
     return ret
-

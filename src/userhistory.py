@@ -9,28 +9,26 @@ import mwparserfromhell as mwp
 # pylint: disable=C0303,R0913,R0914
 
 class UserHistory(History):
-    '''userhistory object parses json user contributions '''
+    ''' UserHistory object parses json user contributions '''
     def __init__(self, user, startyear=None, startmonth=None, startday=None,
                 starthour=None, startminute=None, startsecond=None,
                 endyear=None, endmonth=None, endday=None, endhour=None,
                 endminute=None, endsecond=None, tags=None, titles=None, keyword=None):
         super().init_to_none()
         self.init_to_none()
-        super().__init__(titles, user, keyword, tags,
-                         startyear, startmonth, startday,
-                         starthour, startminute, startsecond,
-                         endyear, endmonth, endday,
+        super().__init__(titles, user, keyword, tags, startyear, startmonth, startday,
+                         starthour, startminute, startsecond,endyear, endmonth, endday,
                          endhour, endminute, endsecond)
 
         self.call_wikipedia_api()
         self.filter()
 
     def init_to_none(self):
-        '''sets up class data members and initializes them to None '''
+        ''' Sets up class data members and initializes them to None '''
         self.user: str = None
 
     def call_wikipedia_api(self):
-        ''' pulls down user's edit history from Wikipedia API '''
+        ''' Pulls down user's edit history from Wikipedia API '''
         self.revisions = []
         session = requests.Session()
 
