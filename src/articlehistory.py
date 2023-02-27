@@ -27,32 +27,6 @@ class ArticleHistory(History):
         '''sets up class data members and initalizes to none'''
         self.pageid: int = None
 
-    def filter_by_keyword(self):
-        '''filters list of revisions by keyword'''
-        for rev in self.revisions.copy():
-            if rev.contains_keyword(self.keyword) is False:
-                self.revisions.remove(rev)
-
-    def filter_by_tags(self):
-        '''filters list of revisions by tags'''
-        for rev in self.revisions.copy():
-            if rev.contains_tag(self.tags) is False:
-                self.revisions.remove(rev)
-
-    def filter(self):
-        '''calls filter helper functions'''
-        if self.tags is not None:
-            self.filter_by_tags()
-        if self.keyword is not None:
-            self.filter_by_keyword()
-
-        if len(self.revisions) == 0:
-            # throw exception instead??
-            print("No revisions found matching your search parameters")
-
-        # for each_revision in self.revisions:
-        #    print(each_revision.json)
-
     def call_wikipedia_api(self):
         '''pulls down an article's revision history from the API'''
         self.revisions = []
@@ -69,7 +43,7 @@ class ArticleHistory(History):
 
         } | self.base_params
         if self.rvstart is None:
-            params["rvlimit"] = "10"
+            params["rvlimit"] = "10"  # change to 500
 
         rev = session.get(url=URL, params=params)
         data = rev.json()

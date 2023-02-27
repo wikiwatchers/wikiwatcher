@@ -22,14 +22,14 @@ class History:
             self.rvstart = format_timestamp(start_year, start_month, start_day,
                                             start_hour, start_minute, start_second)
         if not end_year is None:
-            self.rvend =  format_timestamp(end_year, end_month, end_day,
-                                            end_hour, end_minute, end_second)
+            self.rvend = format_timestamp(end_year, end_month, end_day,
+                                          end_hour, end_minute, end_second)
         self.base_params = {
-            "action": "query",
+           "action": "query",
             "format": "json",
             "formatversion": "2",
             "rvdir": "newer"
-        }
+       }
 
     def init_to_none(self):
         '''sets up class data members and initalizes to none'''
@@ -54,12 +54,27 @@ class History:
         ret_json = ret_json.replace("},", "},<br/>")
         return ret_json
 
-    def filter(self, keyword: str):
-        """ Applies filters to internal revisions list
-        which cannot be applied on initial request to Wikipedia API
-        """
-        print(f"TODO filter {self.revisions}"
-              + f"to only those whose contents contain {keyword}")
+    def filter(self):
+        '''calls filter helper functions'''
+        if self.tags is not None:
+            self.filter_by_tags()
+        if self.keyword is not None:
+            self.filter_by_keyword()
+
+        if len(self.revisions) == 0:
+            print("No revisions found matching your search parameters")
+
+    def filter_by_keyword(self):
+        '''filters list of revisions by keyword'''
+        for rev in self.revisions.copy():
+            if rev.contains_keyword(self.keyword) is False:
+                self.revisions.remove(rev)
+
+    def filter_by_tags(self):
+        '''filters list of revisions by tags'''
+        for rev in self.revisions.copy():
+            if rev.contains_tag(self.tags) is False:
+                self.revisions.remove(rev)
 
 def validate_datetime_params(bad_datetime: Exception, year, month, day, hour, minute, second):
     """ ensures all datetime params fall into valid ranges (ex hours 0 through 23) """

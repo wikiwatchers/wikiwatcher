@@ -7,6 +7,7 @@ import mwparserfromhell as mwp
 URL = "https://www.wikipedia.org/w/api.php"
 
 
+
 class Revision():
     '''revision object parses json revision info into consistent '''
 

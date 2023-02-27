@@ -69,7 +69,7 @@ def test_get_diff():
         assert f_diff == diff
 
 
-if __name__ == '__main__':
-    test_get_diff()
-    print("run python -m pytest")
 
+if __name__ == '__main__':
+    # print("run python -m pytest")
+    test_get_diff()
