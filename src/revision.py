@@ -6,6 +6,8 @@ import mwparserfromhell as mwp
 
 URL = "https://www.wikipedia.org/w/api.php"
 
+
+
 class Revision():
     '''revision object parses json revision info into consistent '''
 
@@ -16,7 +18,7 @@ class Revision():
             try:
                 vars(self)[attr] = self.json[attr]
             except KeyError as err:
-                print(err) # do something more useful? (log?)
+                print(err)  # do something more useful? (log?)
 
     def init_to_none(self):
         '''sets up class data members and initializes them to None '''
@@ -31,6 +33,18 @@ class Revision():
         self.size: int = None
         self.comment: str = None
         self.tags: list[str] = None
+
+    # pylint:disable=E1135
+    def contains_tag(self, tag_list):
+        '''checks if a revision contains any tags from the parameter list of tags'''
+        return all(item in self.tags for item in tag_list)
+
+    def contains_keyword(self, keyword):
+        '''checks if a revision contains any keywords inside of the revision content'''
+        content = self.get_diff()
+        if content.find(keyword) > 0:
+            return True
+        return False
 
     def get_content(self):  # start and end time stamps???
         ''' Returns the content of the page at this revision'''
