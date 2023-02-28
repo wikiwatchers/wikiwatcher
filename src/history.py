@@ -2,15 +2,20 @@
 
 import json
 from datetime import datetime
-from src.revision import Revision
-from src.exceptions import BadRequestException
+try:
+    from src.revision import Revision
+    from src.exceptions import BadRequestException
+except ModuleNotFoundError:
+    from revision import Revision
+    from exceptions import BadRequestException
 
 class History:
     '''history base class initalization'''
+
     def __init__(self, titles=None, user=None, keyword=None, tags=None,
-        start_year=None, start_month=None, start_day=None, start_hour=None,
-        start_minute=None, start_second=None, end_year=None, end_month=None,
-        end_day=None, end_hour=None, end_minute=None, end_second=None):
+                 start_year=None, start_month=None, start_day=None, start_hour=None,
+                 start_minute=None, start_second=None, end_year=None, end_month=None,
+                 end_day=None, end_hour=None, end_minute=None, end_second=None):
         self.init_to_none()
         self.titles = titles
         self.user = user
@@ -22,7 +27,11 @@ class History:
         if not end_year is None:
             self.rvend =  format_timestamp(end_year, end_month, end_day,
                                             end_hour, end_minute, end_second)
-        self.base_params = { "action": "query", "format": "json" }
+        self.base_params = {
+           "action": "query",
+            "format": "json",
+            "formatversion": "2",
+        }
 
     def init_to_none(self):
         '''sets up class data members and initalizes to none'''
@@ -39,7 +48,7 @@ class History:
         """ returns internal revisions list as a JSON string
          where revisions are separated by newlines for readability """
         if self.revisions is None:
-            return None # raise error?
+            return None  # raise error?
         ret = [rev.json for rev in self.revisions]
         ret_json = json.dumps(ret)
         # adding break tags makes this invalid json!
@@ -47,21 +56,36 @@ class History:
         ret_json = ret_json.replace("},", "},<br/>")
         return ret_json
 
-    def filter(self, keyword:str):
-        """ Applies filters to internal revisions list
-        which cannot be applied on initial request to Wikipedia API
-        """
-        print(f"TODO filter {self.revisions}"
-            + f"to only those whose contents contain {keyword}")
+    def filter(self):
+        '''calls filter helper functions'''
+        if self.tags is not None:
+            self.filter_by_tags()
+        if self.keyword is not None:
+            self.filter_by_keyword()
 
-def validate_datetime_params(bad_datetime:Exception, year, month, day, hour, minute, second):
+        if len(self.revisions) == 0:
+            print("No revisions found matching your search parameters")
+
+    def filter_by_keyword(self):
+        '''filters list of revisions by keyword'''
+        for rev in self.revisions.copy():
+            if rev.contains_keyword(self.keyword) is False:
+                self.revisions.remove(rev)
+
+    def filter_by_tags(self):
+        '''filters list of revisions by tags'''
+        for rev in self.revisions.copy():
+            if rev.contains_tag(self.tags) is False:
+                self.revisions.remove(rev)
+
+def validate_datetime_params(bad_datetime: Exception, year, month, day, hour, minute, second):
     """ ensures all datetime params fall into valid ranges (ex hours 0 through 23) """
     # could this entirely replace the order-validation in format_timestamp?
     try:
         datetime(year=year, month=month or 1, day=day or 1,
                  hour=hour or 0, minute=minute or 0, second=second or 0)
-    except ValueError:
-        raise bad_datetime
+    except ValueError as val_err:
+        raise bad_datetime from val_err
 
 def format_timestamp(year, month=None, day=None,
                      hour=None, minute=None, second=None):
@@ -70,7 +94,8 @@ def format_timestamp(year, month=None, day=None,
     """
     bad_datetime = BadRequestException("invalid date/time specification")
     no_more_params = False
-    validate_datetime_params(bad_datetime, year, month, day, hour, minute, second)
+    validate_datetime_params(bad_datetime, year, month,
+                             day, hour, minute, second)
     if year:
         ret = str(year)
     else:
@@ -79,14 +104,13 @@ def format_timestamp(year, month=None, day=None,
     for param in [month, day, hour, minute, second]:
         if no_more_params and not param is None:
             raise bad_datetime
-        elif not param is None:
+        if not param is None:
             ret += str(param).rjust(2, "0")
         else:
             no_more_params = True
-            if index in [2, 3, 4]: # hour minute and second should default to 0
+            if index in [2, 3, 4]:  # hour minute and second should default to 0
                 ret += "00"
-            else: # all other params default to 1
+            else:  # all other params default to 1
                 ret += "01"
         index += 1
-    print(ret)
     return ret
