@@ -62,3 +62,6 @@ class ArticleHistory(History):
 
         except KeyError:
             print("Error accessing API with given parameters")
+
+if __name__ == "__main__":
+    art = ArticleHistory("Techno",startyear=2023, tags=["wikieditor"])
