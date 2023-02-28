@@ -22,3 +22,6 @@ def test_userhistory_keyword_filter():
 
     assert user_history.user == "Jimbo Wales"
     assert user_history.keyword == "Duplicate page"
+
+if __name__ == "__main__":
+    test_userhistory_keyword_filter()

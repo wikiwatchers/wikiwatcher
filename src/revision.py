@@ -76,8 +76,6 @@ class Revision():
             # https://www.mediawiki.org/wiki/API:Compare
             'action': "compare",
             'format': "json",
-            'fromtitle': self.title,
-            'totitle': self.title,
             'fromrev': self.revid,
             'torev': to_id
         }
