@@ -112,5 +112,4 @@ def format_timestamp(year, month=None, day=None,
             else:  # all other params default to 1
                 ret += "01"
         index += 1
-    print(ret)
     return ret
