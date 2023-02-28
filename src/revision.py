@@ -85,6 +85,7 @@ class Revision():
         # Can we return something more user-friendly?
         # Automatically color ins and del tags?
         return str(mwp.parse(wp_response['compare']['*']))
+        #need an exception here?
 
     def timestamp_to_datetime(self):
         '''Converts the timestamp into a python-friendly datetime object
