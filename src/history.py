@@ -2,9 +2,12 @@
 
 import json
 from datetime import datetime
-from src.revision import Revision
-from src.exceptions import BadRequestException
-
+try:
+    from src.revision import Revision
+    from src.exceptions import BadRequestException
+except ModuleNotFoundError:
+    from revision import Revision
+    from exceptions import BadRequestException
 
 class History:
     '''history base class initalization'''
@@ -28,8 +31,6 @@ class History:
            "action": "query",
             "format": "json",
             "formatversion": "2",
-            "rvdir": "newer",
-            "rvlimit": "500"
         }
 
     def init_to_none(self):
