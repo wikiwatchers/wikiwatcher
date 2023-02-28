@@ -1,8 +1,8 @@
 '''defines the collection class for article history'''
 import requests
 from datetime import datetime
-from revision import Revision, URL
-from history import format_timestamp, History
+from src.revision import Revision, URL
+from src.history import format_timestamp, History
 
 class ArticleHistory(History):
     '''article revision collection class'''
@@ -42,8 +42,6 @@ class ArticleHistory(History):
             "rvend": self.rvend,
 
         } | self.base_params
-        if self.rvstart is None:
-            params["rvlimit"] = "10"  # change to 500
 
         rev = session.get(url=URL, params=params)
         data = rev.json()
