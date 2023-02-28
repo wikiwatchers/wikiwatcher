@@ -1,9 +1,9 @@
 '''defines user history class'''
 import datetime
 import requests
-from revision import Revision, URL
-from history import format_timestamp,History
-from exceptions import BadRequestException
+from src.revision import Revision, URL
+from src.history import format_timestamp,History
+from src.exceptions import BadRequestException
 import mwparserfromhell as mwp
 
 class UserHistory(History):
