@@ -42,8 +42,6 @@ class ArticleHistory(History):
             "rvend": self.rvend,
 
         } | self.base_params
-        if self.rvstart is None:
-            params["rvlimit"] = "10"  # change to 500
 
         rev = session.get(url=URL, params=params)
         data = rev.json()

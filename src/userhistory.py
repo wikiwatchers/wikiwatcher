@@ -42,8 +42,6 @@ class UserHistory(History):
         } | self.base_params
         if self.user is None:
             raise BadRequestException("User name missing")
-        if self.rvstart is None:
-            params["rvlimit"] = "10"
 
         request = session.get(url=URL, params=params)
         data = request.json()

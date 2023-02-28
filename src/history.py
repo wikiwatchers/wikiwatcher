@@ -28,7 +28,8 @@ class History:
            "action": "query",
             "format": "json",
             "formatversion": "2",
-            "rvdir": "newer"
+            "rvdir": "newer",
+            "rvlimit": "500"
         }
 
     def init_to_none(self):
