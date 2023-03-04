@@ -1,6 +1,7 @@
 """Base class for Plot object"""
 from history import History
 from revision import Revision
+import numpy as np
 
 class Plot:
     """Plot base class contains basic plot information"""
@@ -9,9 +10,11 @@ class Plot:
         self.style: str = "seaborn-darkgrid" #default?
         # _mpl-gallery = histogram
         # _mpl-gallery-nogrid = pie chart
-        self.x: list[Revision] = None
+        self.x_axis = []
         self.title: str = None
 
-    def set_x(self, data): #input parameter could be self.history.anything
+    def set_x_axis(self, revisions_list: list[Revision],
+                   revision_property: str):
         """set x graphing data to any parameter"""
-        self.x = data
+        for each_rev in revisions_list:
+            self.x_axis.append(vars(each_rev)[revision_property])
