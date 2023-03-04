@@ -15,6 +15,6 @@ class Plot:
 
     def set_x_axis(self, revisions_list: list[Revision],
                    revision_property: str):
-        """set x graphing data to any parameter"""
+        """set x graphing data to any parameter in revision object"""
         for each_rev in revisions_list:
             self.x_axis.append(vars(each_rev)[revision_property])
