@@ -1,4 +1,4 @@
-'''contains history base class attributes and timestamp modification'''
+"""contains history base class attributes and timestamp modification"""
 
 import json
 from datetime import datetime
@@ -10,7 +10,7 @@ except ModuleNotFoundError:
     from exceptions import BadRequestException
 
 class History:
-    '''history base class initalization'''
+    """history base class initalization"""
 
     def __init__(self, titles=None, user=None, keyword=None, tags=None,
                  start_year=None, start_month=None, start_day=None, start_hour=None,
@@ -34,7 +34,7 @@ class History:
         }
 
     def init_to_none(self):
-        '''sets up class data members and initalizes to none'''
+        """sets up class data members and initalizes to none"""
         self.json: dict = None
         self.titles: str = None
         self.user: str = None
@@ -57,7 +57,7 @@ class History:
         return ret_json
 
     def filter(self):
-        '''calls filter helper functions'''
+        """calls filter helper functions"""
         if self.tags is not None:
             self.filter_by_tags()
         if self.keyword is not None:
@@ -67,13 +67,13 @@ class History:
             print("No revisions found matching your search parameters")
 
     def filter_by_keyword(self):
-        '''filters list of revisions by keyword'''
+        """filters list of revisions by keyword"""
         for rev in self.revisions.copy():
             if rev.contains_keyword(self.keyword) is False:
                 self.revisions.remove(rev)
 
     def filter_by_tags(self):
-        '''filters list of revisions by tags'''
+        """filters list of revisions by tags"""
         for rev in self.revisions.copy():
             if rev.contains_tag(self.tags) is False:
                 self.revisions.remove(rev)

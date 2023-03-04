@@ -1,15 +1,15 @@
-''' Tests for user history class '''
+""" Tests for user history class """
 import __init__
 from userhistory import UserHistory
 
 def test_userhistory_init():
-    '''Tests user history init'''
+    """Tests user history init"""
     user_history = UserHistory("Jimbo Wales")
 
     assert user_history.user == "Jimbo Wales"
 
 def test_userhistory_tag_filter():
-    '''Tests user history filtering'''
+    """Tests user history filtering"""
     user_history = UserHistory("Jimbo Wales", tags=["discussiontools-newtopic"])
 
     assert user_history.user == "Jimbo Wales"
@@ -17,7 +17,7 @@ def test_userhistory_tag_filter():
     assert user_history.tags[0] == "discussiontools-newtopic"
 
 def test_userhistory_keyword_filter():
-    '''Tests user history filtering'''
+    """Tests user history filtering"""
     user_history = UserHistory("Jimbo Wales", keyword="Duplicate page")
 
     assert user_history.user == "Jimbo Wales"

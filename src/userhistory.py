@@ -1,4 +1,4 @@
-'''defines user history class'''
+"""defines user history class"""
 import datetime
 import requests
 try:
@@ -12,7 +12,7 @@ except ModuleNotFoundError:
 import mwparserfromhell as mwp
 
 class UserHistory(History):
-    ''' UserHistory object parses json user contributions '''
+    """ UserHistory object parses json user contributions """
     def __init__(self, user, startyear=None, startmonth=None, startday=None,
                 starthour=None, startminute=None, startsecond=None,
                 endyear=None, endmonth=None, endday=None, endhour=None,
@@ -27,11 +27,11 @@ class UserHistory(History):
         self.filter()
 
     def init_to_none(self):
-        ''' Sets up class data members and initializes them to None '''
+        """ Sets up class data members and initializes them to None """
         self.user: str = None
 
     def call_wikipedia_api(self):
-        ''' Pulls down user's edit history from Wikipedia API '''
+        """ Pulls down user's edit history from Wikipedia API """
         session = requests.Session()
 
         params = {
@@ -50,7 +50,7 @@ class UserHistory(History):
         data = request.json()
 
         try:
-            self.json = data['query']['usercontribs']
+            self.json = data["query"]["usercontribs"]
             for each_revision in self.json:
                 self.revisions.append(Revision(each_revision))
             if not data.get("continue") is None:

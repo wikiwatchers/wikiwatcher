@@ -1,11 +1,11 @@
-'''test for article history subclass'''
+"""test for article history subclass"""
 import __init__
 import pytest
 from articlehistory import ArticleHistory, format_timestamp
 from history import History
 
 def test___init__():
-    '''tests initalization'''
+    """tests initalization"""
     art = ArticleHistory(titles="Techno", user="Rio65trio",
                          startyear=2022, startmonth=12, startday=1,
                         endyear=2022, endmonth=12, endday=30)
@@ -35,7 +35,7 @@ def test___init__():
         raise KeyError("Data not found")
 
 def test_filter_by_tags():
-    '''tests filter by tags function'''
+    """tests filter by tags function"""
     art = ArticleHistory(titles="Techno", tags=["mobile edit"],
                          startyear=2023, startmonth=1, startday=1,
                         endyear=2023, endmonth=1, endday=30)
@@ -70,7 +70,7 @@ def test_filter_by_tags():
 
 
 def test_filter_by_keyword():
-    '''tests filter by keyword function'''
+    """tests filter by keyword function"""
     art = ArticleHistory(titles="Techno", keyword="Berlin",
                          startyear=2022, startmonth=12, startday=1,
                          endyear=2022, endmonth=12, endday=30)
@@ -105,12 +105,12 @@ def test_filter_by_keyword():
     assert art4.titles == "Techno"
     assert art4.user == "185.216.15.213"
     assert art4.keyword == "techno"
-    assert art4.tags == ['mw-reverted']
+    assert art4.tags == ["mw-reverted"]
     assert len(art4.revisions) != 0
 
 
 def test_filter():
-    '''tests filter function'''
+    """tests filter function"""
     art = ArticleHistory(titles="Techno")
     assert art.tags is None
     assert art.keyword is None

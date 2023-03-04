@@ -7,7 +7,7 @@ from revision import Revision, URL, datetime
 def test_revision_init():
     """Tests initialization of a single revision
     mocks behavior to be implemented in collection classes """
-    with open("tests/resources/wikipedia_responses.json", 'r', encoding='utf-8') as file:
+    with open("tests/resources/wikipedia_responses.json", "r", encoding="utf-8") as file:
         known_response = file.read()
         response_json = json.loads(known_response)["query"]
         known_revision_json = response_json["pages"][0]["revisions"][0]
@@ -28,7 +28,7 @@ def test_revision_init():
 
 
 def test_contains_tag():
-    '''tests contain tag function inside revision class'''
+    """tests contain tag function inside revision class"""
     test_revision = Revision({})
     test_revision.tags = ["Reverted", "wikieditor"]
     assert test_revision.contains_tag(["Reverted"]) is True
@@ -50,8 +50,8 @@ def test_get_content():
     test_revision = Revision({})
     test_revision.revid = 1127195995
     content = test_revision.get_content()
-    content = content[0:content.index('<!')]  # remove variable mwparser cmt
-    with open('tests/resources/revision-get_contents.html', 'r', encoding='utf-8') as in_file:
+    content = content[0:content.index("<!")]  # remove variable mwparser cmt
+    with open("tests/resources/revision-get_contents.html", "r", encoding="utf-8") as in_file:
         f_content = "".join(in_file.readlines())
         f_content = f_content.replace("\\\\", "\\")
         assert f_content == content
@@ -64,13 +64,13 @@ def test_get_diff():
     test_revision.parentid = 1126322774
     diff = test_revision.get_diff()
     diff = diff[0:diff.index("<!-")]  # remove variable timestamp cmt
-    with open('tests/resources/revision-get_diff.html', 'r', encoding='utf-8') as in_file:
+    with open("tests/resources/revision-get_diff.html", "r", encoding="utf-8") as in_file:
         f_diff = "".join(in_file.readlines())
         assert f_diff == diff
 
 
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # print("run python -m pytest")
     test_get_diff()
