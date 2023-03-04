@@ -76,15 +76,16 @@ class Revision():
             # https://www.mediawiki.org/wiki/API:Compare
             'action': "compare",
             'format': "json",
-            'fromtitle': self.title,
-            'totitle': self.title,
             'fromrev': self.revid,
             'torev': to_id
         }
         wp_response = session.get(url=URL, params=params).json()
         # Can we return something more user-friendly?
         # Automatically color ins and del tags?
-        return str(mwp.parse(wp_response['compare']['*']))
+        try:
+            return str(mwp.parse(wp_response['compare']['*']))
+        except ValueError:
+            return self.get_content()
 
     def timestamp_to_datetime(self):
         '''Converts the timestamp into a python-friendly datetime object
