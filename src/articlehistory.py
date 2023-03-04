@@ -1,4 +1,4 @@
-'''defines the collection class for article history'''
+"""defines the collection class for article history"""
 import requests
 from datetime import datetime
 try:
@@ -9,7 +9,7 @@ except ModuleNotFoundError:
     from history import format_timestamp, History
 
 class ArticleHistory(History):
-    '''article revision collection class'''
+    """article revision collection class"""
 
     def __init__(self, titles, user=None, keyword=None, tags=None,
                  startyear=None, startmonth=None, startday=None,
@@ -23,17 +23,16 @@ class ArticleHistory(History):
                          starthour, startminute, startsecond,
                          endyear, endmonth, endday,
                          endhour, endminute, endsecond)
-
+        self.revisions = []
         self.call_wikipedia_api()
         self.filter()
 
     def init_to_none(self):
-        '''sets up class data members and initalizes to none'''
+        """sets up class data members and initalizes to none"""
         self.pageid: int = None
 
     def call_wikipedia_api(self):
-        '''pulls down an article's revision history from the API'''
-        self.revisions = []
+        """pulls down an article's revision history from the API"""
         session = requests.Session()
 
         params = {
@@ -59,6 +58,11 @@ class ArticleHistory(History):
                 each_revision["pageid"] = self.pageid
                 each_revision["title"] = self.titles
                 self.revisions.append(Revision(each_revision))
+            if not data.get("continue") is None:
+                wp_continue_timestamp_and_id = data["continue"]["rvcontinue"]
+                separator_index = wp_continue_timestamp_and_id.index("|")
+                self.rvstart = wp_continue_timestamp_and_id[:separator_index]
+                self.call_wikipedia_api()
 
         except KeyError:
             print("Error accessing API with given parameters")

@@ -22,7 +22,7 @@ class UserHistory(History):
         super().__init__(titles, user, keyword, tags, startyear, startmonth, startday,
                          starthour, startminute, startsecond,endyear, endmonth, endday,
                          endhour, endminute, endsecond)
-
+        self.revisions = []
         self.call_wikipedia_api()
         self.filter()
 
@@ -32,7 +32,6 @@ class UserHistory(History):
 
     def call_wikipedia_api(self):
         ''' Pulls down user's edit history from Wikipedia API '''
-        self.revisions = []
         session = requests.Session()
 
         params = {
@@ -54,5 +53,10 @@ class UserHistory(History):
             self.json = data['query']['usercontribs']
             for each_revision in self.json:
                 self.revisions.append(Revision(each_revision))
+            if not data.get("continue") is None:
+                wp_continue_timestamp_and_id = data["continue"]["uccontinue"]
+                separator_index = wp_continue_timestamp_and_id.index("|")
+                self.rvstart = wp_continue_timestamp_and_id[:separator_index]
+                self.call_wikipedia_api()
         except BadRequestException:
             print("Data not found")
