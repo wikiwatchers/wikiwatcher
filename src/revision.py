@@ -1,7 +1,6 @@
 """defines revision base class"""
 from datetime import datetime
 import requests
-from bs4 import BeautifulSoup as bs
 import mwparserfromhell as mwp
 
 URL = "https://www.wikipedia.org/w/api.php"
@@ -84,7 +83,7 @@ class Revision():
         # Automatically color ins and del tags?
         try:
             return str(mwp.parse(wp_response['compare']['*']))
-        except ValueError:
+        except (ValueError, KeyError):
             return self.get_content()
 
     def timestamp_to_datetime(self):

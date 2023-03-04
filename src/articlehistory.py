@@ -1,6 +1,5 @@
 """defines the collection class for article history"""
 import requests
-from datetime import datetime
 try:
     from src.revision import Revision, URL
     from src.history import format_timestamp, History

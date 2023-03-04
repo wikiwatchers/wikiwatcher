@@ -1,5 +1,4 @@
 """defines user history class"""
-import datetime
 import requests
 try:
     from src.revision import Revision, URL
