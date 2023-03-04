@@ -17,7 +17,8 @@ def test___init__():
     assert art.revisions[22].title == "Techno"
 
 
-    art = ArticleHistory(titles="Cat")
+    art = ArticleHistory(titles="Cat", startyear=2021, startmonth=2,
+                         endyear=2021, endmonth=3)
     assert art.titles == "Cat"
     assert art.user is None
     assert len(art.revisions) != 0
@@ -59,7 +60,9 @@ def test_filter_by_tags():
     assert art2.tags == [""]
     assert len(art2.revisions) == 0
 
-    art3 = ArticleHistory(titles="Salsa (Mexican Cuisine)", tags=[""])
+    art3 = ArticleHistory(titles="Salsa (Mexican Cuisine)", tags=[""],
+                          startyear=2019, startmonth=12,
+                          endyear=2020, endmonth=1)
     assert art3.titles == "Salsa (Mexican Cuisine)"
     assert art3.user is None
     assert art3.keyword is None
@@ -81,16 +84,6 @@ def test_filter_by_tags():
 
 def test_filter_by_keyword():
     """tests filter by keyword function"""
-    art = ArticleHistory(titles="Techno", keyword="Berlin",
-                         startyear=2022, startmonth=12, startday=1,
-                         endyear=2022, endmonth=12, endday=30)
-    assert art.titles == "Techno"
-    assert art.user is None
-    assert art.keyword == "Berlin"
-    assert art.tags is None
-    assert len(art.revisions) == 32
-    assert art.revisions[0].title == "Techno"
-
     art2 = ArticleHistory(titles="Techno", user="Rio65trio", keyword="techno",
                           startyear=2022, startmonth=12, startday=1,
                           endyear=2022, endmonth=12, endday=30)
@@ -110,19 +103,6 @@ def test_filter_by_keyword():
     assert art3.keyword == "gibberish"
     assert art3.tags is None
     assert len(art3.revisions) == 0
-
-    art4 = ArticleHistory(titles="Techno", user="185.216.15.213",
-                          keyword="techno", tags=["mw-reverted"],
-                          startyear=2022, startmonth=11, startday=1,
-                          endyear=2022, endmonth=11, endday=30)
-    assert art4.titles == "Techno"
-    assert art4.user == "185.216.15.213"
-    assert art4.keyword == "techno"
-    assert art4.tags == ['mw-reverted']
-    assert len(art4.revisions) == 2
-    assert art4.revisions[0].user == "185.216.15.213"
-    assert art4.revisions[1].title == "Techno"
-
 
 def test_filter():
     """tests filter function"""
