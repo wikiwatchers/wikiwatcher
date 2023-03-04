@@ -16,7 +16,7 @@ class Revision():
             try:
                 vars(self)[attr] = self.json[attr]
             except KeyError as err:
-                print("revision initializer JSON is missing", err)
+                pass # init JSON is missing this attr - nbd
 
     def init_to_none(self):
         """sets up class data members and initializes them to None """
