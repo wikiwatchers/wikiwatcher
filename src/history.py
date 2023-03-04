@@ -2,6 +2,7 @@
 
 import json
 from datetime import datetime
+from abc import abstractmethod
 try:
     from src.revision import Revision
     from src.exceptions import BadRequestException
@@ -77,6 +78,18 @@ class History:
         for rev in self.revisions.copy():
             if rev.contains_tag(self.tags) is False:
                 self.revisions.remove(rev)
+
+    @abstractmethod
+    def call_wikipedia_api(self):
+        """ history subclasses must implement a call to the external API """
+
+    def fill_revisions(self):
+        """ uses derived class call_wikipedia_api and filter methods
+        to retrieve revisions from wikipedia
+        """
+        self.revisions = []
+        self.call_wikipedia_api()
+        self.filter()
 
 def validate_datetime_params(bad_datetime: Exception, year, month, day, hour, minute, second):
     """ ensures all datetime params fall into valid ranges (ex hours 0 through 23) """

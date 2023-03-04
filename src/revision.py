@@ -15,7 +15,7 @@ class Revision():
         for attr in [key for key in vars(self).keys() if key != "json"]:
             try:
                 vars(self)[attr] = self.json[attr]
-            except KeyError as err:
+            except KeyError:
                 pass # init JSON is missing this attr - nbd
 
     def init_to_none(self):

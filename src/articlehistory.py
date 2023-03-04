@@ -23,9 +23,7 @@ class ArticleHistory(History):
                          starthour, startminute, startsecond,
                          endyear, endmonth, endday,
                          endhour, endminute, endsecond)
-        self.revisions = []
-        self.call_wikipedia_api()
-        self.filter()
+        self.fill_revisions()
 
     def init_to_none(self):
         """sets up class data members and initalizes to none"""
@@ -39,9 +37,8 @@ class ArticleHistory(History):
             "prop": "revisions",
             "titles": self.titles,
             "rvprop": "comment|ids|flags|size|tags|timestamp|user|userid",
-            "formatversion": "2",
             "rvuser": self.user,
-            "rvstart": self.rvstart,
+            "rvstart": self.rvstart, # pylint: disable=access-member-before-definition
             "rvend": self.rvend,
             "rvdir": "newer",
             "rvlimit": "500"
