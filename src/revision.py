@@ -83,7 +83,7 @@ class Revision():
         # Automatically color ins and del tags?
         try:
             return str(mwp.parse(wp_response['compare']['*']))
-        except (ValueError, KeyError):
+        except (KeyError, ValueError):
             return self.get_content()
 
     def timestamp_to_datetime(self):
