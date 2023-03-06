@@ -1,5 +1,4 @@
-'''defines user history class'''
-import datetime
+"""defines user history class"""
 import requests
 try:
     from src.revision import Revision, URL
@@ -12,7 +11,7 @@ except ModuleNotFoundError:
 import mwparserfromhell as mwp
 
 class UserHistory(History):
-    ''' UserHistory object parses json user contributions '''
+    """ UserHistory object parses json user contributions """
     def __init__(self, user, startyear=None, startmonth=None, startday=None,
                 starthour=None, startminute=None, startsecond=None,
                 endyear=None, endmonth=None, endday=None, endhour=None,
@@ -22,24 +21,21 @@ class UserHistory(History):
         super().__init__(titles, user, keyword, tags, startyear, startmonth, startday,
                          starthour, startminute, startsecond,endyear, endmonth, endday,
                          endhour, endminute, endsecond)
-
-        self.call_wikipedia_api()
-        self.filter()
+        self.fill_revisions()
 
     def init_to_none(self):
-        ''' Sets up class data members and initializes them to None '''
+        """ Sets up class data members and initializes them to None """
         self.user: str = None
 
     def call_wikipedia_api(self):
-        ''' Pulls down user's edit history from Wikipedia API '''
-        self.revisions = []
+        """ Pulls down user's edit history from Wikipedia API """
         session = requests.Session()
 
         params = {
             "list": "usercontribs",
             "ucprop": "comment|ids|flags|size|tags|timestamp|user|userid",
             "ucuser": self.user,
-            "ucstart": self.rvstart,
+            "ucstart": self.rvstart, # pylint: disable=access-member-before-definition
             "ucend" : self.rvend,
             "ucdir": "newer",
             "uclimit": "500"
@@ -51,8 +47,13 @@ class UserHistory(History):
         data = request.json()
 
         try:
-            self.json = data['query']['usercontribs']
+            self.json = data["query"]["usercontribs"]
             for each_revision in self.json:
                 self.revisions.append(Revision(each_revision))
+            if not data.get("continue") is None:
+                wp_continue_timestamp_and_id = data["continue"]["uccontinue"]
+                separator_index = wp_continue_timestamp_and_id.index("|")
+                self.rvstart = wp_continue_timestamp_and_id[:separator_index]
+                self.call_wikipedia_api()
         except BadRequestException:
             print("Data not found")
