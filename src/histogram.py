@@ -13,8 +13,6 @@ class Histogram(Plot):
         self.x_axis = self.pull_dates_from_history()
         self.plot_graph()
 
-        #print(self.x_axis)
-
     def pull_dates_from_history(self):
         datetime_list = []
         for each_rev in self.history.revisions:
@@ -26,17 +24,16 @@ class Histogram(Plot):
 
         fig, ax = plt.subplots()
 
-        ax.hist(self.x_axis, bins=50, color="lightblue", edgecolor="black")
+        ax.hist(self.x_axis, bins=50, color="lightblue", edgecolor="black", range=(self.x_axis[0], self.x_axis[len(self.x_axis)-1]))
 
         locator = mdates.AutoDateLocator()
         ax.xaxis.set_major_locator(locator)
         ax.xaxis.set_major_formatter(mdates.AutoDateFormatter(locator))
+
         plt.xticks(rotation=45)
 
         plt.show()
-        
-
 
 if __name__=="__main__":
-    article = ArticleHistory("Techno", startyear=2001, endyear=2004)
+    article = ArticleHistory("Cat", startyear=2004, endyear=2008)
     Histogram(article)
