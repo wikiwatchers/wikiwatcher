@@ -7,7 +7,6 @@ import sys
 import json
 from flask import Flask, render_template, request
 from markdown import markdown
-from src.index import Index
 from src.revision import URL
 from src.userhistory import UserHistory
 try:
