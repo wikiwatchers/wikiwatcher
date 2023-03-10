@@ -1,8 +1,8 @@
 '''defines the collection class for article history'''
 import requests
-from revision import Revision
+from src.revision import Revision
 from datetime import datetime
-from history import format_timestamp,History
+from src.history import format_timestamp,History
 
 #pylint: disable=C0303,R0913,R0914
 class ArticleHistory(History):

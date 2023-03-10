@@ -1,6 +1,6 @@
 '''contains history base class attributes and timestamp modification'''
 
-from revision import Revision
+from src.revision import Revision
 from src.exceptions import BadRequestException
 
 class History:

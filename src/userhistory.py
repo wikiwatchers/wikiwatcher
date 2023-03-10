@@ -1,8 +1,8 @@
 '''defines user history class'''
 import datetime
 import requests
-from history import History
-from exceptions import BadRequestException
+from src.history import History
+from src.exceptions import BadRequestException
 import mwparserfromhell as mwp
 
 URL = "https://www.wikipedia.org/w/api.php"

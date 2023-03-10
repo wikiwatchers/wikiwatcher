@@ -5,7 +5,7 @@ Handles interactions with our users, does not handle interactions with external 
 import __init__
 import sys
 import json
-from flask import Flask, request
+from flask import Flask, render_template, request
 from markdown import markdown
 from src.index import Index
 from src.revision import URL
@@ -32,12 +32,11 @@ def parse_tags(tagstring):
     tagstring = tagstring[1:-1]
     return tagstring.split(",")
 
-@app.route("/")
+@app.route('/')
 def index():
-    """display readme for now - may put a GUI here later on"""
-    with open("README.md", "r", encoding="utf-8") as readme:
-        ret = markdown(readme.read())
-    return ret
+    """ Our index landing page """
+    content = "Here is some placeholder content"
+    return render_template('index.html', content=content)
 
 @app.route("/articleHistory/<title>")
 def get_article_history(title):
@@ -178,10 +177,6 @@ def get_difference(title):
     else:
         ret = -1
     return ret
-
-app.add_url_rule('/',
-                 view_func=Index.as_view('index'),
-                 methods=["GET"])
 
 
 if __name__ == "__main__":
