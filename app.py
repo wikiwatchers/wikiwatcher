@@ -7,6 +7,7 @@ import sys
 import json
 from flask import Flask, request
 from markdown import markdown
+from src.index import Index
 from src.revision import URL
 from src.userhistory import UserHistory
 try:
@@ -177,6 +178,11 @@ def get_difference(title):
     else:
         ret = -1
     return ret
+
+app.add_url_rule('/',
+                 view_func=Index.as_view('index'),
+                 methods=["GET"])
+
 
 if __name__ == "__main__":
     app.run(debug=True)
