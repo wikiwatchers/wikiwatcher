@@ -10,7 +10,7 @@
 
 
 <body>
-	<nav class="navbar">
+	<nav class="navbar navbar-dark">
 	  <div class="container-fluid">
 	    <a class="navbar-brand" href="#">
 	      	<span class="site-title">Wikiwatcher</span>
@@ -19,10 +19,17 @@
 	</nav>
 
 	<div class="container">
-		
-		<div class=page>
+		<div class="page-content">
 		    {% block content %}{% endblock %}
 		</div>
 	</div>
+
+	<footer>
+		<div class="container"></div>
+		WikiWatcher. 2023. <a href="https://github.com/wikiwatchers/wikiwatcher/" target="_blank">
+			View on GitHub
+		</a>
+		<div class="container-fluid"></div>
+	</footer>
 </body>
 </html>
