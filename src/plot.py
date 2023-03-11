@@ -1,7 +1,11 @@
 """Base class for Plot object"""
-from history import History
-from revision import Revision
-import numpy as np
+try:
+    from src.history import History
+    from src.revision import Revision
+except ModuleNotFoundError:
+    from history import History
+    from revision import Revision
+
 
 class Plot:
     """Plot base class contains basic plot information"""
@@ -11,6 +15,8 @@ class Plot:
         # _mpl-gallery = histogram
         # _mpl-gallery-nogrid = pie chart
         self.x_axis = []
+        self.x_axis_label: str = None
+        self.y_axis_label: str = None
         self.title: str = None
 
     def set_x_axis(self, revisions_list: list[Revision],
