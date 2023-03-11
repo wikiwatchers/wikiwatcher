@@ -69,7 +69,11 @@ class History:
 
     def filter_by_keyword(self):
         """filters list of revisions by keyword"""
+        i = 0
         for rev in self.revisions.copy():
+            print(i)
+            print(rev.title)
+            i += 1
             if rev.contains_keyword(self.keyword) is False:
                 self.revisions.remove(rev)
 
