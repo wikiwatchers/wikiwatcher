@@ -1,26 +1,24 @@
-'''defines revision base class'''
+"""defines revision base class"""
 from datetime import datetime
-import regex as re
 import requests
-from bs4 import BeautifulSoup as bs
 import mwparserfromhell as mwp
 
 URL = "https://www.wikipedia.org/w/api.php"
 
 class Revision():
-    '''revision object parses json revision info into consistent '''
+    """revision object parses json revision info into consistent """
 
     def __init__(self, initjson: dict) -> None:
         self.json: dict = initjson
         self.init_to_none()
-        for attr in [key for key in vars(self).keys() if key != 'json']:
+        for attr in [key for key in vars(self).keys() if key != "json"]:
             try:
                 vars(self)[attr] = self.json[attr]
-            except KeyError as err:
-                print(err) # do something more useful? (log?)
+            except KeyError:
+                pass # init JSON is missing this attr - nbd
 
     def init_to_none(self):
-        '''sets up class data members and initializes them to None '''
+        """sets up class data members and initializes them to None """
         self.pageid: int = None
         self.title: str = None
         self.revid: int = None
@@ -33,8 +31,19 @@ class Revision():
         self.comment: str = None
         self.tags: list[str] = None
 
+    def contains_tag(self, tag_list):
+        """checks if a revision contains any tags from the parameter list of tags"""
+        return all(item in self.tags for item in tag_list)
+
+    def contains_keyword(self, keyword):
+        """checks if a revision contains any keywords inside of the revision content"""
+        content = self.get_diff()
+        if content.find(keyword) > 0:
+            return True
+        return False
+
     def get_content(self):  # start and end time stamps???
-        ''' Returns the content of the page at this revision'''
+        """ Returns the content of the page at this revision"""
 
         session = requests.Session()
 
@@ -47,15 +56,15 @@ class Revision():
         if self.revid is None:
             raise AttributeError("Revision ID missing")
         request = session.get(url=URL, params=params, timeout=5)
-        data = request.json()['parse']['text']['*']
+        data = request.json()["parse"]["text"]["*"]
         ret = mwp.parse(data)
-        return str(''.join(ret).replace("\n", ""))
+        return str("".join(ret).replace("\n", ""))
 
     def get_diff(self, to_id: int = None):
-        ''' Returns the difference between this revision and its parent
+        """ Returns the difference between this revision and its parent
         in this revision's article's history, unless a toId is specified in
         which case this revision is compared with toId.
-        '''
+        """
         if to_id is None:
             if self.parentid is None:
                 raise AttributeError("Revision parent ID missing")
@@ -64,22 +73,23 @@ class Revision():
         params = {
             # params for Compare API
             # https://www.mediawiki.org/wiki/API:Compare
-            'action': "compare",
-            'format': "json",
-            'fromtitle': self.title,
-            'totitle': self.title,
-            'fromrev': self.revid,
-            'torev': to_id
+            "action": "compare",
+            "format": "json",
+            "fromrev": self.revid,
+            "torev": to_id
         }
         wp_response = session.get(url=URL, params=params).json()
         # Can we return something more user-friendly?
         # Automatically color ins and del tags?
-        return str(bs(wp_response['compare']['*'], features='lxml'))
+        try:
+            return str(mwp.parse(wp_response['compare']['*']))
+        except (KeyError, ValueError):
+            return self.get_content()
 
     def timestamp_to_datetime(self):
-        '''Converts the timestamp into a python-friendly datetime object
+        """Converts the timestamp into a python-friendly datetime object
         for use in collections of revisions
-        '''
+        """
         if self.timestamp is None:
             raise AttributeError("Revision timestamp missing")
         year = int(self.timestamp[0:4])
