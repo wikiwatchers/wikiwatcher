@@ -52,6 +52,7 @@ class UserHistory(History):
                 self.revisions.append(Revision(each_revision))
             if not data.get("continue") is None:
                 wp_continue_timestamp_and_id = data["continue"]["uccontinue"]
+                print(wp_continue_timestamp_and_id)
                 separator_index = wp_continue_timestamp_and_id.index("|")
                 self.rvstart = wp_continue_timestamp_and_id[:separator_index]
                 self.call_wikipedia_api()
