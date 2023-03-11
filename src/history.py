@@ -22,10 +22,14 @@ class History:
         self.user = user
         self.keyword = keyword
         self.tags = tags
-        if not start_year is None:
+        start_timestamp_is_specified = start_year or start_month or start_day \
+                                    or start_hour or start_minute or start_second
+        end_timestamp_is_specified = end_year or end_month or end_day \
+                                  or end_hour or end_minute or end_second
+        if start_timestamp_is_specified:
             self.rvstart = format_timestamp(start_year, start_month, start_day,
                                             start_hour, start_minute, start_second)
-        if not end_year is None:
+        if end_timestamp_is_specified:
             self.rvend =  format_timestamp(end_year, end_month, end_day,
                                             end_hour, end_minute, end_second)
         self.base_params = {
@@ -91,6 +95,13 @@ class History:
         self.call_wikipedia_api()
         self.filter()
 
+    @abstractmethod
+    def get_secondary_category(self):
+        """ Returns a list of the secondary category for the subtype of revision
+        that implements the function; e.x. for ArticleHistory, this should return a
+        list of users; for UserHistory, a list of articles
+        """
+
 def validate_datetime_params(bad_datetime: Exception, year, month, day, hour, minute, second):
     """ ensures all datetime params fall into valid ranges (ex hours 0 through 23) """
     # could this entirely replace the order-validation in format_timestamp?
@@ -100,19 +111,19 @@ def validate_datetime_params(bad_datetime: Exception, year, month, day, hour, mi
     except ValueError as val_err:
         raise bad_datetime from val_err
 
-def format_timestamp(year, month=None, day=None,
+def format_timestamp(year=None, month=None, day=None,
                      hour=None, minute=None, second=None):
     """ cats our user's requested date/time values into a wikipedia-friendly string
     and validates that user gave us a correct date/time
     """
     bad_datetime = BadRequestException("invalid date/time specification")
     no_more_params = False
-    validate_datetime_params(bad_datetime, year, month,
-                             day, hour, minute, second)
-    if year:
+    if not year is None:
         ret = str(year)
     else:
         raise bad_datetime
+    validate_datetime_params(bad_datetime, year, month,
+                             day, hour, minute, second)
     index = 0
     for param in [month, day, hour, minute, second]:
         if no_more_params and not param is None:

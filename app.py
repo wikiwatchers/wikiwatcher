@@ -10,6 +10,7 @@ from flask_caching import Cache
 from markdown import markdown
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from src.revision import URL
+from src.exceptions import NoRevisionsException
 from src.userhistory import UserHistory
 from src.articlehistory import ArticleHistory
 from src.exceptions import BadRequestException
@@ -83,9 +84,9 @@ def get_article_history(title):
             output = io.BytesIO()
             chart = None
             match visualize:
-                case "edits_per_time":
+                case "revisions_per_time":
                     chart = Histogram(revisions)
-                case "edits_per_user":
+                case "revisions_per_user":
                     chart = Pie(revisions)
                 case default:
                     raise BadRequestException("Invalid choice of visualization")
@@ -94,6 +95,8 @@ def get_article_history(title):
         return revisions.revisions_as_json()
     except BadRequestException as bre:
         return "<h1>Bad Request</h1>" + str(bre), 400
+    except NoRevisionsException as nre:
+        return "<h1>No Revisions</h1>" + str(nre), 404
 
 @app.route("/userHistory/<username>")
 @mem_cache.cached(timeout=CACHE_TIMEOUT)
@@ -140,9 +143,9 @@ def get_user_history(username):
             output = io.BytesIO()
             chart = None
             match visualize:
-                case "edits_per_time":
+                case "revisions_per_time":
                     chart = Histogram(revisions)
-                case "edits_per_article":
+                case "revisions_per_article":
                     chart = Pie(revisions)
                 case default:
                     raise BadRequestException("Invalid choice of visualization")
@@ -151,6 +154,8 @@ def get_user_history(username):
         return revisions.revisions_as_json()
     except BadRequestException as bre:
         return "<h1>Bad Request</h1>" + str(bre), 400
+    except NoRevisionsException as nre:
+        return "<h1>No Revisions</h1>" + str(nre), 404
 
 @app.route("/getRevision/<title>")
 @mem_cache.cached(timeout=CACHE_TIMEOUT)
@@ -175,6 +180,8 @@ def get_revision(title):
         return ret
     except BadRequestException as bre:
         return "<h1>Bad Request</h1>" + str(bre), 400
+    except NoRevisionsException as nre:
+        return "<h1>No Revisions</h1>" + str(nre), 404
 
 @app.route("/compareRevisions/<title>")
 @mem_cache.cached(timeout=CACHE_TIMEOUT*2)
@@ -211,6 +218,8 @@ def get_difference(title):
         return ret
     except BadRequestException as bre:
         return "<h1>Bad Request</h1>" + str(bre), 400
+    except NoRevisionsException as nre:
+        return "<h1>No Revisions</h1>" + str(nre), 404
 
 if __name__ == "__main__":
     app.run(debug=True)

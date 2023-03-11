@@ -5,9 +5,11 @@ from datetime import datetime
 try:
     from src.articlehistory import ArticleHistory
     from src.plot import Plot
+    from src.revision import timestamp_to_datetime
 except ModuleNotFoundError:
     from articlehistory import ArticleHistory
     from plot import Plot
+    from revision import timestamp_to_datetime
 
 class Histogram(Plot):
     def __init__(self, history):
@@ -19,7 +21,7 @@ class Histogram(Plot):
     def pull_dates_from_history(self):
         datetime_list = []
         for each_rev in self.history.revisions:
-            this_datetime = each_rev.timestamp_to_datetime()
+            this_datetime = timestamp_to_datetime(each_rev.timestamp)
             datetime_list.append(mdates.date2num(this_datetime))
         return np.array(datetime_list)
     
