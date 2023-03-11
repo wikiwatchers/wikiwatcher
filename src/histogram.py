@@ -1,3 +1,4 @@
+""" temporary to calm pylint down - should be filled in by author """
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import numpy as np
@@ -12,6 +13,7 @@ except ModuleNotFoundError:
     from revision import timestamp_to_datetime
 
 class Histogram(Plot):
+    """ temporary to calm pylint down - should be filled in by author """
     def __init__(self, history):
         super().__init__(history)
 
@@ -19,21 +21,23 @@ class Histogram(Plot):
         self.graph = self.plot_graph()
 
     def pull_dates_from_history(self):
+        """ temporary to calm pylint down - should be filled in by author """
         datetime_list = []
         for each_rev in self.history.revisions:
             this_datetime = timestamp_to_datetime(each_rev.timestamp)
             datetime_list.append(mdates.date2num(this_datetime))
         return np.array(datetime_list)
-    
+
     def plot_graph(self):
+        """ temporary to calm pylint down - should be filled in by author """
+        fig, axes = plt.subplots()
 
-        fig, ax = plt.subplots()
-
-        ax.hist(self.x_axis, bins=50, color="lightblue", edgecolor="black", range=(self.x_axis[0], self.x_axis[len(self.x_axis)-1]))
+        axes.hist(self.x_axis, bins=50, color="lightblue", edgecolor="black",
+                range=(self.x_axis[0], self.x_axis[len(self.x_axis)-1]))
 
         locator = mdates.AutoDateLocator()
-        ax.xaxis.set_major_locator(locator)
-        ax.xaxis.set_major_formatter(mdates.AutoDateFormatter(locator))
+        axes.xaxis.set_major_locator(locator)
+        axes.xaxis.set_major_formatter(mdates.AutoDateFormatter(locator))
 
         plt.xticks(rotation=45)
         plt.tight_layout()

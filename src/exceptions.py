@@ -7,5 +7,5 @@ class BadRequestException(Exception):
 
 class NoRevisionsException(Exception):
     """ to be raised throughout codebase
-    upon discovery of no revisions fitting request's filters 
+    upon discovery of no revisions fitting request's filters
     """

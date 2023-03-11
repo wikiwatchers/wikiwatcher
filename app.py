@@ -88,7 +88,7 @@ def get_article_history(title):
                     chart = Histogram(revisions)
                 case "revisions_per_user":
                     chart = Pie(revisions)
-                case default:
+                case _:
                     raise BadRequestException("Invalid choice of visualization")
             FigureCanvas(chart.graph).print_png(output)
             return Response(output.getvalue(), mimetype="image/png")
@@ -147,7 +147,7 @@ def get_user_history(username):
                     chart = Histogram(revisions)
                 case "revisions_per_article":
                     chart = Pie(revisions)
-                case default:
+                case _:
                     raise BadRequestException("Invalid choice of visualization")
             FigureCanvas(chart.graph).print_png(output)
             return Response(output.getvalue(), mimetype="image/png")
