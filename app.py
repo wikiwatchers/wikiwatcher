@@ -6,6 +6,7 @@ import __init__
 import io
 import json
 from flask import Flask, request, Response
+from flask_caching import Cache
 from markdown import markdown
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from src.revision import URL
@@ -15,6 +16,8 @@ from src.exceptions import BadRequestException
 from src.histogram import Histogram
 
 app = Flask("WikiWatcher")
+mem_cache = Cache(app, config={"CACHE-TYPE": "simple"})
+CACHE_TIMEOUT = 120 # seconds
 
 def validate_tagstring(tagstring):
     """ ensures user passed a list of tags to endpoint """
@@ -37,6 +40,7 @@ def index():
     return ret
 
 @app.route("/articleHistory/<title>")
+@mem_cache.cached(timeout=CACHE_TIMEOUT)
 def get_article_history(title):
     """ /articleHistory/<title>?...
     Returns a JSON collection of revisions made to an article.
@@ -76,6 +80,7 @@ def get_article_history(title):
         return "<h1>Bad Request</h1>" + str(bre), 400
 
 @app.route("/userHistory/<username>")
+@mem_cache.cached(timeout=CACHE_TIMEOUT)
 def get_user_history(username):
     """ /userHistory/<username>?...
     Returns a JSON collection of revisions made by a user.
@@ -104,7 +109,7 @@ def get_user_history(username):
     endhour: int = request.args.get("endhour", default=None, type=int)
     endminute: int = request.args.get("endminute", default=None, type=int)
     endsecond: int = request.args.get("endsecond", default=None, type=int)
-    visualize: bool = request.args.get("visualize", default=False, type=bool)
+    visualize: str = request.args.get("visualize", default=None, type=str)
     # gather and filter revisions
     try:
         revisions = UserHistory(user=username,
@@ -113,15 +118,21 @@ def get_user_history(username):
                                 startsecond=startsecond, endyear=endyear, endmonth=endmonth,
                                 endday=endday, endhour=endhour, endminute=endminute,
                                 endsecond=endsecond, tags=tags, titles=titles, keyword=keyword)
+        # https://stackoverflow.com/questions/50728328/
+        # python-how-to-show-matplotlib-in-flask/50728936#50728936
         if visualize:
             output = io.BytesIO()
-            FigureCanvas(Histogram(revisions).graph).print_png(output)
+            if visualize == "edits_per_time":
+                FigureCanvas(Histogram(revisions).graph).print_png(output)
+            #elif visualize == "edits_per_article":
+                #FigureCanvas(Pie(revisions).graph).print_png(output)
             return Response(output.getvalue(), mimetype="image/png")
         return revisions.revisions_as_json()
     except BadRequestException as bre:
         return "<h1>Bad Request</h1>" + str(bre), 400
 
 @app.route("/getRevision/<title>")
+@mem_cache.cached(timeout=CACHE_TIMEOUT)
 def get_revision(title):
     """ /getRevision/<title>?...
     Returns the contents of a single revision.
@@ -145,6 +156,7 @@ def get_revision(title):
         return "<h1>Bad Request</h1>" + str(bre), 400
 
 @app.route("/compareRevisions/<title>")
+@mem_cache.cached(timeout=CACHE_TIMEOUT*2)
 def get_difference(title):
     """ /getRevision/<title>?...
     Returns the difference between two revisions a and b.

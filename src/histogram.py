@@ -34,6 +34,7 @@ class Histogram(Plot):
         ax.xaxis.set_major_formatter(mdates.AutoDateFormatter(locator))
 
         plt.xticks(rotation=45)
+        plt.tight_layout()
 
         return fig
 
