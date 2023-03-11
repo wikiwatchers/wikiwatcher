@@ -17,11 +17,8 @@ class Plot:
         self.y_axis_label: str = None
         self.title: str = None
 
-    def set_x_axis_data(self, revisions_list: list[Revision],
+    def get_x_axis_data(self,
                    revision_property: str):
-        """set x graphing data to any parameter in revision object"""
-        try:
-            for each_rev in revisions_list:
-                self.x_axis.append(vars(each_rev)[revision_property])
-        except KeyError:
-            print("Revisions do not contain this key")
+        """set x graphing data to any parameter in revision object"""        
+        return self.history.get_list_of_revision_key_data(revision_property)
+

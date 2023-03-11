@@ -19,19 +19,19 @@ class Histogram(Plot):
         self.num_bins = None
         self.y_axis_label = "Number of edits"
         self.x_axis_label = "Date"
+        self.title = "Number of Edits per Date"
 
-        self.x_axis = self.pull_dates_from_history()
+        self.x_axis = self.get_x_axis_data()
         self.graph = self.plot_graph()
-        #print(self.x_axis)
+        print(self.x_axis)
 
-    def pull_dates_from_history(self):
+    def get_x_axis_data(self):
         """pulls the datetime from each history object
         turns the datetime into a format useable by matplotlib
         then puts it into a numpy array"""
         datetime_list = []
         for each_rev in self.history.revisions:
-            this_datetime = each_rev.timestamp_to_datetime()
-            datetime_list.append(mdates.date2num(this_datetime))
+            datetime_list.append(mdates.date2num(each_rev.timestamp_to_datetime()))
         return np.array(datetime_list)
 
     def set_num_bins(self):
@@ -46,7 +46,7 @@ class Histogram(Plot):
 
     def plot_graph(self):
         """graphs the histogram using matplot lib"""
-        fig, axe = plt.subplots()
+        fig, axe = plt.subplots(layout="constrained")
         self.set_num_bins()
         axe.hist(self.x_axis, bins=self.num_bins, color="lightblue",
                 edgecolor="black", range=(self.x_axis[0], self.x_axis[len(self.x_axis)-1]))
@@ -56,10 +56,13 @@ class Histogram(Plot):
         plt.xticks(rotation=45)
         plt.ylabel(self.y_axis_label)
         plt.xlabel(self.x_axis_label)
-        fig.tight_layout()
+        plt.title(self.title)
+        plt.rcParams['figure.constrained_layout.use'] = True
         plt.show()
         return fig
 
 if __name__=="__main__":
-    article = ArticleHistory("Cat", startyear=2004, endyear=2004, startmonth=10, endmonth=11)
+    article = ArticleHistory(titles="Techno", user="Rio65trio",
+                         startyear=2022, startmonth=12, startday=1,
+                        endyear=2022, endmonth=12, endday=30)
     Histogram(article)

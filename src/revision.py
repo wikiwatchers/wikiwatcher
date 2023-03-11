@@ -100,3 +100,6 @@ class Revision():
         second = int(self.timestamp[17:19])
         ret = datetime(year, month, day, hour, minute, second)
         return ret
+    
+    def get_revision_key(self, attr):
+        return vars(self)[attr]

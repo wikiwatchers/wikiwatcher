@@ -91,6 +91,15 @@ class History:
         self.call_wikipedia_api()
         self.filter()
 
+    def get_list_of_revision_key_data(self, revision_key):
+        revision_key_list = []
+        try:
+            for each_rev in self.revisions:
+                revision_key_list.append(each_rev.get_revision_key(revision_key))
+        except KeyError:
+            print("Revisions do not contain this key")
+        return revision_key_list
+
 def validate_datetime_params(bad_datetime: Exception, year, month, day, hour, minute, second):
     """ ensures all datetime params fall into valid ranges (ex hours 0 through 23) """
     # could this entirely replace the order-validation in format_timestamp?
@@ -127,3 +136,4 @@ def format_timestamp(year, month=None, day=None,
                 ret += "01"
         index += 1
     return ret
+
