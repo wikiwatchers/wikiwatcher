@@ -4,21 +4,21 @@ from userhistory import UserHistory
 
 def test_userhistory_init():
     '''Tests user history init'''
-    user_history = UserHistory("QuicoleJR")
+    user_history = UserHistory("Discospinster")
 
-    assert user_history.user == "QuicoleJR"
+    assert user_history.user == "Discospinster"
     assert user_history.tags is None
     assert user_history.keyword is None
     assert len(user_history.revisions) > 0
 
 def test_userhistory_tag_filter():
     '''Tests user history filtering'''
-    user_history = UserHistory("QuicoleJR", tags=["mobile edit"])
-    assert user_history.user == "QuicoleJR"
+    user_history = UserHistory("StarTrekker", tags=["visualeditor"])
+    assert user_history.user == "StarTrekker"
     assert len(user_history.tags) == 1
-    assert user_history.tags[0] == "mobile edit"
+    assert user_history.tags[0] == "visualeditor"
     assert len(user_history.revisions) > 0
-    assert "mobile edit" in user_history.revisions[0].tags
+    assert "visualeditor" in user_history.revisions[0].tags
 
 def test_userhistory_keyword_filter():
     '''Tests user history filtering'''
