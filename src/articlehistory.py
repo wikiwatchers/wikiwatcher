@@ -1,15 +1,14 @@
-'''defines the collection class for article history'''
+"""defines the collection class for article history"""
 import requests
-from datetime import datetime
-# from src.revision import Revision, URL
-# from src.history import format_timestamp,History
-from src.revision import Revision, URL
-from src.history import format_timestamp, History
-
-# pylint: disable=C0303,R0913,R0914
+try:
+    from src.revision import Revision, URL
+    from src.history import format_timestamp, History
+except ModuleNotFoundError:
+    from revision import Revision, URL
+    from history import format_timestamp, History
 
 class ArticleHistory(History):
-    '''article revision collection class'''
+    """article revision collection class"""
 
     def __init__(self, titles, user=None, keyword=None, tags=None,
                  startyear=None, startmonth=None, startday=None,
@@ -23,54 +22,26 @@ class ArticleHistory(History):
                          starthour, startminute, startsecond,
                          endyear, endmonth, endday,
                          endhour, endminute, endsecond)
-
-        self.call_wikipedia_api()
-        self.filter()
+        self.fill_revisions()
 
     def init_to_none(self):
-        '''sets up class data members and initalizes to none'''
+        """sets up class data members and initalizes to none"""
         self.pageid: int = None
 
-    def filter_by_keyword(self):
-        for rev in self.revisions.copy():
-            if rev.contains_keyword(self.keyword) == False:
-                self.revisions.remove(rev)
-
-    def filter_by_tags(self):
-        for rev in self.revisions.copy():
-            if rev.contains_tag(self.tags) == False:
-                self.revisions.remove(rev)
-
-    def filter(self):
-        if self.tags != None:
-            self.filter_by_tags()
-        if self.keyword != None:
-            self.filter_by_keyword()
-
-        if len(self.revisions) == 0:
-            print("No revisions found matching your search parameters")
-
-        for each_revision in self.revisions:
-            print(each_revision.json)
-
     def call_wikipedia_api(self):
-        '''pulls down an article's revision history from the API'''
-        self.revisions = []
+        """pulls down an article's revision history from the API"""
         session = requests.Session()
 
         params = {
             "prop": "revisions",
             "titles": self.titles,
             "rvprop": "comment|ids|flags|size|tags|timestamp|user|userid",
-            "formatversion": "2",
             "rvuser": self.user,
-            "rvstart": self.rvstart,
+            "rvstart": self.rvstart, # pylint: disable=access-member-before-definition
             "rvend": self.rvend,
-
-            "rvend": self.rvend,
+            "rvdir": "newer",
+            "rvlimit": "500"
         } | self.base_params
-        if self.rvstart is None:
-            params["rvlimit"] = "10"  # change to 500
 
         rev = session.get(url=URL, params=params)
         data = rev.json()
@@ -83,6 +54,11 @@ class ArticleHistory(History):
                 each_revision["pageid"] = self.pageid
                 each_revision["title"] = self.titles
                 self.revisions.append(Revision(each_revision))
+            if not data.get("continue") is None:
+                wp_continue_timestamp_and_id = data["continue"]["rvcontinue"]
+                separator_index = wp_continue_timestamp_and_id.index("|")
+                self.rvstart = wp_continue_timestamp_and_id[:separator_index]
+                self.call_wikipedia_api()
 
         except KeyError:
-            print("Data matching specified parameters not found")
+            print("Error accessing API with given parameters")
