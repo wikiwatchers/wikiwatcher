@@ -4,9 +4,9 @@ from userhistory import UserHistory
 
 def test_userhistory_init():
     '''Tests user history init'''
-    user_history = UserHistory("Jimbo Wales")
+    user_history = UserHistory("Discospinster")
 
-    assert user_history.user == "Jimbo Wales"
+    assert user_history.user == "Discospinster"
     assert user_history.tags is None
     assert user_history.keyword is None
     assert len(user_history.revisions) > 0
@@ -22,12 +22,12 @@ def test_userhistory_tag_filter():
 
 def test_userhistory_keyword_filter():
     '''Tests user history filtering'''
-    user_history = UserHistory("Jimbo Wales", keyword="Help")
+    user_history = UserHistory("Discospinster", keyword="composer")
 
-    assert user_history.user == "Jimbo Wales"
-    assert user_history.keyword == "Help"
+    assert user_history.user == "Discospinster"
+    assert user_history.keyword == "composer"
     assert len(user_history.revisions) > 0
-    assert user_history.revisions[0].contains_keyword("Help")
+    assert user_history.revisions[0].contains_keyword("composer")
 
 def test_userhistory_timestamps():
     '''Tests user history with timestamps'''
