@@ -31,6 +31,8 @@ def parse_tags(tagstring):
 def index():
     """ Our index landing page """
     content = "Here is some placeholder content"
+    """ We can pass arguments into the html template like this content variable, which can 
+    then be called in the template file by using {{ content }}"""
     return render_template('index.html', content=content)
 
 @app.route("/articleHistory/<title>")
