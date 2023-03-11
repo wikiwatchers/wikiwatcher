@@ -23,16 +23,17 @@ class Histogram(Plot):
 
         self.x_axis = self.get_x_axis_data()
         self.graph = self.plot_graph()
-        print(self.x_axis)
+        #print(self.x_axis)
 
     def get_x_axis_data(self):
         """pulls the datetime from each history object
         turns the datetime into a format useable by matplotlib
         then puts it into a numpy array"""
-        datetime_list = []
-        for each_rev in self.history.revisions:
-            datetime_list.append(mdates.date2num(each_rev.timestamp_to_datetime()))
-        return np.array(datetime_list)
+        datetime_list = self.history.get_list_datetimes()
+        new_dt = []
+        for each_dt in datetime_list:
+            new_dt.append(mdates.date2num(each_dt))
+        return np.array(new_dt)
 
     def set_num_bins(self):
         """sets the number of bins - approximately one bin per day"""
@@ -63,6 +64,6 @@ class Histogram(Plot):
 
 if __name__=="__main__":
     article = ArticleHistory(titles="Techno", user="Rio65trio",
-                         startyear=2022, startmonth=12, startday=1,
+                        startyear=2022, startmonth=12, startday=1,
                         endyear=2022, endmonth=12, endday=30)
     Histogram(article)

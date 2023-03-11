@@ -99,6 +99,12 @@ class History:
         except KeyError:
             print("Revisions do not contain this key")
         return revision_key_list
+    
+    def get_list_datetimes(self):
+        datetimes = []
+        for each_rev in self.revisions:
+            datetimes.append(each_rev.timestamp_to_datetime())
+        return datetimes
 
 def validate_datetime_params(bad_datetime: Exception, year, month, day, hour, minute, second):
     """ ensures all datetime params fall into valid ranges (ex hours 0 through 23) """
