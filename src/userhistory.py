@@ -27,7 +27,7 @@ class UserHistory(History):
         """ Sets up class data members and initializes them to None """
         self.user: str = None
 
-    def call_wikipedia_api(self, i = 0):
+    def call_wikipedia_api(self, limit = 0):
         """ Pulls down user's edit history from Wikipedia API """
         session = requests.Session()
 
@@ -50,12 +50,12 @@ class UserHistory(History):
             self.json = data["query"]["usercontribs"]
             for each_revision in self.json:
                 self.revisions.append(Revision(each_revision))
-            if not data.get("continue") is None and i < 50:
+            if not data.get("continue") is None and limit < 50:
                 wp_continue_timestamp_and_id = data["continue"]["uccontinue"]
                 print(wp_continue_timestamp_and_id)
                 separator_index = wp_continue_timestamp_and_id.index("|")
                 self.rvstart = wp_continue_timestamp_and_id[:separator_index]
-                i += 1
-                self.call_wikipedia_api(i)
+                limit += 1
+                self.call_wikipedia_api(limit)
         except BadRequestException:
             print("Data not found")
