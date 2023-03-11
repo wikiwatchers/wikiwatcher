@@ -14,6 +14,7 @@ class Plot:
         #self.style: str = "seaborn-darkgrid" #default?
         # _mpl-gallery = histogram
         # _mpl-gallery-nogrid = pie chart
+        self.graph = None
         self.x_axis = []
         self.x_axis_label: str = None
         self.y_axis_label: str = None
