@@ -3,14 +3,16 @@ Defines endpoints of our API
 Handles interactions with our users, does not handle interactions with external APIs
 """
 import __init__
-import sys
+import io
 import json
-from flask import Flask, request
+from flask import Flask, request, Response
 from markdown import markdown
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from src.revision import URL
 from src.userhistory import UserHistory
 from src.articlehistory import ArticleHistory
 from src.exceptions import BadRequestException
+from src.histogram import Histogram
 
 app = Flask("WikiWatcher")
 
@@ -102,6 +104,7 @@ def get_user_history(username):
     endhour: int = request.args.get("endhour", default=None, type=int)
     endminute: int = request.args.get("endminute", default=None, type=int)
     endsecond: int = request.args.get("endsecond", default=None, type=int)
+    visualize: bool = request.args.get("visualize", default=False, type=bool)
     # gather and filter revisions
     try:
         revisions = UserHistory(user=username,
@@ -110,6 +113,10 @@ def get_user_history(username):
                                 startsecond=startsecond, endyear=endyear, endmonth=endmonth,
                                 endday=endday, endhour=endhour, endminute=endminute,
                                 endsecond=endsecond, tags=tags, titles=titles, keyword=keyword)
+        if visualize:
+            output = io.BytesIO()
+            FigureCanvas(Histogram(revisions).graph).print_png(output)
+            return Response(output.getvalue(), mimetype="image/png")
         return revisions.revisions_as_json()
     except BadRequestException as bre:
         return "<h1>Bad Request</h1>" + str(bre), 400
