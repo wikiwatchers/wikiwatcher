@@ -33,7 +33,7 @@ class UserHistory(History):
 
         params = {
             "list": "usercontribs",
-            "ucprop": "comment|ids|flags|size|tags|timestamp|user|userid",
+            "ucprop": "comment|ids|flags|size|tags|timestamp|title|user|userid",
             "ucuser": self.user,
             "ucstart": self.rvstart, # pylint: disable=access-member-before-definition
             "ucend" : self.rvend,
