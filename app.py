@@ -122,10 +122,15 @@ def get_user_history(username):
         # python-how-to-show-matplotlib-in-flask/50728936#50728936
         if visualize:
             output = io.BytesIO()
-            if visualize == "edits_per_time":
-                FigureCanvas(Histogram(revisions).graph).print_png(output)
-            #elif visualize == "edits_per_article":
-                #FigureCanvas(Pie(revisions).graph).print_png(output)
+            chart = None
+            match visualize:
+                case "edits_per_time":
+                    chart = Histogram(revisions)
+                #case "edits_per_article":
+                    #chart = Pie(revisions)
+                case default:
+                    raise BadRequestException("Invalid choice of visualization")
+            FigureCanvas(chart.graph).print_png(output)
             return Response(output.getvalue(), mimetype="image/png")
         return revisions.revisions_as_json()
     except BadRequestException as bre:
