@@ -14,6 +14,7 @@ from src.userhistory import UserHistory
 from src.articlehistory import ArticleHistory
 from src.exceptions import BadRequestException
 from src.histogram import Histogram
+from src.pie import Pie
 
 app = Flask("WikiWatcher")
 mem_cache = Cache(app, config={"CACHE-TYPE": "simple"})
@@ -67,6 +68,7 @@ def get_article_history(title):
     endhour: int = request.args.get("endhour", default=None, type=int)
     endminute: int = request.args.get("endminute", default=None, type=int)
     endsecond: int = request.args.get("endsecond", default=None, type=int)
+    visualize: str = request.args.get("visualize", default=None, type=str)
     # gather and filter revisions
     try:
         revisions = ArticleHistory(titles=title,
@@ -75,6 +77,20 @@ def get_article_history(title):
                                    startsecond=startsecond, endyear=endyear, endmonth=endmonth,
                                    endday=endday, endhour=endhour, endminute=endminute,
                                    endsecond=endsecond, tags=tags, user=user, keyword=keyword)
+        # https://stackoverflow.com/questions/50728328/
+        # python-how-to-show-matplotlib-in-flask/50728936#50728936
+        if visualize:
+            output = io.BytesIO()
+            chart = None
+            match visualize:
+                case "edits_per_time":
+                    chart = Histogram(revisions)
+                case "edits_per_user":
+                    chart = Pie(revisions)
+                case default:
+                    raise BadRequestException("Invalid choice of visualization")
+            FigureCanvas(chart.graph).print_png(output)
+            return Response(output.getvalue(), mimetype="image/png")
         return revisions.revisions_as_json()
     except BadRequestException as bre:
         return "<h1>Bad Request</h1>" + str(bre), 400
@@ -126,8 +142,8 @@ def get_user_history(username):
             match visualize:
                 case "edits_per_time":
                     chart = Histogram(revisions)
-                #case "edits_per_article":
-                    #chart = Pie(revisions)
+                case "edits_per_article":
+                    chart = Pie(revisions)
                 case default:
                     raise BadRequestException("Invalid choice of visualization")
             FigureCanvas(chart.graph).print_png(output)
