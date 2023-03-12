@@ -36,12 +36,12 @@ def test_format_timestamp():
 def test_get_list_of_revision_key_data():
     """tests get_list_of_revision_key_data"""
     with open("tests/resources/wikipedia_responses.json", "r", encoding="utf-8") as file:
-        known_response = file.read()
-        response_json = json.loads(known_response)["query"]
-        known_revision_json = response_json["pages"][0]["revisions"][0]
-        known_revision_json["title"] = response_json["pages"][0]["title"]
-        known_revision_json["pageid"] = response_json["pages"][0]["pageid"]
-    test_revision = Revision(known_revision_json)
+        known_rev = file.read()
+        response_json = json.loads(known_rev)["query"]
+        known_rev_json = response_json["pages"][0]["revisions"][0]
+        known_rev_json["title"] = response_json["pages"][0]["title"]
+        known_rev_json["pageid"] = response_json["pages"][0]["pageid"]
+    test_revision = Revision(known_rev_json)
 
     rev_key_list = []
     for _ in range(10):
