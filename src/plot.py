@@ -19,6 +19,5 @@ class Plot:
 
     def get_x_axis_data(self,
                    revision_property: str):
-        """set x graphing data to any parameter in revision object"""        
+        """set x graphing data to any parameter in revision object"""
         return self.history.get_list_of_revision_key_data(revision_property)
-
