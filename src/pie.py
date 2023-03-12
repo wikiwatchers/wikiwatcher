@@ -72,8 +72,13 @@ class Pie(Plot):
         return fig
 
 def make_autopct(values):
-    def my_autopct(pct):
+    """ see
+    https://stackoverflow.com/questions/6170246/
+    how-do-i-use-matplotlib-autopct
+    enables pie chart to display both percent and raw count for each wedge
+    """
+    def make_percent_and_count_string(count):
         total = sum(values)
-        val = int(round(pct*total/100.0))
-        return "{p:.2f}% ({v:d})".format(p=pct, v=val)
-    return my_autopct
+        val = int(round(count*total/100.0))
+        return f"{count:.2f}% ({val:d})"
+    return make_percent_and_count_string
