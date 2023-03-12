@@ -109,12 +109,3 @@ class History:
         that implements the function; e.x. for ArticleHistory, this should return a
         list of users; for UserHistory, a list of articles
         """
-
-def validate_datetime_params(bad_datetime: Exception, year, month, day, hour, minute, second):
-    """ ensures all datetime params fall into valid ranges (ex hours 0 through 23) """
-    # could this entirely replace the order-validation in format_timestamp?
-    try:
-        datetime(year=year, month=month or 1, day=day or 1,
-                 hour=hour or 0, minute=minute or 0, second=second or 0)
-    except ValueError as val_err:
-        raise bad_datetime from val_err
