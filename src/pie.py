@@ -3,17 +3,16 @@ or which users have edited an article
 """
 import matplotlib.pyplot as plt
 from random import random
+from datetime import datetime
 import numpy as np
 try:
     from src.exceptions import NoRevisionsException, BadRequestException
     from src.plot import Plot
     from src.history import History
-    from src.revision import timestamp_to_datetime
 except ModuleNotFoundError:
     from exceptions import NoRevisionsException
     from plot import Plot
     from history import History
-    from revision import timestamp_to_datetime
 
 class Pie(Plot):
     """ the pie chart itself, graph attribute contains a pyplot.Figure """
@@ -34,18 +33,26 @@ class Pie(Plot):
                 raise NoRevisionsException("No revisions matching filter parameters")
             case _ if 1 < num_labels < 10:
                 fig_size_inches = (6,6)
+                pct_distance = 1.4
+                label_distance = 1.8
             case _ if 11 < num_labels < 30:
                 fig_size_inches = (10,10)
+                pct_distance = 1.3
+                label_distance = 1.6
             case _ if 30 < num_labels < 100:
                 fig_size_inches = (14,14)
+                pct_distance = 1.2
+                label_distance = 1.4
             case _:
                 fig_size_inches = (18,18)
+                pct_distance = 1.1
+                label_distance = 1.2
 
         fig, axes = plt.subplots(layout="constrained", figsize=fig_size_inches)
         plt.rcParams["figure.constrained_layout.use"] = True
 
-        _, labels, percents = axes.pie(sizes, labels=labels, autopct="%1.1f%%",
-               pctdistance=1.2, labeldistance=1.4, rotatelabels=True)
+        _, labels, percents = axes.pie(sizes, labels=labels, autopct=make_autopct(sizes),
+               pctdistance=pct_distance, labeldistance=label_distance, rotatelabels=True)
         for label, percent in zip(labels, percents):
             percent.set_rotation(label.get_rotation())
 
@@ -58,8 +65,15 @@ class Pie(Plot):
         else:
             title = f"Articles revised by {self.history.user}\n"
         if not self.history.rvstart is None:
-            title += f"from {timestamp_to_datetime(self.history.rvstart)}\n"
+            title += f"from {datetime.fromisoformat(self.history.rvstart)}\n"
         if not self.history.rvend is None:
-            title += f"to {self.history.rvend}\n"
+            title += f"to {datetime.fromisoformat(self.history.rvend)}\n"
         fig.suptitle(title)
         return fig
+
+def make_autopct(values):
+    def my_autopct(pct):
+        total = sum(values)
+        val = int(round(pct*total/100.0))
+        return "{p:.2f}% ({v:d})".format(p=pct, v=val)
+    return my_autopct

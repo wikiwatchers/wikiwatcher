@@ -3,14 +3,13 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import numpy as np
 from datetime import datetime
+from dateutil import parser
 try:
     from src.articlehistory import ArticleHistory
     from src.plot import Plot
-    from src.revision import timestamp_to_datetime
 except ModuleNotFoundError:
     from articlehistory import ArticleHistory
     from plot import Plot
-    from revision import timestamp_to_datetime
 
 class Histogram(Plot):
     """ temporary to calm pylint down - should be filled in by author """
@@ -24,7 +23,7 @@ class Histogram(Plot):
         """ temporary to calm pylint down - should be filled in by author """
         datetime_list = []
         for each_rev in self.history.revisions:
-            this_datetime = timestamp_to_datetime(each_rev.timestamp)
+            this_datetime = parser.isoparse(each_rev.timestamp)
             datetime_list.append(mdates.date2num(this_datetime))
         return np.array(datetime_list)
 

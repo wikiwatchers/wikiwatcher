@@ -68,9 +68,6 @@ def test_get_diff():
         f_diff = "".join(in_file.readlines())
         assert f_diff == diff
 
-
-
-
 if __name__ == "__main__":
     # print("run python -m pytest")
     test_get_diff()
