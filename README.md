@@ -26,10 +26,19 @@
 		endx parameters specify a date and time which acts as an upper bound on the timestamp of retrieved revisions.
 		These date/time parameters follow the same specificity rules as those in the endpoints above.
 		<li>tags</li>
-		tags should be a list of strings matching wikipedia's available reviser-applied tags for revisions - <br/>
+		tags should be a comma-separated bracket-enclosed list of strings matching wikipedia's available reviser-applied tags for revisions.<br/>
+		Single tags still require the enclosing brackets.
+
 		view a comprehensive list of available tags <a href=https://en.wikipedia.org/wiki/Special:Tags>here</a>.
 		<li>user - retrieve only revisions to the specified article which were created by this username.</li>
 		<li>keyword - retrieve only revisions whose contents contain this keyword.</li>
+		This filter is very resource intensive and may incur several minutes of waiting time for large requests.
+		<li>visualize - specify a visualization to be generated and returned as a PNG image.</li>
+		valid values for this argument:
+		<ul>
+			<li>revisions_per_time - plots the number of revisions per unit of time as a histogram.</li>
+			<li>revisions_per_user - plots the proportion of revisions made to the article per user who has made revisions as a pie chart.</li>
+		</ul>
 		</ul>
 	<br/>
 	<li>/userHistory/user - Requires the username of a wikipedia editor.</li>
@@ -56,6 +65,13 @@
 		See above for an explanation of the tags parameter.
 		<li>title - retrieve only revisions created by the specified user made to this article.</li>
 		<li>keyword - retrieve only revisions whose contents contain this keyword.</li>
+		This filter is very resource intensive and may incur several minutes of waiting time for large requests.
+		<li>visualize - specify a visualization to be generated and returned as a PNG image.</li>
+		valid values for this argument:
+		<ul>
+			<li>revisions_per_time - plots the number of revisions per unit of time as a histogram.</li>
+			<li>revisions_per_article - plots the proportion of revisions made by the user per article that they have made revisions to as a pie chart.</li>
+		</ul>
 		</ul>
 	<br/>
 	<li>/getRevision/title - Requires the title of an article.</li>

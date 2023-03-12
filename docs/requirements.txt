@@ -1,6 +1,8 @@
 pytest==6.2.5
 pylint==2.11.1
-requests==2.25.1
+requests
 flask==2.2.2
+flask_caching==2.0.2
 mwparserfromhell==0.6.4
 markdown==3.4.1
+matplotlib==3.7.1
