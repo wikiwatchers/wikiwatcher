@@ -86,20 +86,26 @@ class Revision():
         except (KeyError, ValueError):
             return self.get_content()
 
-    def timestamp_to_datetime(self):
-        """Converts the timestamp into a python-friendly datetime object
-        for use in collections of revisions
-        """
-        if self.timestamp is None:
-            raise AttributeError("Revision timestamp missing")
-        year = int(self.timestamp[0:4])
-        month = int(self.timestamp[5:7])
-        day = int(self.timestamp[8:10])
-        hour = int(self.timestamp[11:13])
-        minute = int(self.timestamp[14:16])
-        second = int(self.timestamp[17:19])
-        ret = datetime(year, month, day, hour, minute, second)
-        return ret
-    
     def get_revision_key(self, attr):
-        return vars(self)[attr]
+        """gets the revision attribute, which is passed in as a string"""
+        if attr == "":
+            raise KeyError
+        try:
+            return vars(self)[attr]
+        except KeyError:
+            return None
+
+def timestamp_to_datetime(timestamp: str):
+    """Converts the timestamp into a python-friendly datetime object
+    for use in collections of revisions
+    """
+    if timestamp is None:
+        raise AttributeError("Revision timestamp missing")
+    year = int(timestamp[0:4])
+    month = int(timestamp[5:7])
+    day = int(timestamp[8:10])
+    hour = int(timestamp[11:13])
+    minute = int(timestamp[14:16])
+    second = int(timestamp[17:19])
+    ret = datetime(year, month, day, hour, minute, second)
+    return ret

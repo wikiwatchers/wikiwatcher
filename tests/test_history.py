@@ -34,6 +34,7 @@ def test_format_timestamp():
         format_timestamp(year=2015, month=12, day=25, hour=13, second=0)
 
 def test_get_list_of_revision_key_data():
+    """tests get_list_of_revision_key_data"""
     with open("tests/resources/wikipedia_responses.json", "r", encoding="utf-8") as file:
         known_response = file.read()
         response_json = json.loads(known_response)["query"]
@@ -43,7 +44,7 @@ def test_get_list_of_revision_key_data():
     test_revision = Revision(known_revision_json)
 
     rev_key_list = []
-    for i in range(10):
+    for _ in range(10):
         rev_key_list.append(test_revision)
 
     history_test = History()
@@ -54,6 +55,12 @@ def test_get_list_of_revision_key_data():
         rev_key_list_userid.append(each_rev.userid)
 
     assert history_test.get_list_of_revision_key_data("userid") == rev_key_list_userid
+
+    rev_key_list_timestamp = []
+    for each_rev in rev_key_list:
+        rev_key_list_timestamp.append(each_rev.timestamp)
+
+    assert history_test.get_list_of_revision_key_data("timestamp") == rev_key_list_timestamp
 
 if __name__ == "__main__":
     test_format_timestamp()

@@ -1,7 +1,7 @@
 """Tests for class revision"""
 import __init__
 import json
-import requests
+import pytest
 from revision import Revision, URL, datetime
 
 def test_revision_init():
@@ -69,6 +69,7 @@ def test_get_diff():
         assert f_diff == diff
 
 def test_get_revision_key():
+    """Tests get_revision_key()"""
     with open("tests/resources/wikipedia_responses.json", "r", encoding="utf-8") as file:
         known_response = file.read()
         response_json = json.loads(known_response)["query"]
@@ -86,7 +87,6 @@ def test_get_revision_key():
     assert test_revision.get_revision_key("title") == "100 Gecs"
     assert test_revision.get_revision_key("user") == "Ss112"
     assert test_revision.get_revision_key("userid") == 1286970
-
 
 if __name__ == "__main__":
     # print("run python -m pytest")
