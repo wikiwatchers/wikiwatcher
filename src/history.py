@@ -80,7 +80,7 @@ class History:
                 self.revisions.remove(rev)
 
     @abstractmethod
-    def call_wikipedia_api(self, limit = 0):
+    def call_wikipedia_api(self):
         """ history subclasses must implement a call to the external API """
 
     def fill_revisions(self):
