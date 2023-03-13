@@ -85,18 +85,3 @@ class Revision():
             return str(mwp.parse(wp_response['compare']['*']))
         except (KeyError, ValueError):
             return self.get_content()
-
-    def timestamp_to_datetime(self):
-        """Converts the timestamp into a python-friendly datetime object
-        for use in collections of revisions
-        """
-        if self.timestamp is None:
-            raise AttributeError("Revision timestamp missing")
-        year = int(self.timestamp[0:4])
-        month = int(self.timestamp[5:7])
-        day = int(self.timestamp[8:10])
-        hour = int(self.timestamp[11:13])
-        minute = int(self.timestamp[14:16])
-        second = int(self.timestamp[17:19])
-        ret = datetime(year, month, day, hour, minute, second)
-        return ret

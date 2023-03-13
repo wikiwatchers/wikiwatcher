@@ -2,3 +2,4 @@ temp.*
 .vscode
 *.pyc
 .DS_Store
+venv
