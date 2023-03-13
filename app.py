@@ -3,16 +3,23 @@ Defines endpoints of our API
 Handles interactions with our users, does not handle interactions with external APIs
 """
 import __init__
-import sys
+import io
 import json
-from flask import Flask, request
+from flask import Flask, request, Response
+from flask_caching import Cache
 from markdown import markdown
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from src.revision import URL
+from src.exceptions import NoRevisionsException
 from src.userhistory import UserHistory
 from src.articlehistory import ArticleHistory
 from src.exceptions import BadRequestException
+from src.histogram import Histogram
+from src.pie import Pie
 
 app = Flask("WikiWatcher")
+mem_cache = Cache(app, config={"CACHE-TYPE": "simple"})
+CACHE_TIMEOUT = 120 # seconds
 
 def validate_tagstring(tagstring):
     """ ensures user passed a list of tags to endpoint """
@@ -35,6 +42,7 @@ def index():
     return ret
 
 @app.route("/articleHistory/<title>")
+@mem_cache.cached(timeout=CACHE_TIMEOUT)
 def get_article_history(title):
     """ /articleHistory/<title>?...
     Returns a JSON collection of revisions made to an article.
@@ -61,6 +69,7 @@ def get_article_history(title):
     endhour: int = request.args.get("endhour", default=None, type=int)
     endminute: int = request.args.get("endminute", default=None, type=int)
     endsecond: int = request.args.get("endsecond", default=None, type=int)
+    visualize: str = request.args.get("visualize", default=None, type=str)
     # gather and filter revisions
     try:
         revisions = ArticleHistory(titles=title,
@@ -69,11 +78,28 @@ def get_article_history(title):
                                    startsecond=startsecond, endyear=endyear, endmonth=endmonth,
                                    endday=endday, endhour=endhour, endminute=endminute,
                                    endsecond=endsecond, tags=tags, user=user, keyword=keyword)
+        # https://stackoverflow.com/questions/50728328/
+        # python-how-to-show-matplotlib-in-flask/50728936#50728936
+        if visualize:
+            output = io.BytesIO()
+            chart = None
+            match visualize:
+                case "revisions_per_time":
+                    chart = Histogram(revisions)
+                case "revisions_per_user":
+                    chart = Pie(revisions)
+                case _:
+                    raise BadRequestException("Invalid choice of visualization")
+            FigureCanvas(chart.graph).print_png(output)
+            return Response(output.getvalue(), mimetype="image/png")
         return revisions.revisions_as_json()
     except BadRequestException as bre:
         return "<h1>Bad Request</h1>" + str(bre), 400
+    except NoRevisionsException as nre:
+        return "<h1>No Revisions</h1>" + str(nre), 404
 
 @app.route("/userHistory/<username>")
+@mem_cache.cached(timeout=CACHE_TIMEOUT)
 def get_user_history(username):
     """ /userHistory/<username>?...
     Returns a JSON collection of revisions made by a user.
@@ -102,6 +128,7 @@ def get_user_history(username):
     endhour: int = request.args.get("endhour", default=None, type=int)
     endminute: int = request.args.get("endminute", default=None, type=int)
     endsecond: int = request.args.get("endsecond", default=None, type=int)
+    visualize: str = request.args.get("visualize", default=None, type=str)
     # gather and filter revisions
     try:
         revisions = UserHistory(user=username,
@@ -110,11 +137,28 @@ def get_user_history(username):
                                 startsecond=startsecond, endyear=endyear, endmonth=endmonth,
                                 endday=endday, endhour=endhour, endminute=endminute,
                                 endsecond=endsecond, tags=tags, titles=titles, keyword=keyword)
+        # https://stackoverflow.com/questions/50728328/
+        # python-how-to-show-matplotlib-in-flask/50728936#50728936
+        if visualize:
+            output = io.BytesIO()
+            chart = None
+            match visualize:
+                case "revisions_per_time":
+                    chart = Histogram(revisions)
+                case "revisions_per_article":
+                    chart = Pie(revisions)
+                case _:
+                    raise BadRequestException("Invalid choice of visualization")
+            FigureCanvas(chart.graph).print_png(output)
+            return Response(output.getvalue(), mimetype="image/png")
         return revisions.revisions_as_json()
     except BadRequestException as bre:
         return "<h1>Bad Request</h1>" + str(bre), 400
+    except NoRevisionsException as nre:
+        return "<h1>No Revisions</h1>" + str(nre), 404
 
 @app.route("/getRevision/<title>")
+@mem_cache.cached(timeout=CACHE_TIMEOUT)
 def get_revision(title):
     """ /getRevision/<title>?...
     Returns the contents of a single revision.
@@ -136,8 +180,11 @@ def get_revision(title):
         return ret
     except BadRequestException as bre:
         return "<h1>Bad Request</h1>" + str(bre), 400
+    except NoRevisionsException as nre:
+        return "<h1>No Revisions</h1>" + str(nre), 404
 
 @app.route("/compareRevisions/<title>")
+@mem_cache.cached(timeout=CACHE_TIMEOUT*2)
 def get_difference(title):
     """ /getRevision/<title>?...
     Returns the difference between two revisions a and b.
@@ -171,6 +218,8 @@ def get_difference(title):
         return ret
     except BadRequestException as bre:
         return "<h1>Bad Request</h1>" + str(bre), 400
+    except NoRevisionsException as nre:
+        return "<h1>No Revisions</h1>" + str(nre), 404
 
 if __name__ == "__main__":
     app.run(debug=True)
