@@ -30,7 +30,8 @@ def parse_tags(tagstring):
 @app.route('/')
 def index():
     """ Our index landing page """
-    content = "Here is some placeholder content"
+    with open("README.md", "r", encoding="utf-8") as readme:
+        content = markdown(readme.read())
     return render_template('index.html', content=content)
 
 @app.route("/articleHistory/<title>")

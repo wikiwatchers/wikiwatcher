@@ -1,10 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-	<div class="login text-center">
-		<h1>Welcome to WikiWatcher!</h1>
-		<p>{{ content }}</p>
-		<p>WikiWatcher is an API for retrieving data about the history of edits made to an article or by a user on Wikipedia.</p>
-		<p>The API is intended to facilitate or ease the development of applications which use the data it returns. We hope to include a small toy example of such an application once the API itself is in a client-ready state, or potentially a graphical frontend which will replace this page (while still making the readme accessible through a separate link/url).</p>
-		<p>The API is implemented using the Flask framework for Python.</p>
+	<div class="home-content">
+		<p>{{ content  | safe }}</p>
 	</div>
 {% endblock %}
