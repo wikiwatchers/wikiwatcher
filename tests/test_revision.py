@@ -64,7 +64,10 @@ def test_get_diff():
     test_revision.revid = 1127195995
     test_revision.parentid = 1126322774
     diff = test_revision.get_diff()
-    diff = diff[0:diff.index("<!-")]  # remove variable timestamp cmt
+    diff_timestamp_comment_i = diff.find("<!-")
+    diff_timestamp_present = diff_timestamp_comment_i != -1
+    if diff_timestamp_present:
+        diff = diff[0:diff_timestamp_comment_i]
     with open("tests/resources/revision-get_diff.html", "r", encoding="utf-8") as in_file:
         f_diff = "".join(in_file.readlines())
         assert f_diff == diff
