@@ -61,7 +61,7 @@ class Histogram(Plot):
         plt.xlabel(self.x_axis_label)
         plt.title(self.title)
         plt.rcParams['figure.constrained_layout.use'] = True
-        plt.show()
+        #plt.show()
         return fig
 
 if __name__=="__main__":
