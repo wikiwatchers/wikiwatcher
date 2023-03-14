@@ -34,7 +34,7 @@ def parse_tags(tagstring):
     tagstring = tagstring[1:-1]
     return tagstring.split(",")
 
-@app.route('/')
+@app.route("/")
 def index():
     """ Our index landing page """
     with open("README.md", "r", encoding="utf-8") as readme:
