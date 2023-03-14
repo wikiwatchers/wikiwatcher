@@ -52,4 +52,4 @@ def test_userhistory_timestamps():
 
 
 if __name__ == "__main__":
-    test_userhistory_keyword_filter()
+    test_userhistory_keyword_filters()
