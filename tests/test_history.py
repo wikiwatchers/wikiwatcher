@@ -39,6 +39,3 @@ def test_get_list_of_revision_key_data():
         rev_key_list_timestamp.append(each_rev.timestamp)
 
     assert history_test.get_list_of_revision_key_data("timestamp") == rev_key_list_timestamp
-
-if __name__ == "__main__":
-    test_format_timestamp()
