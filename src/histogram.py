@@ -30,7 +30,7 @@ class Histogram(Plot):
         timestamp_list = super().get_x_axis_data("timestamp")
         new_datetime = []
         for each_timestamp in timestamp_list:
-            new_datetime.append(mdates.date2num(timestamp_to_datetime(each_timestamp)))
+            new_datetime.append(mdates.date2num(parser.isoparse(each_timestamp)))
         return np.array(new_datetime)
 
     def set_num_bins(self):
@@ -42,7 +42,6 @@ class Histogram(Plot):
         bound_max = maximum - maximum % bin_width + bin_width
         num = int((bound_max - bound_min) / bin_width) + 1
         self.num_bins = np.linspace(bound_min, bound_max, num)
-        print(self.num_bins)
 
     def plot_graph(self):
         """graphs the histogram using matplot lib"""
@@ -51,8 +50,8 @@ class Histogram(Plot):
         axe.hist(self.x_axis, bins=self.num_bins, color="lightblue",
                 edgecolor="black", range=(self.x_axis[0], self.x_axis[len(self.x_axis)-1]))
         locator = mdates.AutoDateLocator()
-        axes.xaxis.set_major_locator(locator)
-        axes.xaxis.set_major_formatter(mdates.AutoDateFormatter(locator))
+        axe.xaxis.set_major_locator(locator)
+        axe.xaxis.set_major_formatter(mdates.AutoDateFormatter(locator))
 
         plt.xticks(rotation=45)
         plt.ylabel(self.y_axis_label)
