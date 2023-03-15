@@ -15,7 +15,7 @@ def test_userhistory_init():
 def test_userhistory_tag_filter():
     """Tests user history filtering"""
     user_history = UserHistory("QuicoleJR", tags=["mobile edit"], startyear=2023, startmonth=1,
-                               startday=1, endyear=2023, endmonth=3, endday=1)
+                               startday=1, endyear=2023, endmonth=2, endday=25)
     assert user_history.user == "QuicoleJR"
     assert len(user_history.tags) == 1
     assert user_history.tags[0] == "mobile edit"
@@ -42,8 +42,8 @@ def test_userhistory_keyword_filters():
 
 def test_userhistory_timestamps():
     """Tests user history with timestamps"""
-    user_history = UserHistory(user="Greatgiant19", startyear=2023, startmonth=2, startday=1,
-                          endyear=2023, endmonth=2, endday=28)
+    user_history = UserHistory(user="Greatgiant19", startyear=2023, startmonth=1, startday=1,
+                          endyear=2023, endmonth=2, endday=25)
 
     assert len(user_history.revisions) > 0
     assert user_history.user == "Greatgiant19"
