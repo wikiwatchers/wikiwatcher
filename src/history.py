@@ -103,6 +103,17 @@ class History:
         self.call_wikipedia_api()
         self.filter()
 
+    def get_list_of_revision_key_data(self, revision_key):
+        """returns a list of attributes pulled from revisions list
+        argument is the attribute to pull from each revision"""
+        revision_key_list = []
+        try:
+            for each_rev in self.revisions:
+                revision_key_list.append(each_rev.get_revision_key(revision_key))
+        except KeyError:
+            print("Revisions do not contain this key")
+        return revision_key_list
+
     @abstractmethod
     def get_secondary_category(self):
         """ Returns a list of the secondary category for the subtype of revision

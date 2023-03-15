@@ -1,7 +1,7 @@
 """Tests for class revision"""
 import __init__
 import json
-import requests
+import pytest
 from revision import Revision, URL, datetime
 
 def test_revision_init():
@@ -71,6 +71,26 @@ def test_get_diff():
     with open("tests/resources/revision-get_diff.html", "r", encoding="utf-8") as in_file:
         f_diff = "".join(in_file.readlines())
         assert f_diff == diff
+
+def test_get_revision_key():
+    """Tests get_revision_key()"""
+    with open("tests/resources/wikipedia_responses.json", "r", encoding="utf-8") as file:
+        known_response = file.read()
+        response_json = json.loads(known_response)["query"]
+        known_revision_json = response_json["pages"][0]["revisions"][0]
+        known_revision_json["title"] = response_json["pages"][0]["title"]
+        known_revision_json["pageid"] = response_json["pages"][0]["pageid"]
+    test_revision = Revision(known_revision_json)
+    assert test_revision.get_revision_key("timestamp") == "2022-12-13T11:41:23Z"
+    assert test_revision.get_revision_key("size") == 63658
+    assert test_revision.get_revision_key("comment") == "add peak"
+    assert test_revision.get_revision_key("pageid") == 61495838
+    assert test_revision.get_revision_key("parentid") == 1126322774
+    assert test_revision.get_revision_key("revid") == 1127195995
+    assert test_revision.get_revision_key("tags") == ["wikieditor"]
+    assert test_revision.get_revision_key("title") == "100 Gecs"
+    assert test_revision.get_revision_key("user") == "Ss112"
+    assert test_revision.get_revision_key("userid") == 1286970
 
 if __name__ == "__main__":
     # print("run python -m pytest")

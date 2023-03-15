@@ -5,15 +5,15 @@ from articlehistory import ArticleHistory
 
 def test___init__():
     """tests initalization"""
-    art = ArticleHistory(titles="Techno", user="Rio65trio",
+    art1 = ArticleHistory(titles="Techno", user="Rio65trio",
                          startyear=2022, startmonth=12, startday=1,
                         endyear=2022, endmonth=12, endday=30)
-    assert art.titles == "Techno"
-    assert art.user == "Rio65trio"
-    assert len(art.revisions) == 35
-    assert art.pageid == 23958411
-    assert art.revisions[0].user == "Rio65trio"
-    assert art.revisions[22].title == "Techno"
+    assert art1.titles == "Techno"
+    assert art1.user == "Rio65trio"
+    assert len(art1.revisions) == 35
+    assert art1.pageid == 23958411
+    assert art1.revisions[0].user == "Rio65trio"
+    assert art1.revisions[22].title == "Techno"
 
 
     art = ArticleHistory(titles="Cat", startyear=2021, startmonth=2,

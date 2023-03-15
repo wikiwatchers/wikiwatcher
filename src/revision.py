@@ -85,3 +85,12 @@ class Revision():
             return str(mwp.parse(wp_response['compare']['*']))
         except (KeyError, ValueError):
             return self.get_content()
+
+    def get_revision_key(self, attr):
+        """gets the revision attribute, which is passed in as a string"""
+        if attr == "":
+            raise KeyError
+        try:
+            return vars(self)[attr]
+        except KeyError:
+            return None
