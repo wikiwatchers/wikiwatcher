@@ -1,8 +1,7 @@
 """test for article history subclass"""
 import __init__
 import pytest
-from articlehistory import ArticleHistory, format_timestamp
-from history import History
+from articlehistory import ArticleHistory
 
 def test___init__():
     """tests initalization"""

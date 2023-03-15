@@ -1,21 +1,18 @@
-"""Histogram class, accepts a History object and
-makes a plot based on datetime"""
+""" temporary to calm pylint down - should be filled in by author """
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import numpy as np
-from plot import Plot
 from datetime import datetime
-import time
+from dateutil import parser
 try:
     from src.articlehistory import ArticleHistory
-    from src.revision import timestamp_to_datetime
+    from src.plot import Plot
 except ModuleNotFoundError:
     from articlehistory import ArticleHistory
-    from revision import timestamp_to_datetime
+    from plot import Plot
 
 class Histogram(Plot):
-    """Histogram class, accepts a History object and
-    plots a histogram using datetime array"""
+    """ temporary to calm pylint down - should be filled in by author """
     def __init__(self, history):
         super().__init__(history)
         self.num_bins = None
@@ -54,8 +51,9 @@ class Histogram(Plot):
         axe.hist(self.x_axis, bins=self.num_bins, color="lightblue",
                 edgecolor="black", range=(self.x_axis[0], self.x_axis[len(self.x_axis)-1]))
         locator = mdates.AutoDateLocator()
-        axe.xaxis.set_major_locator(locator)
-        axe.xaxis.set_major_formatter(mdates.AutoDateFormatter(locator))
+        axes.xaxis.set_major_locator(locator)
+        axes.xaxis.set_major_formatter(mdates.AutoDateFormatter(locator))
+
         plt.xticks(rotation=45)
         plt.ylabel(self.y_axis_label)
         plt.xlabel(self.x_axis_label)

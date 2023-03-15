@@ -2,10 +2,10 @@
 import requests
 try:
     from src.revision import Revision, URL
-    from src.history import format_timestamp, History
+    from src.history import History
 except ModuleNotFoundError:
     from revision import Revision, URL
-    from history import format_timestamp, History
+    from history import History
 
 class ArticleHistory(History):
     """article revision collection class"""
@@ -62,3 +62,9 @@ class ArticleHistory(History):
 
         except KeyError:
             print("Error accessing API with given parameters")
+
+    def get_secondary_category(self):
+        """ returns a list of users who have made revisions to the article -
+        should only be called after self.revisions has been filled
+        """
+        return [rev.user for rev in self.revisions]

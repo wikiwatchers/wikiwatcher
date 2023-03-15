@@ -48,12 +48,13 @@ def test_contains_tag():
 def test_get_content():
     """ Tests get_content method against known correct output """
     test_revision = Revision({})
-    test_revision.revid = 1127195995
+    test_revision.revid = 739873
     content = test_revision.get_content()
     content = content[0:content.index("<!")]  # remove variable mwparser cmt
+    content = content.replace("\r", "r")
+    content = content.replace("\'", "'")
     with open("tests/resources/revision-get_contents.html", "r", encoding="utf-8") as in_file:
         f_content = "".join(in_file.readlines())
-        f_content = f_content.replace("\\\\", "\\")
         assert f_content == content
 
 
@@ -63,7 +64,10 @@ def test_get_diff():
     test_revision.revid = 1127195995
     test_revision.parentid = 1126322774
     diff = test_revision.get_diff()
-    diff = diff[0:diff.index("<!-")]  # remove variable timestamp cmt
+    diff_timestamp_comment_i = diff.find("<!-")
+    diff_timestamp_present = diff_timestamp_comment_i != -1
+    if diff_timestamp_present:
+        diff = diff[0:diff_timestamp_comment_i]
     with open("tests/resources/revision-get_diff.html", "r", encoding="utf-8") as in_file:
         f_diff = "".join(in_file.readlines())
         assert f_diff == diff
@@ -90,4 +94,4 @@ def test_get_revision_key():
 
 if __name__ == "__main__":
     # print("run python -m pytest")
-    test_get_diff()
+    test_get_content()

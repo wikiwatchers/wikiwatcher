@@ -22,12 +22,24 @@ class History:
         self.user = user
         self.keyword = keyword
         self.tags = tags
-        if not start_year is None:
-            self.rvstart = format_timestamp(start_year, start_month, start_day,
-                                            start_hour, start_minute, start_second)
-        if not end_year is None:
-            self.rvend =  format_timestamp(end_year, end_month, end_day,
-                                            end_hour, end_minute, end_second)
+        start_timestamp_is_specified = start_year or start_month or start_day \
+                                    or start_hour or start_minute or start_second
+        end_timestamp_is_specified = end_year or end_month or end_day \
+                                  or end_hour or end_minute or end_second
+        try:
+            if start_timestamp_is_specified:
+                self.rvstart = datetime(year=start_year, month=start_month or 1,
+                                        day=start_day or 1, hour=start_hour or 0,
+                                        minute=start_minute or 0, second = start_second or 0
+                                        ).isoformat()
+            if end_timestamp_is_specified:
+                self.rvend = datetime(year=end_year, month=end_month or 1,
+                                        day=end_day or 1, hour=end_hour or 0,
+                                        minute=end_minute or 0, second = end_second or 0
+                                        ).isoformat()
+        except (ValueError, TypeError) as val_err:
+            raise BadRequestException("invalid date/time specification") from val_err
+
         self.base_params = {
            "action": "query",
             "format": "json",
@@ -102,39 +114,9 @@ class History:
             print("Revisions do not contain this key")
         return revision_key_list
 
-def validate_datetime_params(bad_datetime: Exception, year, month, day, hour, minute, second):
-    """ ensures all datetime params fall into valid ranges (ex hours 0 through 23) """
-    # could this entirely replace the order-validation in format_timestamp?
-    try:
-        datetime(year=year, month=month or 1, day=day or 1,
-                 hour=hour or 0, minute=minute or 0, second=second or 0)
-    except ValueError as val_err:
-        raise bad_datetime from val_err
-
-def format_timestamp(year, month=None, day=None,
-                     hour=None, minute=None, second=None):
-    """ cats our user's requested date/time values into a wikipedia-friendly string
-    and validates that user gave us a correct date/time
-    """
-    bad_datetime = BadRequestException("invalid date/time specification")
-    no_more_params = False
-    validate_datetime_params(bad_datetime, year, month,
-                             day, hour, minute, second)
-    if year:
-        ret = str(year)
-    else:
-        raise bad_datetime
-    index = 0
-    for param in [month, day, hour, minute, second]:
-        if no_more_params and not param is None:
-            raise bad_datetime
-        if not param is None:
-            ret += str(param).rjust(2, "0")
-        else:
-            no_more_params = True
-            if index in [2, 3, 4]:  # hour minute and second should default to 0
-                ret += "00"
-            else:  # all other params default to 1
-                ret += "01"
-        index += 1
-    return ret
+    @abstractmethod
+    def get_secondary_category(self):
+        """ Returns a list of the secondary category for the subtype of revision
+        that implements the function; e.x. for ArticleHistory, this should return a
+        list of users; for UserHistory, a list of articles
+        """

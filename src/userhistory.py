@@ -2,11 +2,11 @@
 import requests
 try:
     from src.revision import Revision, URL
-    from src.history import format_timestamp,History
+    from src.history import History
     from src.exceptions import BadRequestException
 except ModuleNotFoundError:
     from revision import Revision, URL
-    from history import format_timestamp,History
+    from history import History
     from exceptions import BadRequestException
 import mwparserfromhell as mwp
 
@@ -19,7 +19,7 @@ class UserHistory(History):
         super().init_to_none()
         self.init_to_none()
         super().__init__(titles, user, keyword, tags, startyear, startmonth, startday,
-                         starthour, startminute, startsecond,endyear, endmonth, endday,
+                         starthour, startminute, startsecond, endyear, endmonth, endday,
                          endhour, endminute, endsecond)
         self.fill_revisions()
 
@@ -33,7 +33,7 @@ class UserHistory(History):
 
         params = {
             "list": "usercontribs",
-            "ucprop": "comment|ids|flags|size|tags|timestamp|user|userid",
+            "ucprop": "comment|ids|title|flags|size|tags|timestamp|user|userid",
             "ucuser": self.user,
             "ucstart": self.rvstart, # pylint: disable=access-member-before-definition
             "ucend" : self.rvend,
@@ -57,3 +57,9 @@ class UserHistory(History):
                 self.call_wikipedia_api()
         except BadRequestException:
             print("Data not found")
+
+    def get_secondary_category(self):
+        """ returns a list of articles which have been edited by the user -
+        should only be called after self.revisions has been filled
+        """
+        return [rev.title for rev in self.revisions]
