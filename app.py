@@ -5,7 +5,7 @@ Handles interactions with our users, does not handle interactions with external 
 import __init__
 import io
 import json
-from flask import Flask, request, Response
+from flask import Flask, render_template, request, Response
 from flask_caching import Cache
 from markdown import markdown
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -36,10 +36,10 @@ def parse_tags(tagstring):
 
 @app.route("/")
 def index():
-    """display readme for now - may put a GUI here later on"""
+    """ Our index landing page """
     with open("README.md", "r", encoding="utf-8") as readme:
-        ret = markdown(readme.read())
-    return ret
+        content = markdown(readme.read())
+    return render_template('index.html', content=content)
 
 @app.route("/articleHistory/<title>")
 @mem_cache.cached(timeout=CACHE_TIMEOUT)
@@ -220,6 +220,7 @@ def get_difference(title):
         return "<h1>Bad Request</h1>" + str(bre), 400
     except NoRevisionsException as nre:
         return "<h1>No Revisions</h1>" + str(nre), 404
+
 
 if __name__ == "__main__":
     app.run(debug=True)
