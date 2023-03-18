@@ -66,7 +66,7 @@ class Revision():
         for ins_tag in soup.find_all('ins'):
             ins_tag['style'] = 'background-color: green'
         for del_tag in soup.find_all('del'): 
-            del_tag['del'] = 'background-color: red'
+            del_tag['style'] = 'background-color: red'
         #<ins> <del>
         return content
 
@@ -89,11 +89,11 @@ class Revision():
             "torev": to_id
         }
         wp_response = session.get(url=URL, params=params).json()
-        color_coded_response = self.add_color_coding_to_text(wp_response)
+        color_coded_response = self.add_color_coding_to_text(wp_response['compare']['*'])
         # Can we return something more user-friendly?
         # Automatically color ins and del tags?
         try:
-            return str(mwp.parse(color_coded_response['compare']['*']))
+            return str(mwp.parse(color_coded_response))
         except (KeyError, ValueError):
             return self.get_content()
             
