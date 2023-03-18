@@ -65,7 +65,7 @@ class Pie(Plot):
         else:
             title = f"Articles revised by {self.history.user}\n"
         if not self.history.rvstart is None:
-            title += f"from {datetime.fromisoformat(self.history.rvstart)}\n"
+            title += f"from {datetime.fromisoformat(self.history.init_rvstart_for_charts)}\n"
         if not self.history.rvend is None:
             title += f"to {datetime.fromisoformat(self.history.rvend)}\n"
         fig.suptitle(title)
