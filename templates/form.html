@@ -11,28 +11,49 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="tags">Tags</label>
-                <textarea name="tags" rows="4" cols="30">Separate tags by comma</textarea>
+                <label for="tags">Tags (separated by comma)</label>
+                <textarea name="tags" rows="4" cols="30"></textarea>
             </div>
             <div class="form-group">
                 <label for="keyword">User</label>
                 <input type="text" id="user" name="user" value="">
             </div>
             <div class="form-group">
+                <label for="keyword">Article</label>
+                <input type="text" id="article" name="article" value="">
+            </div>
+            <div class="form-group">
                 <label for="keyword">Keyword</label>
                 <input type="text" id="keyword" name="keyword" value="">
             </div>
             <div class="form-group">
-                <label for="keyword">Start Time</label>
-                <input type="datetime-local" id="starttime" name="starttime">
+                <label for="keyword">Start Year</label>
+                <input type="number" id="startyear" name="startyear">
+                <label for="keyword">Start Month</label>
+                <input type="number" id="startmonth" name="startmonth">
+                <label for="keyword">Start Day</label>
+                <input type="number" id="startday" name="startday">
+                <label for="keyword">Start Minute</label>
+                <input type="number" id="startminute" name="startminute">
+                <label for="keyword">Start Second</label>
+                <input type="number" id="startsecond" name="startsecond">
             </div>
             <div class="form-group">
-                <label for="keyword">End Time</label>
-                <input type="datetime-local" id="endtime" name="endtime">
+                <label for="keyword">End Year</label>
+                <input type="number" id="endyear" name="endyear">
+                <label for="keyword">End Month</label>
+                <input type="number" id="endmonth" name="endmonth">
+                <label for="keyword">End Day</label>
+                <input type="number" id="endday" name="endday">
+                <label for="keyword">End Minute</label>
+                <input type="number" id="endminute" name="endminute">
+                <label for="keyword">End Second</label>
+                <input type="number" id="endsecond" name="endsecond">
             </div>
             <div class="form-group">
-                <label for="endpoint">Visualization</label>
-                <select id="endpoint" name="endpoint">
+                <label for="visualization">Visualization</label>
+                <select id="visualization" name="visualization">
+                 <option value="None">None</option>
                   <option value="Histogram">Histogram</option>
                   <option value="Pie Chart">Pie Chart</option>
                 </select>

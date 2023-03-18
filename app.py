@@ -57,6 +57,67 @@ def formrequest():
         case "User History":
             baseURL += "userHistory/"
             baseURL += request.args.get("user")
+            baseURL += "?"
+        case "Article History":
+            baseURL += "articleHistory/"
+            baseURL += request.args.get("article")
+            baseURL += "?"
+        case "Get Difference":
+            baseURL += "getDiff/"
+            baseURL += request.args.get("article")
+            baseURL += "?"
+
+    if request.args.get("keyword"):
+        baseURL += "keyword="
+        baseURL += request.args.get("keyword")
+        baseURL += "&"
+
+    if request.args.get("tags"):
+        baseURL += "tags="
+        baseURL += request.args.get("tags")
+        baseURL += "&"
+
+    if request.args.get("startyear"):
+        baseURL += "startyear="
+        baseURL += request.args.get("startyear")
+        baseURL += "&"
+
+    if request.args.get("startday"):
+        baseURL += "startday="
+        baseURL += request.args.get("startday")
+        baseURL += "&"
+
+    if request.args.get("startmonth"):
+        baseURL += "startmonth="
+        baseURL += request.args.get("startmonth")
+        baseURL += "&"
+
+    if request.args.get("endyear"):
+        baseURL += "&endyear="
+        baseURL += request.args.get("endyear")
+        baseURL += "&"
+
+    if request.args.get("endday"):
+        baseURL += "endday="
+        baseURL += request.args.get("endday")
+        baseURL += "&"
+
+    if request.args.get("endmonth"):
+        baseURL += "endmonth="
+        baseURL += request.args.get("endmonth")
+        baseURL += "&"
+
+    if request.args.get("visualization"):
+        visualization = request.args.get("visualization")
+        baseURL += "&visualize="
+        match visualization:
+            case "Histogram":
+                baseURL += ""
+            case "Pie":
+                baseURL += ""
+        baseURL += "&"
+
+
     return redirect(baseURL)
 
 @app.route("/articleHistory/<title>")
