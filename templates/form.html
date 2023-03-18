@@ -1,54 +1,85 @@
 {% extends "layout.html" %}
 {% block content %}
 	<div class="form-content">
+        <h2>Make a Request</h2>
 		<form action="{{ BaseURL }}/formrequest" method="get">
             <div class="form-group">
-                <label for="endpoint">Endpoint</label>
-                <select id="endpoint" name="endpoint">
+                <label for="endpoint" class="form-label">Endpoint</label>
+                <select id="endpoint" name="endpoint" class="form-control">
                     <option value="Article History">Article History</option>
                     <option value="User History">User History</option>
                     <option value="Get Difference">Get Difference</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="tags">Tags (separated by comma)</label>
-                <textarea name="tags" rows="4" cols="30"></textarea>
+                <label for="tags" class="form-label">Tags (separated by comma)</label>
+                <textarea name="tags" rows="3" cols="30" class="form-control"></textarea>
             </div>
             <div class="form-group">
-                <label for="keyword">User</label>
-                <input type="text" id="user" name="user" value="">
+                <label for="keyword" class="form-label">User</label>
+                <input type="text" id="user" name="user" value="" class="form-control">
             </div>
             <div class="form-group">
-                <label for="keyword">Article</label>
-                <input type="text" id="article" name="article" value="">
+                <label for="keyword" class="form-label">Article</label>
+                <input type="text" id="article" name="article" value="" class="form-control">
             </div>
             <div class="form-group">
-                <label for="keyword">Keyword</label>
-                <input type="text" id="keyword" name="keyword" value="">
+                <label for="keyword" class="form-label">Keyword</label>
+                <input type="text" id="keyword" name="keyword" value="" class="form-control">
             </div>
             <div class="form-group">
-                <label for="keyword">Start Year</label>
-                <input type="number" id="startyear" name="startyear">
-                <label for="keyword">Start Month</label>
-                <input type="number" id="startmonth" name="startmonth">
-                <label for="keyword">Start Day</label>
-                <input type="number" id="startday" name="startday">
-                <label for="keyword">Start Minute</label>
-                <input type="number" id="startminute" name="startminute">
-                <label for="keyword">Start Second</label>
-                <input type="number" id="startsecond" name="startsecond">
+                <div class="row">
+                    <div class="col-12">
+                        <h3>Start Time:</h3>
+                    </div>
+                    <div class="col-4">
+                        <label for="keyword" class="form-label">Year</label>
+                        <input type="number" id="startyear" name="startyear" class="form-control">
+                    </div>
+                    <div class="col-4">
+                        <label for="keyword" class="form-label">Month</label>
+                        <input type="number" id="startmonth" name="startmonth" class="form-control">
+                    </div>
+                    <div class="col-4">
+                        <label for="keyword" class="form-label">Day</label>
+                        <input type="number" id="startday" name="startday" class="form-control">
+                    </div>
+                    <div class="col-4">
+                        <label for="keyword" class="form-label">Minute</label>
+                        <input type="number" id="startminute" name="startminute" class="form-control">
+                    </div>
+                    <div class="col-4">
+                        <label for="keyword" class="form-label">Second</label>
+                        <input type="number" id="startsecond" name="startsecond" class="form-control">
+                    </div>
+                </div>
             </div>
             <div class="form-group">
-                <label for="keyword">End Year</label>
-                <input type="number" id="endyear" name="endyear">
-                <label for="keyword">End Month</label>
-                <input type="number" id="endmonth" name="endmonth">
-                <label for="keyword">End Day</label>
-                <input type="number" id="endday" name="endday">
-                <label for="keyword">End Minute</label>
-                <input type="number" id="endminute" name="endminute">
-                <label for="keyword">End Second</label>
-                <input type="number" id="endsecond" name="endsecond">
+                <div class="row">
+                    <div class="col-12">
+                        <h3>End Time:</h3>
+                    </div>
+                    <div class="col-4">
+                        <label for="keyword" class="form-label">Year</label>
+                        <input type="number" id="endyear" name="endyear" class="form-control">
+                    </div>
+                    <div class="col-4">
+                        <label for="keyword" class="form-label">Month</label>
+                        <input type="number" id="endmonth" name="endmonth" class="form-control">
+                    </div>
+                    <div class="col-4">
+                        <label for="keyword" class="form-label">Day</label>
+                        <input type="number" id="endday" name="endday" class="form-control">
+                    </div>
+                    <div class="col-4">
+                        <label for="keyword" class="form-label">Minute</label>
+                        <input type="number" id="endminute" name="endminute" class="form-control">
+                    </div>
+                    <div class="col-4">
+                        <label for="keyword" class="form-label">Second</label>
+                        <input type="number" id="endsecond" name="endsecond" class="form-control">
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <label for="visualization">Visualization</label>
