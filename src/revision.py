@@ -2,6 +2,7 @@
 from datetime import datetime
 import requests
 import mwparserfromhell as mwp
+from bs4 import BeautifulSoup
 
 URL = "https://www.wikipedia.org/w/api.php"
 
@@ -59,6 +60,15 @@ class Revision():
         data = request.json()["parse"]["text"]["*"]
         ret = mwp.parse(data)
         return str("".join(ret).replace("\n", ""))
+    
+    def add_color_coding_to_text(self, content):
+        soup = BeautifulSoup(content, 'html.parser')
+        for ins_tag in soup.find_all('ins'):
+            ins_tag['style'] = 'background-color: green'
+        for del_tag in soup.find_all('del'): 
+            del_tag['del'] = 'background-color: red'
+        #<ins> <del>
+        return content
 
     def get_diff(self, to_id: int = None):
         """ Returns the difference between this revision and its parent
@@ -79,12 +89,14 @@ class Revision():
             "torev": to_id
         }
         wp_response = session.get(url=URL, params=params).json()
+        color_coded_response = self.add_color_coding_to_text(wp_response)
         # Can we return something more user-friendly?
         # Automatically color ins and del tags?
         try:
-            return str(mwp.parse(wp_response['compare']['*']))
+            return str(mwp.parse(color_coded_response['compare']['*']))
         except (KeyError, ValueError):
             return self.get_content()
+            
 
     def get_revision_key(self, attr):
         """gets the revision attribute, which is passed in as a string"""
@@ -94,3 +106,6 @@ class Revision():
             return vars(self)[attr]
         except KeyError:
             return None
+
+#if __name__ == "__main__":
+#    rev = Revision()
