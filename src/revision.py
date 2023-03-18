@@ -6,6 +6,17 @@ from bs4 import BeautifulSoup
 
 URL = "https://www.wikipedia.org/w/api.php"
 
+def add_color_coding_to_text(content):
+    """adds color doing information to a wikipedia html object"""
+    soup = BeautifulSoup(content, 'html.parser')
+    ins_tags = soup.find_all('ins')
+    for ins in ins_tags:
+        ins.attrs['style'] = 'background-color: green'
+    del_tags = soup.find_all('del')
+    for del_t in del_tags:
+        del_t.attrs['style'] = 'background-color: red'
+    return content
+
 class Revision():
     """revision object parses json revision info into consistent """
 
@@ -60,17 +71,8 @@ class Revision():
         data = request.json()["parse"]["text"]["*"]
         ret = mwp.parse(data)
         return str("".join(ret).replace("\n", ""))
-    
-    def add_color_coding_to_text(self, content):
-        soup = BeautifulSoup(content, 'html.parser')
-        ins_tags = soup.find_all('ins')
-        for ins in ins_tags:
-            ins.attrs['style'] = 'background-color: green'
-        del_tags = soup.find_all('del')
-        for d in del_tags:
-            d.attrs['style'] = 'background-color: red'
-        #<ins> <del>
-        return content
+
+
 
     def get_diff(self, to_id: int = None):
         """ Returns the difference between this revision and its parent
@@ -91,15 +93,13 @@ class Revision():
             "torev": to_id
         }
         wp_response = session.get(url=URL, params=params).json()
-        color_coded_response = self.add_color_coding_to_text(wp_response['compare']['*'])
+        color_coded_response = add_color_coding_to_text(wp_response['compare']['*'])
         # Can we return something more user-friendly?
         # Automatically color ins and del tags?
         try:
-            return color_coded_response
-            #return str(mwp.parse(color_coded_response))
+            return str(mwp.parse(color_coded_response))
         except (KeyError, ValueError):
             return self.get_content()
-            
 
     def get_revision_key(self, attr):
         """gets the revision attribute, which is passed in as a string"""
