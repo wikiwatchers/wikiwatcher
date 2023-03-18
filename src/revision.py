@@ -63,10 +63,12 @@ class Revision():
     
     def add_color_coding_to_text(self, content):
         soup = BeautifulSoup(content, 'html.parser')
-        for ins_tag in soup.find_all('ins'):
-            ins_tag['style'] = 'background-color: green'
-        for del_tag in soup.find_all('del'): 
-            del_tag['style'] = 'background-color: red'
+        ins_tags = soup.find_all('ins')
+        for ins in ins_tags:
+            ins.attrs['style'] = 'background-color: green'
+        del_tags = soup.find_all('del')
+        for d in del_tags:
+            d.attrs['style'] = 'background-color: red'
         #<ins> <del>
         return content
 
@@ -93,7 +95,8 @@ class Revision():
         # Can we return something more user-friendly?
         # Automatically color ins and del tags?
         try:
-            return str(mwp.parse(color_coded_response))
+            return color_coded_response
+            #return str(mwp.parse(color_coded_response))
         except (KeyError, ValueError):
             return self.get_content()
             
