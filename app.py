@@ -41,6 +41,11 @@ def index():
         content = markdown(readme.read())
     return render_template('index.html', content=content)
 
+@app.route("/form")
+def form():
+    """ Form page """
+    return render_template('form.html')
+
 @app.route("/articleHistory/<title>")
 @mem_cache.cached(timeout=CACHE_TIMEOUT)
 def get_article_history(title):
@@ -83,6 +88,7 @@ def get_article_history(title):
         if visualize:
             output = io.BytesIO()
             chart = None
+            print(visualize)
             match visualize:
                 case "revisions_per_time":
                     chart = Histogram(revisions)
