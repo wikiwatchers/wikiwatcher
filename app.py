@@ -5,7 +5,7 @@ Handles interactions with our users, does not handle interactions with external 
 import __init__
 import io
 import json
-from flask import Flask, render_template, request, Response
+from flask import Flask, render_template, request, Response, redirect
 from flask_caching import Cache
 from markdown import markdown
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -44,7 +44,20 @@ def index():
 @app.route("/form")
 def form():
     """ Form page """
-    return render_template('form.html')
+    return render_template('form.html', baseURL=URL)
+
+@app.route("/formrequest")
+def formrequest():
+    """ Route to handle form requests """
+    baseURL = "http://127.0.0.1:5000/"
+    print(request.args)
+    print(request.args.get("endpoint"))
+    endpoint = request.args.get("endpoint")
+    match endpoint:
+        case "User History":
+            baseURL += "userHistory/"
+            baseURL += request.args.get("user")
+    return redirect(baseURL)
 
 @app.route("/articleHistory/<title>")
 @mem_cache.cached(timeout=CACHE_TIMEOUT)

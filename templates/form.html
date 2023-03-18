@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 	<div class="form-content">
-		<form>
+		<form action="{{ BaseURL }}/formrequest" method="get">
             <div class="form-group">
                 <label for="endpoint">Endpoint</label>
                 <select id="endpoint" name="endpoint">
@@ -13,6 +13,10 @@
             <div class="form-group">
                 <label for="tags">Tags</label>
                 <textarea name="tags" rows="4" cols="30">Separate tags by comma</textarea>
+            </div>
+            <div class="form-group">
+                <label for="keyword">User</label>
+                <input type="text" id="user" name="user" value="">
             </div>
             <div class="form-group">
                 <label for="keyword">Keyword</label>
@@ -33,7 +37,7 @@
                   <option value="Pie Chart">Pie Chart</option>
                 </select>
               </div>
-            <button type="submit" class="btn btn-primary">Submit Request</button>
+            <input type="submit" value="Submit Request" class="btn btn-primary">
           </form>
 	</div>
 {% endblock %}
