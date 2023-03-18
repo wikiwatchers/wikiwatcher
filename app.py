@@ -5,7 +5,7 @@ Handles interactions with our users, does not handle interactions with external 
 import __init__
 import io
 import json
-from flask import Flask, render_template, request, Response
+from flask import Flask, render_template, request, Response, Markup
 from flask_caching import Cache
 from markdown import markdown
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -214,8 +214,8 @@ def get_difference(title):
                                     endyear=endyear, endmonth=endmonth,
                                     endday=endday, endhour=endhour,
                                     endminute=endminute, endsecond=endsecond)
-        ret = json.dumps(revisions.revisions[0].get_diff(revisions.revisions[-1].revid))
-        return ret
+        ret = revisions.revisions[0].get_diff(revisions.revisions[-1].revid)
+        return render_template("diff.html", diff=Markup(ret))
     except BadRequestException as bre:
         return "<h1>Bad Request</h1>" + str(bre), 400
     except NoRevisionsException as nre:
