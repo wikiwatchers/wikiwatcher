@@ -44,68 +44,52 @@ def index():
 @app.route("/form")
 def form():
     """ Form page """
+    baseURL = "http://127.0.0.1:5000/"
     return render_template('form.html', baseURL=URL)
+
+def updateURL(parameter, value, baseURL, operator):
+    baseURL += parameter
+    baseURL += value
+    baseURL += operator
+    return baseURL
 
 @app.route("/formrequest")
 def formrequest():
     """ Route to handle form requests """
     baseURL = "http://127.0.0.1:5000/"
-    print(request.args)
-    print(request.args.get("endpoint"))
     endpoint = request.args.get("endpoint")
     match endpoint:
         case "User History":
-            baseURL += "userHistory/"
-            baseURL += request.args.get("user")
-            baseURL += "?"
+            baseURL = updateURL("userHistory/", request.args.get("user"), baseURL, "?")
+            print("baseuRL FOR USERS = " + baseURL)
         case "Article History":
-            baseURL += "articleHistory/"
-            baseURL += request.args.get("article")
-            baseURL += "?"
+            baseURL = updateURL("articleHistory/", request.args.get("article"), baseURL, "?")
         case "Get Difference":
-            baseURL += "getDiff/"
-            baseURL += request.args.get("article")
-            baseURL += "?"
+            baseURL = updateURL("getDifference", request.args.get("article"), baseURL, "?")
 
     if request.args.get("keyword"):
-        baseURL += "keyword="
-        baseURL += request.args.get("keyword")
-        baseURL += "&"
+        baseURL = updateURL("keyword=", request.args.get("keyword"), baseURL, "&")
 
     if request.args.get("tags"):
-        baseURL += "tags="
-        baseURL += request.args.get("tags")
-        baseURL += "&"
+        baseURL = updateURL("tags=", request.args.get("tags"), baseURL, "&")
 
     if request.args.get("startyear"):
-        baseURL += "startyear="
-        baseURL += request.args.get("startyear")
-        baseURL += "&"
+        baseURL = updateURL("startyear=", request.args.get("startyear"), baseURL, "&")
 
     if request.args.get("startday"):
-        baseURL += "startday="
-        baseURL += request.args.get("startday")
-        baseURL += "&"
+        baseURL = updateURL("startday=", request.args.get("startday"), baseURL, "&")
 
     if request.args.get("startmonth"):
-        baseURL += "startmonth="
-        baseURL += request.args.get("startmonth")
-        baseURL += "&"
+        baseURL = updateURL("startmonth=", request.args.get("startmonth"), baseURL, "&")
 
     if request.args.get("endyear"):
-        baseURL += "&endyear="
-        baseURL += request.args.get("endyear")
-        baseURL += "&"
+        baseURL = updateURL("endyear=", request.args.get("endyear"), baseURL, "&")
 
     if request.args.get("endday"):
-        baseURL += "endday="
-        baseURL += request.args.get("endday")
-        baseURL += "&"
+        baseURL = updateURL("endday=", request.args.get("endday"), baseURL, "&")
 
     if request.args.get("endmonth"):
-        baseURL += "endmonth="
-        baseURL += request.args.get("endmonth")
-        baseURL += "&"
+        baseURL = updateURL("endmonth=", request.args.get("endmonth"), baseURL, "&")
 
     if request.args.get("visualization"):
         visualization = request.args.get("visualization")
@@ -117,6 +101,7 @@ def formrequest():
                 baseURL += ""
         baseURL += "&"
 
+    print("baseURL = " + baseURL)
 
     return redirect(baseURL)
 
