@@ -63,3 +63,19 @@ del {
 .diff-deletedline .diffchange {
 	background-color: #feeec8;
 }
+
+.diff-row {
+    margin: 30px 0px;
+	display: table;
+}
+
+.diff-row .col{
+    width: 50%;
+    float: left;
+    max-height: 900px;
+    overflow-y: scroll;
+}
+
+.diff-row .col .revision {
+	padding: 15px;
+}

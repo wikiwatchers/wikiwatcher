@@ -5,7 +5,8 @@ Handles interactions with our users, does not handle interactions with external 
 import __init__
 import io
 import json
-from flask import Flask, render_template, request, Response, Markup
+import dateutil.parser
+from flask import Flask, render_template, request, Response, redirect, Markup
 from flask_caching import Cache
 from markdown import markdown
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -34,12 +35,122 @@ def parse_tags(tagstring):
     tagstring = tagstring[1:-1]
     return tagstring.split(",")
 
+def add_params_to_url(parameter, value, base_url, operator):
+    """ adds parameters to URL """
+    base_url += parameter
+    base_url += value
+    base_url += operator
+    return base_url
+
 @app.route("/")
 def index():
     """ Our index landing page """
     with open("README.md", "r", encoding="utf-8") as readme:
         content = markdown(readme.read())
     return render_template('index.html', content=content)
+
+@app.route("/form")
+def form():
+    """ Form page """
+    return render_template('form.html')
+
+@app.route("/formrequest")
+def formrequest():
+    """ Route to handle form requests """
+    base_url = "/"
+    endpoint = request.args.get("endpoint")
+    match endpoint:
+        case "User History":
+            base_url = add_params_to_url("userHistory/",
+                                        request.args.get("user"),
+                                        base_url, "?")
+        case "Article History":
+            base_url = add_params_to_url("articleHistory/",
+                                        request.args.get("title"),
+                                        base_url, "?")
+        case "Get Revision":
+            base_url = add_params_to_url("getRevision/",
+                                        request.args.get("title"),
+                                        base_url, "?")
+        case "Compare Revisions":
+            base_url = add_params_to_url("compareRevisions/",
+                                        request.args.get("title"),
+                                        base_url, "?")
+
+    if request.args.get("keyword"):
+        base_url = add_params_to_url("keyword=",
+                                    request.args.get("keyword"),
+                                    base_url, "&")
+
+    if endpoint != "User History" and request.args.get("user"):
+        base_url = add_params_to_url("user=",
+                                    request.args.get("user"),
+                                    base_url, "&")
+
+    if endpoint == "User History" and request.args.get("title"):
+        base_url = add_params_to_url("titles=",
+                                    request.args.get("title"),
+                                    base_url, "&")
+
+    if request.args.get("starttime"):
+        start_time = dateutil.parser.parse(request.args.get("starttime"))
+        base_url = add_params_to_url("startyear=",
+                                    str(start_time.year),
+                                    base_url, "&")
+        base_url = add_params_to_url("startmonth=",
+                                    str(start_time.month),
+                                    base_url, "&")
+        base_url = add_params_to_url("startday=",
+                                    str(start_time.day),
+                                    base_url, "&")
+        base_url = add_params_to_url("startminute=",
+                                    str(start_time.minute),
+                                    base_url, "&")
+        base_url = add_params_to_url("startsecond=",
+                                    str(start_time.second),
+                                    base_url, "&")
+
+    if request.args.get("endtime"):
+        end_time = dateutil.parser.parse(request.args.get("endtime"))
+        base_url = add_params_to_url("endyear=",
+                                    str(end_time.year),
+                                    base_url, "&")
+        base_url = add_params_to_url("endmonth=",
+                                    str(end_time.month),
+                                    base_url, "&")
+        base_url = add_params_to_url("endday=",
+                                    str(end_time.day),
+                                    base_url, "&")
+        base_url = add_params_to_url("endminute=",
+                                    str(end_time.minute),
+                                    base_url, "&")
+        base_url = add_params_to_url("endsecond=",
+                                    str(end_time.second),
+                                    base_url, "&")
+
+    if request.args.get("tags"):
+        parsed_tags = request.args.get("tags").split(",")
+        tags = "["
+        first_tag = True
+        for tag in parsed_tags:
+            print("tag = " + tag)
+            if not first_tag:
+                tags += ","
+            if first_tag:
+                first_tag = False
+            tag = tag.strip()
+            print("stripped tag = " + tag)
+            tags += tag
+        tags += "]"
+        base_url = add_params_to_url("tags=", tags, base_url, "&")
+
+    if request.args.get("visualize") and request.args.get("visualize") != "":
+        base_url = add_params_to_url("visualize=", request.args.get("visualize"), base_url, "")
+
+    if base_url[-1] == "&":
+        base_url = base_url.rstrip("&")
+
+    return redirect(base_url)
 
 @app.route("/articleHistory/<title>")
 @mem_cache.cached(timeout=CACHE_TIMEOUT)
@@ -215,7 +326,13 @@ def get_difference(title):
                                     endday=endday, endhour=endhour,
                                     endminute=endminute, endsecond=endsecond)
         ret = revisions.revisions[0].get_diff(revisions.revisions[-1].revid)
-        return render_template("diff.html", diff=Markup(ret))
+        new = revisions.revisions[-1].get_content()
+        prev = revisions.revisions[0].get_content()
+
+        return render_template("diff.html", title=title,
+                               diff=Markup(ret),
+                               prev_revision=prev,
+                               new_revision=new)
     except BadRequestException as bre:
         return "<h1>Bad Request</h1>" + str(bre), 400
     except NoRevisionsException as nre:

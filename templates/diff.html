@@ -5,6 +5,23 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='diff.css') }}">
 </head>
 <body>
-    <div class="diff">{{ diff|safe }}</div>
+    <div class="diff-row">
+        <div class="col">
+            <div class="revision">
+                <h2>Previous Revision</h2>
+                {{ prev_revision|safe }}
+            </div>
+        </div>
+        <div class="col">
+            <div class="revision">
+                <h2>New Revision</h2>
+                {{ new_revision|safe }}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <h2>Differences</h2>
+        <table class="diff">{{ diff|safe }}</table>
+    </div>
 </body>
 </html>

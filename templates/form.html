@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block content %}
+	<div class="form-content">
+        <h2>Make a Request</h2>
+		<form action="/formrequest" method="get">
+            <div class="form-group">
+                <label for="endpoint" class="form-label">Endpoint</label>
+                <select id="endpoint" name="endpoint" class="form-control">
+                    <option value="Article History">Article History</option>
+                    <option value="User History">User History</option>
+                    <option value="Get Revision">Get Revision</option>
+                    <option value="Compare Revisions">Compare Revisions</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="tags" class="form-label">Tags (separated by comma)</label>
+                <textarea name="tags" rows="2" cols="30" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="user" class="form-label">User</label>
+                <input type="text" id="user" name="user" value="" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="title" class="form-label">Article Title</label>
+                <input type="text" id="title" name="title" value="" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="keyword" class="form-label">Keyword</label>
+                <input type="text" id="keyword" name="keyword" value="" class="form-control">
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-12">
+                        <label for="startTime" class="form-label">Start Time</label>
+                        <input type="datetime-local" id="startTime" name="starttime" class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <label for="endTime" class="form-label">End Time</label>
+                        <input type="datetime-local" id="endTime" name="endtime" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="visualize" class="form-label">Visualization</label>
+                <select id="visualize" name="visualize" class="form-control">
+                 <option value="">None</option>
+                  <option value="revisions_per_time">Histogram</option>
+                  <option value="revisions_per_user">Pie Chart</option>
+                </select>
+              </div>
+            <input type="submit" value="Make Request" class="btn btn-primary">
+          </form>
+	</div>
+{% endblock %}
