@@ -13,7 +13,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="tags" class="form-label">Tags (separated by comma with no space)</label>
+                <label for="tags" class="form-label">Tags (separated by comma)</label>
                 <textarea name="tags" rows="2" cols="30" class="form-control"></textarea>
             </div>
             <div class="form-group">
@@ -41,15 +41,15 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="visualize">Visualization</label>
-                <select id="visualize" name="visualize">
+                <label for="visualize" class="form-label">Visualization</label>
+                <select id="visualize" name="visualize" class="form-control">
                  <option value="">None</option>
                   <option value="revisions_per_time">Histogram</option>
                   <option value="revisions_per_user">Pie Chart</option>
                   <option value="side_by_side">Side By Side (for Compare Revisions only)</option>
                 </select>
               </div>
-            <input type="submit" value="Submit Request" class="btn btn-primary">
+            <input type="submit" value="Make Request" class="btn btn-primary">
           </form>
 	</div>
 {% endblock %}

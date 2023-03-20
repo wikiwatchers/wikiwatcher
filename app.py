@@ -306,7 +306,8 @@ def get_difference(title):
                                     endday=endday, endhour=endhour,
                                     endminute=endminute, endsecond=endsecond)
         ret = json.dumps(revisions.revisions[0].get_diff(revisions.revisions[-1].revid))
-        formatted_output = ret.replace('\\n', '\n').replace('\\t', '\t')
+
+        print("visualize = " + visualize)
 
         if visualize:
             match visualize:
@@ -324,7 +325,7 @@ def get_difference(title):
                 case _:
                     raise BadRequestException("Invalid choice of visualization")
 
-        return formatted_output
+        return ret
     except BadRequestException as bre:
         return "<h1>Bad Request</h1>" + str(bre), 400
     except NoRevisionsException as nre:
