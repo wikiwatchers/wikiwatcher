@@ -6,12 +6,10 @@ try:
     from src.plot import Plot
     from src.articlehistory import ArticleHistory
     from src.histogram import Histogram
-    from src.revision import timestamp_to_datetime
 except ModuleNotFoundError:
     from plot import Plot
     from articlehistory import ArticleHistory
     from histogram import Histogram
-    from revision import timestamp_to_datetime
 
 def test_get_x_axis_data():
     """test for get_x_axis_data"""
