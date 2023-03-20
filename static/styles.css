@@ -3,10 +3,18 @@
     color: white;
 }
 
+.home-blurb {
+    margin-bottom: 100px;
+}
+
 .footer {
     width: 100%;
 }
 
 .page-content {
     padding: 40px 0px;
+}
+
+.form-group {
+    margin-bottom: 20px;
 }
