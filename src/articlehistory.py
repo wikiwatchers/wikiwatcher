@@ -1,13 +1,14 @@
 """defines the collection class for article history"""
 import requests
 try:
+    #pylint:disable=R0801
     from src.revision import Revision, URL
     from src.history import History
     from src.exceptions import BadRequestException
 except ModuleNotFoundError:
     from revision import Revision, URL
     from history import History
-    from exceptions import BadRequestException #pylint:disable=R0801
+    from exceptions import BadRequestException 
 
 class ArticleHistory(History):
     """article revision collection class"""
