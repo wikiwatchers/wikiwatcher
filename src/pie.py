@@ -19,10 +19,10 @@ class Pie(Plot):
     def __init__(self, history):
         super().__init__(history)
 
-        self.x_axis = history.get_secondary_category()
+        self.x_axis = self.get_x_axis_data("user")
         self.graph = self.plot_graph()
 
-    def size_of_png(self, labels) -> tuple(tuple(int,int), float, float):
+    def size_of_png(self, labels):
         """ uses number of wedges to determine necessary image size and chart parameters
         returns a 3-tuple of (
             tuple of (width_inches: int, height_inches: int),
@@ -70,12 +70,13 @@ class Pie(Plot):
 
     def plot_graph(self):
         """ sets up the pychart.Figure object and returns it """
-        fig, axes = plt.subplots(layout="constrained", figsize=fig_size_inches)
-        plt.rcParams["figure.constrained_layout.use"] = True
 
         labels = tuple(set(self.x_axis))
         sizes = [self.x_axis.count(category) for category in labels]
         fig_size_inches, pct_distance, label_distance = self.size_of_png(labels)
+
+        fig, axes = plt.subplots(layout="constrained", figsize=fig_size_inches)
+
         _, labels, percents = axes.pie(sizes, labels=labels, autopct=make_autopct(sizes),
                pctdistance=pct_distance, labeldistance=label_distance, rotatelabels=True)
         for label, percent in zip(labels, percents):
@@ -87,6 +88,7 @@ class Pie(Plot):
                 )
         title = self.generate_pie_title()
         fig.suptitle(title)
+        plt.rcParams["figure.constrained_layout.use"] = True
         return fig
 
 def make_autopct(values):
