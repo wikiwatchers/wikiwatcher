@@ -31,8 +31,8 @@ def test___init__():
     assert plot2.y_axis_label is None
     assert plot2.title is None
 
-def test_set_x_axis_data():
-    """tests the set_x_axis_data() function"""
+def test_get_x_axis_data():
+    """tests the get_x_axis_data() function"""
     art = ArticleHistory(titles="Techno", user="Rio65trio",
                          startyear=2022, startmonth=12, startday=1,
                         endyear=2022, endmonth=12, endday=30)
