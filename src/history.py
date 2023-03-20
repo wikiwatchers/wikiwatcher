@@ -5,10 +5,10 @@ from datetime import datetime
 from abc import abstractmethod
 try:
     from src.revision import Revision
-    from src.exceptions import BadRequestException
+    from src.exceptions import BadRequestException, NoRevisionsException
 except ModuleNotFoundError:
     from revision import Revision
-    from exceptions import BadRequestException
+    from exceptions import BadRequestException, NoRevisionsException
 
 class History:
     """history base class initalization"""
@@ -104,6 +104,8 @@ class History:
         self.revisions = []
         self.call_wikipedia_api()
         self.filter()
+        if len(self.revisions) == 0:
+            raise NoRevisionsException("No revisions matching filter parameters")
 
     def get_list_of_revision_key_data(self, revision_key):
         """returns a list of attributes pulled from revisions list
