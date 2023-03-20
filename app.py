@@ -93,38 +93,38 @@ def formrequest():
                                     base_url, "&")
 
     if request.args.get("startTime"):
-        start_time = dateutil.parser.parse(request.args.get("startTime"))
-        base_url = add_params_to_url("startYear=",
+        start_time = dateutil.parser.parse(request.args.get("starttime"))
+        base_url = add_params_to_url("startyear=",
                                     str(start_time.year),
                                     base_url, "&")
-        base_url = add_params_to_url("startMonth=",
+        base_url = add_params_to_url("startmonth=",
                                     str(start_time.month),
                                     base_url, "&")
-        base_url = add_params_to_url("startDay=",
+        base_url = add_params_to_url("startday=",
                                     str(start_time.day),
                                     base_url, "&")
-        base_url = add_params_to_url("startMinute=",
+        base_url = add_params_to_url("startminute=",
                                     str(start_time.minute),
                                     base_url, "&")
-        base_url = add_params_to_url("startSecond=",
+        base_url = add_params_to_url("startsecond=",
                                     str(start_time.second),
                                     base_url, "&")
 
     if request.args.get("endTime"):
-        end_time = dateutil.parser.parse(request.args.get("endTime"))
-        base_url = add_params_to_url("endYear=",
+        end_time = dateutil.parser.parse(request.args.get("endtime"))
+        base_url = add_params_to_url("endyear=",
                                     str(end_time.year),
                                     base_url, "&")
-        base_url = add_params_to_url("endMonth=",
+        base_url = add_params_to_url("endmonth=",
                                     str(end_time.month),
                                     base_url, "&")
-        base_url = add_params_to_url("endDay=",
+        base_url = add_params_to_url("endday=",
                                     str(end_time.day),
                                     base_url, "&")
-        base_url = add_params_to_url("endMinute=",
+        base_url = add_params_to_url("endminute=",
                                     str(end_time.minute),
                                     base_url, "&")
-        base_url = add_params_to_url("endSecond=",
+        base_url = add_params_to_url("endsecond=",
                                     str(end_time.second),
                                     base_url, "&")
 
