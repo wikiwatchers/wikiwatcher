@@ -8,7 +8,7 @@ try:
 except ModuleNotFoundError:
     from revision import Revision, URL
     from history import History
-    from exceptions import BadRequestException 
+    from exceptions import BadRequestException
 
 class ArticleHistory(History):
     """article revision collection class"""
