@@ -16,6 +16,7 @@ from src.articlehistory import ArticleHistory
 from src.exceptions import BadRequestException
 from src.histogram import Histogram
 from src.pie import Pie
+from src.requests import update_URL, get_base_URL
 
 app = Flask("WikiWatcher")
 mem_cache = Cache(app, config={"CACHE-TYPE": "simple"})
@@ -44,66 +45,41 @@ def index():
 @app.route("/form")
 def form():
     """ Form page """
-    baseURL = "http://127.0.0.1:5000/"
-    return render_template('form.html', baseURL=URL)
-
-def updateURL(parameter, value, baseURL, operator):
-    baseURL += parameter
-    baseURL += value
-    baseURL += operator
-    return baseURL
+    base_URL = get_base_URL()
+    return render_template('form.html', base_URL=base_URL)
 
 @app.route("/formrequest")
 def formrequest():
     """ Route to handle form requests """
-    baseURL = "http://127.0.0.1:5000/"
     endpoint = request.args.get("endpoint")
+    remove_Arguments = ["endpoint", "visualization", "tags"]
+    base_URL = get_base_URL()
     match endpoint:
         case "User History":
-            baseURL = updateURL("userHistory/", request.args.get("user"), baseURL, "?")
-            print("baseuRL FOR USERS = " + baseURL)
+            base_URL = update_URL("userHistory/", request.args.get("user"), base_URL, "?")
+            remove_Arguments.append("user")
         case "Article History":
-            baseURL = updateURL("articleHistory/", request.args.get("article"), baseURL, "?")
+            base_URL = update_URL("articleHistory/", request.args.get("article"), base_URL, "?")
         case "Get Difference":
-            baseURL = updateURL("getDifference", request.args.get("article"), baseURL, "?")
+            base_URL = update_URL("getDifference/", request.args.get("article"), base_URL, "?")
 
-    if request.args.get("keyword"):
-        baseURL = updateURL("keyword=", request.args.get("keyword"), baseURL, "&")
+    print(request.args)
+    for argument in request.args:
+        if argument not in remove_Arguments and request.args.get(argument):
+            print(argument)
+            parameter_Value = argument
+            parameter_Value += "="
+            base_URL = update_URL(parameter_Value, request.args.get(argument), base_URL, "&")
 
     if request.args.get("tags"):
-        baseURL = updateURL("tags=", request.args.get("tags"), baseURL, "&")
+        tags = "[" + request.args.get("tags") + "]"
+        base_URL = update_URL("tags=", tags, base_URL, "&")
 
-    if request.args.get("startyear"):
-        baseURL = updateURL("startyear=", request.args.get("startyear"), baseURL, "&")
+    if request.args.get("visualize") and request.args.get("visualize") != "":
+        base_URL = update_URL("visualize=", request.args.get("visualize"), base_URL, "")
+    print("baseURL = " + base_URL)
 
-    if request.args.get("startday"):
-        baseURL = updateURL("startday=", request.args.get("startday"), baseURL, "&")
-
-    if request.args.get("startmonth"):
-        baseURL = updateURL("startmonth=", request.args.get("startmonth"), baseURL, "&")
-
-    if request.args.get("endyear"):
-        baseURL = updateURL("endyear=", request.args.get("endyear"), baseURL, "&")
-
-    if request.args.get("endday"):
-        baseURL = updateURL("endday=", request.args.get("endday"), baseURL, "&")
-
-    if request.args.get("endmonth"):
-        baseURL = updateURL("endmonth=", request.args.get("endmonth"), baseURL, "&")
-
-    if request.args.get("visualization"):
-        visualization = request.args.get("visualization")
-        baseURL += "&visualize="
-        match visualization:
-            case "Histogram":
-                baseURL += ""
-            case "Pie":
-                baseURL += ""
-        baseURL += "&"
-
-    print("baseURL = " + baseURL)
-
-    return redirect(baseURL)
+    return redirect(base_URL)
 
 @app.route("/articleHistory/<title>")
 @mem_cache.cached(timeout=CACHE_TIMEOUT)

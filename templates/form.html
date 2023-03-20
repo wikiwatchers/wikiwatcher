@@ -2,7 +2,7 @@
 {% block content %}
 	<div class="form-content">
         <h2>Make a Request</h2>
-		<form action="{{ BaseURL }}/formrequest" method="get">
+		<form action="{{ base_URL }}formrequest" method="get">
             <div class="form-group">
                 <label for="endpoint" class="form-label">Endpoint</label>
                 <select id="endpoint" name="endpoint" class="form-control">
@@ -12,8 +12,8 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="tags" class="form-label">Tags (separated by comma)</label>
-                <textarea name="tags" rows="3" cols="30" class="form-control"></textarea>
+                <label for="tags" class="form-label">Tags (separated by comma with no space)</label>
+                <textarea name="tags" rows="2" cols="30" class="form-control"></textarea>
             </div>
             <div class="form-group">
                 <label for="keyword" class="form-label">User</label>
@@ -31,6 +31,14 @@
                 <div class="row">
                     <div class="col-12">
                         <h3>Start Time:</h3>
+                    </div>
+                    <div class="col-12">
+                        <label for="startTime" class="form-label">Start Time</label>
+                        <input type="date" id="startTime" name="startTime" class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <label for="endTime" class="form-label">End Time</label>
+                        <input type="date" id="endTime" name="endTime" class="form-control">
                     </div>
                     <div class="col-4">
                         <label for="keyword" class="form-label">Year</label>
@@ -82,11 +90,11 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="visualization">Visualization</label>
-                <select id="visualization" name="visualization">
-                 <option value="None">None</option>
-                  <option value="Histogram">Histogram</option>
-                  <option value="Pie Chart">Pie Chart</option>
+                <label for="visualize">Visualization</label>
+                <select id="visualize" name="visualize">
+                 <option value="">None</option>
+                  <option value="revisions_per_time">Histogram</option>
+                  <option value="revisions_per_user">Pie Chart</option>
                 </select>
               </div>
             <input type="submit" value="Submit Request" class="btn btn-primary">
