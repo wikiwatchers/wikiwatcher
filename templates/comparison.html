@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block content %}
+	<div class="compare-content">
+		<div class="row">
+            <div class="col-12">
+                <h1>{{ title }}</h1>
+                <hr>
+            </div>
+            <div class="col-md-6">
+                <h2>First Revision</h2>
+                <p>Date: {{ firstDate }}</p>
+                <p>{{ firstArticle  | safe }}</p>
+            </div>
+            <div class="col-md-6">
+                <h2>Latest Revision</h2>
+                <p>Date: {{ secondDate }}</p>
+                <p>{{ secondArticle  | safe }}</p>
+            </div>
+        </div>
+	</div>
+{% endblock %}

@@ -62,8 +62,8 @@ def formrequest():
             remove_Arguments.append("user")
         case "Article History":
             base_URL = update_URL("articleHistory/", request.args.get("title"), base_URL, "?")
-        case "Get Difference":
-            base_URL = update_URL("getDifference/", request.args.get("title"), base_URL, "?")
+        case "Compare Revisions":
+            base_URL = update_URL("compareRevisions/", request.args.get("title"), base_URL, "?")
 
     if request.args.get("keyword"):
         base_URL = update_URL("keyword=", request.args.get("keyword"), base_URL, "&")
@@ -270,6 +270,7 @@ def get_difference(title):
     endhour: int = request.args.get("endhour", default=None, type=int)
     endminute: int = request.args.get("endminute", default=None, type=int)
     endsecond: int = request.args.get("endsecond", default=None, type=int)
+    visualize: str = request.args.get("visualize", default=None, type=str)
     try:
         revisions = ArticleHistory(titles=title,
                                     startyear=startyear, startmonth=startmonth,
@@ -279,7 +280,25 @@ def get_difference(title):
                                     endday=endday, endhour=endhour,
                                     endminute=endminute, endsecond=endsecond)
         ret = json.dumps(revisions.revisions[0].get_diff(revisions.revisions[-1].revid))
-        return ret
+        formatted_output = ret.replace('\\n', '\n').replace('\\t', '\t')
+
+        if visualize:
+            match visualize:
+                case "side_by_side":
+                    firstArticle = revisions.revisions[0].get_content()
+                    secondArticle = revisions.revisions[-1].get_content()
+                    firstDate = revisions.revisions[0].timestamp
+                    secondDate = revisions.revisions[-1].timestamp
+                    return render_template('comparison.html', 
+                                           title=title,
+                                           firstArticle=firstArticle, 
+                                           secondArticle=secondArticle, 
+                                           firstDate=firstDate,
+                                           secondDate=secondDate)
+                case _:
+                    raise BadRequestException("Invalid choice of visualization")
+
+        return formatted_output
     except BadRequestException as bre:
         return "<h1>Bad Request</h1>" + str(bre), 400
     except NoRevisionsException as nre:
