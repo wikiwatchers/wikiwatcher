@@ -1,4 +1,5 @@
 """defines user history class"""
+#pylint:disable=R0801
 import requests
 try:
     #pylint:disable=R0801
