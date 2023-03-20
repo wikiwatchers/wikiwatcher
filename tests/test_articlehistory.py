@@ -2,6 +2,7 @@
 import __init__
 import pytest
 from articlehistory import ArticleHistory
+from exceptions import BadRequestException, NoRevisionsException
 
 def test___init__():
     """tests initalization"""
@@ -31,13 +32,8 @@ def test___init__():
     assert art.revisions[0].user =="CAPTAIN RAJU"
     assert art.revisions[0].title =="Salsa"
 
-    art = ArticleHistory(titles="fdjaklfgd;jsa")
-    with pytest.raises(KeyError):
-        raise KeyError("Data not found")
-
-    art = ArticleHistory(titles="")
-    with pytest.raises(KeyError):
-        raise KeyError("Data not found")
+    with pytest.raises(BadRequestException):
+        art = ArticleHistory(titles=None)
 
 def test_filter_by_tags():
     """tests filter by tags function"""

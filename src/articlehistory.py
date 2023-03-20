@@ -3,9 +3,11 @@ import requests
 try:
     from src.revision import Revision, URL
     from src.history import History
+    from src.exceptions import BadRequestException
 except ModuleNotFoundError:
     from revision import Revision, URL
     from history import History
+    from exceptions import BadRequestException
 
 class ArticleHistory(History):
     """article revision collection class"""
@@ -42,6 +44,8 @@ class ArticleHistory(History):
             "rvdir": "newer",
             "rvlimit": "500"
         } | self.base_params
+        if self.titles is None:
+            raise BadRequestException("Title Missing")
 
         rev = session.get(url=URL, params=params)
         data = rev.json()
@@ -59,7 +63,6 @@ class ArticleHistory(History):
                 separator_index = wp_continue_timestamp_and_id.index("|")
                 self.rvstart = wp_continue_timestamp_and_id[:separator_index]
                 self.call_wikipedia_api()
-
         except KeyError:
             print("Error accessing API with given parameters")
 
@@ -68,3 +71,7 @@ class ArticleHistory(History):
         should only be called after self.revisions has been filled
         """
         return [rev.user for rev in self.revisions]
+    
+if __name__ == "__main__":
+    art = ArticleHistory(titles="fdjaklfgd;jsa")
+    print(art)
