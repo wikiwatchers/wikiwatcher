@@ -57,9 +57,3 @@ class UserHistory(History):
                 self.call_wikipedia_api()
         except BadRequestException:
             print("Data not found")
-
-    def get_secondary_category(self):
-        """ returns a list of articles which have been edited by the user -
-        should only be called after self.revisions has been filled
-        """
-        return [rev.title for rev in self.revisions]

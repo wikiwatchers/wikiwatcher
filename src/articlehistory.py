@@ -62,9 +62,3 @@ class ArticleHistory(History):
 
         except KeyError:
             print("Error accessing API with given parameters")
-
-    def get_secondary_category(self):
-        """ returns a list of users who have made revisions to the article -
-        should only be called after self.revisions has been filled
-        """
-        return [rev.user for rev in self.revisions]

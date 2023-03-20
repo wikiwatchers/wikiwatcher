@@ -115,10 +115,3 @@ class History:
         except KeyError:
             print("Revisions do not contain this key")
         return revision_key_list
-
-    @abstractmethod
-    def get_secondary_category(self):
-        """ Returns a list of the secondary category for the subtype of revision
-        that implements the function; e.x. for ArticleHistory, this should return a
-        list of users; for UserHistory, a list of articles
-        """
