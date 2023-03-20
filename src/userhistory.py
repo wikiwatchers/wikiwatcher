@@ -7,7 +7,7 @@ try:
 except ModuleNotFoundError:
     from revision import Revision, URL
     from history import History
-    from exceptions import BadRequestException
+    from exceptions import BadRequestException #pylint:disable=R0801
 import mwparserfromhell as mwp
 
 class UserHistory(History):
