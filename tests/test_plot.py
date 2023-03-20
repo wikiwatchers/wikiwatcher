@@ -59,4 +59,3 @@ def test_get_x_axis_data():
 
 if __name__ == "__main__":
     test___init__()
-    test_set_x_axis_data()
