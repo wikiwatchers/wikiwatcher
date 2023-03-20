@@ -1,0 +1,65 @@
+ins {
+	color: green;
+}
+del {
+	color: red;
+}
+
+/* https://en.wikipedia.org/wiki/Module:Diff/styles.css */
+.diff {
+	border: 0;
+	border-spacing: 4px;
+	margin: 0;
+	width: 100%;
+}
+.diff td.diff-marker {
+	width: 2%;
+	padding: .25em;
+	font-weight: bold;
+	font-size: 1.25em;
+	line-height: 1.2;
+	text-align: end;
+}
+.diff-addedline,
+.diff-deletedline,
+.diff-context {
+	width: 48%;
+	padding: .33em .5em;
+	font-size: 88%;
+	line-height: 1.6;
+	vertical-align: top;
+	white-space: pre-wrap;
+	border-style: solid;
+	border-width: 1px 1px 1px 4px;
+	border-radius: .33em;
+}
+.diff-addedline {
+	border-color: #a3d3ff;
+}
+.diff-deletedline {
+	border-color: #ffe49c;
+}
+.diff-context {
+	background-color: #f8f9fa;
+	border-color: #eaecf0;
+	color: #222;
+}
+.diff td div {
+	word-wrap: break-word; /* force wrapping long lines */
+	direction: ltr;
+}
+.diffchange {
+	font-weight: bold;
+	text-decoration: none;
+}
+.diff-addedline .diffchange,
+.diff-deletedline .diffchange {
+	border-radius: 0; /* override mediawiki.diff.styles */
+	padding: .25em 0;
+}
+.diff-addedline .diffchange {
+	background-color: #d8ecff;
+}
+.diff-deletedline .diffchange {
+	background-color: #feeec8;
+}

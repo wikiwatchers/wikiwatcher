@@ -97,7 +97,8 @@ class Revision():
         # Can we return something more user-friendly?
         # Automatically color ins and del tags?
         try:
-            return str(mwp.parse(color_coded_response))
+            diff_html = wp_response['compare']['*']
+            return diff_html
         except (KeyError, ValueError):
             return self.get_content()
 
