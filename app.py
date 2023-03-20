@@ -129,11 +129,26 @@ def formrequest():
                                     base_url, "&")
 
     if request.args.get("tags"):
-        tags = "[" + request.args.get("tags").replace(", ",",") + "]"
+        parsed_tags = request.args.get("tags").split(",")
+        tags = "["
+        first_tag = True
+        for tag in parsed_tags:
+            print("tag = " + tag)
+            if not first_tag:
+                tags += ","
+            if first_tag:
+                first_tag = False
+            tag = tag.strip()
+            print("stripped tag = " + tag)
+            tags += tag
+        tags += "]"
         base_url = add_params_to_url("tags=", tags, base_url, "&")
 
     if request.args.get("visualize") and request.args.get("visualize") != "":
         base_url = add_params_to_url("visualize=", request.args.get("visualize"), base_url, "")
+
+    if base_url[-1] == "&":
+        base_url = base_url.rstrip("&")
 
     return redirect(base_url)
 

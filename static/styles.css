@@ -18,12 +18,3 @@
 .form-group {
     margin-bottom: 20px;
 }
-
-.diff-row {
-    margin: 20px 0px;
-}
-
-.diff-row .col{
-    max-height: 900px;
-    overflow-y: scroll;
-}
