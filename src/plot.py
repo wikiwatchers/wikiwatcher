@@ -1,5 +1,5 @@
 """Base class for Plot object"""
-from abc import abstractclassmethod
+from abc import abstractmethod
 try:
     from src.history import History
     from src.revision import Revision
@@ -22,7 +22,7 @@ class Plot:
                    revision_property: str):
         """set x graphing data to any parameter in revision object"""
         return self.history.get_list_of_revision_key_data(revision_property)
-    
-    @abstractclassmethod
+
+    @abstractmethod
     def get_graph(self):
         """ returns a plt.Figure of the finished graph """

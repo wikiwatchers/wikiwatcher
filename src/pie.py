@@ -26,9 +26,6 @@ class Pie(Plot):
         self.labels = tuple(set(self.x_axis))
         self.sizes = [self.x_axis.count(category) for category in self.labels]
 
-    def get_x_axis_data(self, revision_property: str):
-        return super().get_x_axis_data(revision_property)
-
     def get_graph(self) -> plt.Figure:
         """ sets up the pychart.Figure object and returns it """
         if not self.history.titles is None and not self.history.user is None:
