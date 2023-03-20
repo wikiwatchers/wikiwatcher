@@ -309,8 +309,8 @@ def get_difference(title):
         prev = revisions.revisions[0].get_content()
 
         return render_template("diff.html", title=title,
-                               diff=Markup(ret), 
-                               prev_revision=prev, 
+                               diff=Markup(ret),
+                               prev_revision=prev,
                                new_revision=new)
     except BadRequestException as bre:
         return "<h1>Bad Request</h1>" + str(bre), 400
