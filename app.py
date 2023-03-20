@@ -6,7 +6,6 @@ import __init__
 import io
 import json
 import dateutil.parser
-from datetime import datetime
 from flask import Flask, render_template, request, Response, redirect
 from flask_caching import Cache
 from markdown import markdown
@@ -18,7 +17,7 @@ from src.articlehistory import ArticleHistory
 from src.exceptions import BadRequestException
 from src.histogram import Histogram
 from src.pie import Pie
-from src.requests import update_URL, get_base_URL
+from src.requests import add_params_to_url
 
 app = Flask("WikiWatcher")
 mem_cache = Cache(app, config={"CACHE-TYPE": "simple"})
@@ -47,62 +46,54 @@ def index():
 @app.route("/form")
 def form():
     """ Form page """
-    base_URL = get_base_URL()
-    return render_template('form.html', base_URL=base_URL)
+    return render_template('form.html')
 
 @app.route("/formrequest")
 def formrequest():
     """ Route to handle form requests """
+    base_url = "/"
     endpoint = request.args.get("endpoint")
-    remove_Arguments = ["endpoint", "visualization", "tags"]
-    base_URL = get_base_URL()
     match endpoint:
         case "User History":
-            base_URL = update_URL("userHistory/", request.args.get("user"), base_URL, "?")
-            remove_Arguments.append("user")
+            base_url = add_params_to_url("userHistory/", request.args.get("user"), base_url, "?")
         case "Article History":
-            base_URL = update_URL("articleHistory/", request.args.get("title"), base_URL, "?")
+            base_url = add_params_to_url("articleHistory/", request.args.get("title"), base_url, "?")
         case "Compare Revisions":
-            base_URL = update_URL("compareRevisions/", request.args.get("title"), base_URL, "?")
+            base_url = add_params_to_url("compareRevisions/", request.args.get("title"), base_url, "?")
 
     if request.args.get("keyword"):
-        base_URL = update_URL("keyword=", request.args.get("keyword"), base_URL, "&")
+        base_url = add_params_to_url("keyword=", request.args.get("keyword"), base_url, "&")
 
     if endpoint != "User History" and request.args.get("user"):
-        base_URL = update_URL("user=", request.args.get("user"), base_URL, "&")
+        base_url = add_params_to_url("user=", request.args.get("user"), base_url, "&")
 
     if endpoint == "User History" and request.args.get("title"):
-        base_URL = update_URL("titles=", request.args.get("title"), base_URL, "&")
+        base_url = add_params_to_url("titles=", request.args.get("title"), base_url, "&")
 
     if request.args.get("startTime"):
-        print(request.args.get("startTime"))
         start_time = dateutil.parser.parse(request.args.get("startTime"))
-        print(start_time)
-        base_URL = update_URL("startYear=", str(start_time.year), base_URL, "&")
-        base_URL = update_URL("startMonth=", str(start_time.month), base_URL, "&")
-        base_URL = update_URL("startDay=", str(start_time.day), base_URL, "&")
-        base_URL = update_URL("startMinute=", str(start_time.minute), base_URL, "&")
-        base_URL = update_URL("startSecond=", str(start_time.second), base_URL, "&")
+        base_url = add_params_to_url("startYear=", str(start_time.year), base_url, "&")
+        base_url = add_params_to_url("startMonth=", str(start_time.month), base_url, "&")
+        base_url = add_params_to_url("startDay=", str(start_time.day), base_url, "&")
+        base_url = add_params_to_url("startMinute=", str(start_time.minute), base_url, "&")
+        base_url = add_params_to_url("startSecond=", str(start_time.second), base_url, "&")
 
     if request.args.get("endTime"):
-        print(request.args.get("endTime"))
         end_time = dateutil.parser.parse(request.args.get("endTime"))
-        print(end_time)
-        base_URL = update_URL("endYear=", str(end_time.year), base_URL, "&")
-        base_URL = update_URL("endMonth=", str(end_time.month), base_URL, "&")
-        base_URL = update_URL("endDay=", str(end_time.day), base_URL, "&")
-        base_URL = update_URL("endMinute=", str(end_time.minute), base_URL, "&")
-        base_URL = update_URL("endSecond=", str(end_time.second), base_URL, "&")
+        base_url = add_params_to_url("endYear=", str(end_time.year), base_url, "&")
+        base_url = add_params_to_url("endMonth=", str(end_time.month), base_url, "&")
+        base_url = add_params_to_url("endDay=", str(end_time.day), base_url, "&")
+        base_url = add_params_to_url("endMinute=", str(end_time.minute), base_url, "&")
+        base_url = add_params_to_url("endSecond=", str(end_time.second), base_url, "&")
 
     if request.args.get("tags"):
         tags = "[" + request.args.get("tags") + "]"
-        base_URL = update_URL("tags=", tags, base_URL, "&")
+        base_url = add_params_to_url("tags=", tags, base_url, "&")
 
     if request.args.get("visualize") and request.args.get("visualize") != "":
-        base_URL = update_URL("visualize=", request.args.get("visualize"), base_URL, "")
-    print("baseURL = " + base_URL)
+        base_url = add_params_to_url("visualize=", request.args.get("visualize"), base_url, "")
 
-    return redirect(base_URL)
+    return redirect(base_url)
 
 @app.route("/articleHistory/<title>")
 @mem_cache.cached(timeout=CACHE_TIMEOUT)
@@ -146,7 +137,6 @@ def get_article_history(title):
         if visualize:
             output = io.BytesIO()
             chart = None
-            print(visualize)
             match visualize:
                 case "revisions_per_time":
                     chart = Histogram(revisions)
@@ -285,16 +275,16 @@ def get_difference(title):
         if visualize:
             match visualize:
                 case "side_by_side":
-                    firstArticle = revisions.revisions[0].get_content()
-                    secondArticle = revisions.revisions[-1].get_content()
-                    firstDate = revisions.revisions[0].timestamp
-                    secondDate = revisions.revisions[-1].timestamp
+                    first_article = revisions.revisions[0].get_content()
+                    second_article = revisions.revisions[-1].get_content()
+                    first_date = revisions.revisions[0].timestamp
+                    second_date = revisions.revisions[-1].timestamp
                     return render_template('comparison.html', 
                                            title=title,
-                                           firstArticle=firstArticle, 
-                                           secondArticle=secondArticle, 
-                                           firstDate=firstDate,
-                                           secondDate=secondDate)
+                                           first_article=first_article, 
+                                           second_article=second_article, 
+                                           first_date=first_date,
+                                           second_date=second_date)
                 case _:
                     raise BadRequestException("Invalid choice of visualization")
 

@@ -2,7 +2,7 @@
 {% block content %}
 	<div class="form-content">
         <h2>Make a Request</h2>
-		<form action="{{ base_URL }}formrequest" method="get">
+		<form action="/formrequest" method="get">
             <div class="form-group">
                 <label for="endpoint" class="form-label">Endpoint</label>
                 <select id="endpoint" name="endpoint" class="form-control">
@@ -45,6 +45,7 @@
                  <option value="">None</option>
                   <option value="revisions_per_time">Histogram</option>
                   <option value="revisions_per_user">Pie Chart</option>
+                  <option value="side_by_side">Side By Side (for Compare Revisions only)</option>
                 </select>
               </div>
             <input type="submit" value="Submit Request" class="btn btn-primary">
