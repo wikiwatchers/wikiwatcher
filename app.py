@@ -6,7 +6,7 @@ import __init__
 import io
 import json
 import dateutil.parser
-from flask import Flask, render_template, request, Response, redirect
+from flask import Flask, render_template, request, Response, redirect, Markup
 from flask_caching import Cache
 from markdown import markdown
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -304,9 +304,8 @@ def get_difference(title):
                                     endyear=endyear, endmonth=endmonth,
                                     endday=endday, endhour=endhour,
                                     endminute=endminute, endsecond=endsecond)
-        ret = json.dumps(revisions.revisions[0].get_diff(revisions.revisions[-1].revid))
-
-        return ret
+        ret = revisions.revisions[0].get_diff(revisions.revisions[-1].revid)
+        return render_template("diff.html", diff=Markup(ret))
     except BadRequestException as bre:
         return "<h1>Bad Request</h1>" + str(bre), 400
     except NoRevisionsException as nre:

@@ -32,6 +32,7 @@ class History:
                                         day=start_day or 1, hour=start_hour or 0,
                                         minute=start_minute or 0, second = start_second or 0
                                         ).isoformat()
+                self.init_rvstart_for_charts = self.rvstart
             if end_timestamp_is_specified:
                 self.rvend = datetime(year=end_year, month=end_month or 1,
                                         day=end_day or 1, hour=end_hour or 0,
@@ -54,6 +55,7 @@ class History:
         self.keyword: str = None
         self.tags: list[str] = None
         self.rvstart: str = None
+        self.init_rvstart_for_charts: str = None
         self.rvend: str = None
         self.revisions: list[Revision] = None
 
