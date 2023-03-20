@@ -55,36 +55,68 @@ def formrequest():
     endpoint = request.args.get("endpoint")
     match endpoint:
         case "User History":
-            base_url = add_params_to_url("userHistory/", request.args.get("user"), base_url, "?")
+            base_url = add_params_to_url("userHistory/",
+                                        request.args.get("user"),
+                                        base_url, "?")
         case "Article History":
-            base_url = add_params_to_url("articleHistory/", request.args.get("title"), base_url, "?")
+            base_url = add_params_to_url("articleHistory/",
+                                        request.args.get("title"),
+                                        base_url, "?")
         case "Compare Revisions":
-            base_url = add_params_to_url("compareRevisions/", request.args.get("title"), base_url, "?")
+            base_url = add_params_to_url("compareRevisions/",
+                                        request.args.get("title"),
+                                        base_url, "?")
 
     if request.args.get("keyword"):
-        base_url = add_params_to_url("keyword=", request.args.get("keyword"), base_url, "&")
+        base_url = add_params_to_url("keyword=",
+                                    request.args.get("keyword"),
+                                    base_url, "&")
 
     if endpoint != "User History" and request.args.get("user"):
-        base_url = add_params_to_url("user=", request.args.get("user"), base_url, "&")
+        base_url = add_params_to_url("user=",
+                                    request.args.get("user"),
+                                    base_url, "&")
 
     if endpoint == "User History" and request.args.get("title"):
-        base_url = add_params_to_url("titles=", request.args.get("title"), base_url, "&")
+        base_url = add_params_to_url("titles=",
+                                    request.args.get("title"),
+                                    base_url, "&")
 
     if request.args.get("startTime"):
         start_time = dateutil.parser.parse(request.args.get("startTime"))
-        base_url = add_params_to_url("startYear=", str(start_time.year), base_url, "&")
-        base_url = add_params_to_url("startMonth=", str(start_time.month), base_url, "&")
-        base_url = add_params_to_url("startDay=", str(start_time.day), base_url, "&")
-        base_url = add_params_to_url("startMinute=", str(start_time.minute), base_url, "&")
-        base_url = add_params_to_url("startSecond=", str(start_time.second), base_url, "&")
+        base_url = add_params_to_url("startYear=",
+                                    str(start_time.year),
+                                    base_url, "&")
+        base_url = add_params_to_url("startMonth=",
+                                    str(start_time.month),
+                                    base_url, "&")
+        base_url = add_params_to_url("startDay=",
+                                    str(start_time.day),
+                                    base_url, "&")
+        base_url = add_params_to_url("startMinute=",
+                                    str(start_time.minute),
+                                    base_url, "&")
+        base_url = add_params_to_url("startSecond=",
+                                    str(start_time.second),
+                                    base_url, "&")
 
     if request.args.get("endTime"):
         end_time = dateutil.parser.parse(request.args.get("endTime"))
-        base_url = add_params_to_url("endYear=", str(end_time.year), base_url, "&")
-        base_url = add_params_to_url("endMonth=", str(end_time.month), base_url, "&")
-        base_url = add_params_to_url("endDay=", str(end_time.day), base_url, "&")
-        base_url = add_params_to_url("endMinute=", str(end_time.minute), base_url, "&")
-        base_url = add_params_to_url("endSecond=", str(end_time.second), base_url, "&")
+        base_url = add_params_to_url("endYear=",
+                                    str(end_time.year),
+                                    base_url, "&")
+        base_url = add_params_to_url("endMonth=",
+                                    str(end_time.month),
+                                    base_url, "&")
+        base_url = add_params_to_url("endDay=",
+                                    str(end_time.day),
+                                    base_url, "&")
+        base_url = add_params_to_url("endMinute=",
+                                    str(end_time.minute),
+                                    base_url, "&")
+        base_url = add_params_to_url("endSecond=",
+                                    str(end_time.second),
+                                    base_url, "&")
 
     if request.args.get("tags"):
         tags = "[" + request.args.get("tags") + "]"
@@ -279,10 +311,10 @@ def get_difference(title):
                     second_article = revisions.revisions[-1].get_content()
                     first_date = revisions.revisions[0].timestamp
                     second_date = revisions.revisions[-1].timestamp
-                    return render_template('comparison.html', 
+                    return render_template('comparison.html',
                                            title=title,
-                                           first_article=first_article, 
-                                           second_article=second_article, 
+                                           first_article=first_article,
+                                           second_article=second_article,
                                            first_date=first_date,
                                            second_date=second_date)
                 case _:
