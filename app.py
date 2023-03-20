@@ -62,6 +62,10 @@ def formrequest():
             base_url = add_params_to_url("articleHistory/",
                                         request.args.get("title"),
                                         base_url, "?")
+        case "Get Revision":
+            base_url = add_params_to_url("getRevision/",
+                                        request.args.get("title"),
+                                        base_url, "?")
         case "Compare Revisions":
             base_url = add_params_to_url("compareRevisions/",
                                         request.args.get("title"),
