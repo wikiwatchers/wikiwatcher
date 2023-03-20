@@ -1,4 +1,5 @@
 """defines the collection class for article history"""
+#pylint:disable=R0801
 import requests
 try:
     from src.revision import Revision, URL
@@ -71,7 +72,7 @@ class ArticleHistory(History):
         should only be called after self.revisions has been filled
         """
         return [rev.user for rev in self.revisions]
-    
+
 if __name__ == "__main__":
     art = ArticleHistory(titles="fdjaklfgd;jsa")
     print(art)
