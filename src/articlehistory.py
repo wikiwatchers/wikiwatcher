@@ -3,6 +3,7 @@ import requests
 try:
     from src.revision import Revision, URL
     from src.history import History
+    from src.exceptions import NoRevisionsException
 except ModuleNotFoundError:
     from revision import Revision, URL
     from history import History
@@ -49,6 +50,8 @@ class ArticleHistory(History):
         try:
             pages = data["query"]["pages"]
             self.json = pages[0]
+            if len(self.json["revisions"]) == 0:
+                raise NoRevisionsException("No revisions matching filter parameters")
             self.pageid = self.json["pageid"]
             for each_revision in self.json["revisions"]:
                 each_revision["pageid"] = self.pageid

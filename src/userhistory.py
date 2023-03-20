@@ -7,7 +7,7 @@ try:
 except ModuleNotFoundError:
     from revision import Revision, URL
     from history import History
-    from exceptions import BadRequestException
+    from exceptions import NoRevisionsException, BadRequestException
 import mwparserfromhell as mwp
 
 class UserHistory(History):
@@ -48,6 +48,8 @@ class UserHistory(History):
 
         try:
             self.json = data["query"]["usercontribs"]
+            if len(self.json) == 0:
+                raise NoRevisionsException("No revisions matching filter parameters")
             for each_revision in self.json:
                 self.revisions.append(Revision(each_revision))
             if not data.get("continue") is None:
