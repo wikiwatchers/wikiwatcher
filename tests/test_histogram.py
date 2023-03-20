@@ -12,6 +12,7 @@ except ModuleNotFoundError:
     from histogram import Histogram
 
 def test_get_x_axis_data():
+    """test for get_x_axis_data in Histogram"""
     art = ArticleHistory(titles="Techno", user="Rio65trio",
                          startyear=2020, startmonth=1, startday=1,
                         endyear=2020, endmonth=1, endday=30)
