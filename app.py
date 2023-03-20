@@ -5,6 +5,8 @@ Handles interactions with our users, does not handle interactions with external 
 import __init__
 import io
 import json
+import dateutil.parser
+from datetime import datetime
 from flask import Flask, render_template, request, Response, redirect
 from flask_caching import Cache
 from markdown import markdown
@@ -59,17 +61,38 @@ def formrequest():
             base_URL = update_URL("userHistory/", request.args.get("user"), base_URL, "?")
             remove_Arguments.append("user")
         case "Article History":
-            base_URL = update_URL("articleHistory/", request.args.get("article"), base_URL, "?")
+            base_URL = update_URL("articleHistory/", request.args.get("title"), base_URL, "?")
         case "Get Difference":
-            base_URL = update_URL("getDifference/", request.args.get("article"), base_URL, "?")
+            base_URL = update_URL("getDifference/", request.args.get("title"), base_URL, "?")
 
-    print(request.args)
-    for argument in request.args:
-        if argument not in remove_Arguments and request.args.get(argument):
-            print(argument)
-            parameter_Value = argument
-            parameter_Value += "="
-            base_URL = update_URL(parameter_Value, request.args.get(argument), base_URL, "&")
+    if request.args.get("keyword"):
+        base_URL = update_URL("keyword=", request.args.get("keyword"), base_URL, "&")
+
+    if endpoint != "User History" and request.args.get("user"):
+        base_URL = update_URL("user=", request.args.get("user"), base_URL, "&")
+
+    if endpoint == "User History" and request.args.get("title"):
+        base_URL = update_URL("titles=", request.args.get("title"), base_URL, "&")
+
+    if request.args.get("startTime"):
+        print(request.args.get("startTime"))
+        start_time = dateutil.parser.parse(request.args.get("startTime"))
+        print(start_time)
+        base_URL = update_URL("startYear=", str(start_time.year), base_URL, "&")
+        base_URL = update_URL("startMonth=", str(start_time.month), base_URL, "&")
+        base_URL = update_URL("startDay=", str(start_time.day), base_URL, "&")
+        base_URL = update_URL("startMinute=", str(start_time.minute), base_URL, "&")
+        base_URL = update_URL("startSecond=", str(start_time.second), base_URL, "&")
+
+    if request.args.get("endTime"):
+        print(request.args.get("endTime"))
+        end_time = dateutil.parser.parse(request.args.get("endTime"))
+        print(end_time)
+        base_URL = update_URL("endYear=", str(end_time.year), base_URL, "&")
+        base_URL = update_URL("endMonth=", str(end_time.month), base_URL, "&")
+        base_URL = update_URL("endDay=", str(end_time.day), base_URL, "&")
+        base_URL = update_URL("endMinute=", str(end_time.minute), base_URL, "&")
+        base_URL = update_URL("endSecond=", str(end_time.second), base_URL, "&")
 
     if request.args.get("tags"):
         tags = "[" + request.args.get("tags") + "]"
