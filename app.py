@@ -296,7 +296,6 @@ def get_difference(title):
     endhour: int = request.args.get("endhour", default=None, type=int)
     endminute: int = request.args.get("endminute", default=None, type=int)
     endsecond: int = request.args.get("endsecond", default=None, type=int)
-    visualize: str = request.args.get("visualize", default=None, type=str)
     try:
         revisions = ArticleHistory(titles=title,
                                     startyear=startyear, startmonth=startmonth,
@@ -306,24 +305,6 @@ def get_difference(title):
                                     endday=endday, endhour=endhour,
                                     endminute=endminute, endsecond=endsecond)
         ret = json.dumps(revisions.revisions[0].get_diff(revisions.revisions[-1].revid))
-
-        print("visualize = " + visualize)
-
-        if visualize:
-            match visualize:
-                case "side_by_side":
-                    first_article = revisions.revisions[0].get_content()
-                    second_article = revisions.revisions[-1].get_content()
-                    first_date = revisions.revisions[0].timestamp
-                    second_date = revisions.revisions[-1].timestamp
-                    return render_template('comparison.html',
-                                           title=title,
-                                           first_article=first_article,
-                                           second_article=second_article,
-                                           first_date=first_date,
-                                           second_date=second_date)
-                case _:
-                    raise BadRequestException("Invalid choice of visualization")
 
         return ret
     except BadRequestException as bre:
