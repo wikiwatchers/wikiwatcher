@@ -15,14 +15,38 @@ except ModuleNotFoundError:
     from history import History
 
 class Pie(Plot):
-    """ the pie chart itself, graph attribute contains a pyplot.Figure """
+    """ representst the pie chart associated with the history object passed in
+    returns a pyplot.Figure from its get_graph() method
+    """
     def __init__(self, history):
         super().__init__(history)
 
         self.x_axis = self.get_x_axis_data("user")
-        self.graph = self.plot_graph()
+        self.labels = tuple(set(self.x_axis))
+        self.sizes = [self.x_axis.count(category) for category in self.labels]
 
-    def size_of_png(self, labels):
+    def get_x_axis_data(self, revision_property: str):
+        return super().get_x_axis_data(revision_property)
+
+    def get_graph(self) -> plt.Figure:
+        """ sets up the pychart.Figure object and returns it """
+        if not self.history.titles is None and not self.history.user is None:
+            raise BadRequestException(
+                "Specifying both user and article title - pie chart redundant")
+        fig_size_inches, pct_distance, label_distance = self.size_of_png()
+        fig, axes = plt.subplots(layout="constrained", figsize=fig_size_inches)
+        autopct_string = make_autopct(self.sizes)
+
+        _, labels, percents = axes.pie(self.sizes, labels=self.labels, autopct=autopct_string,
+               pctdistance=pct_distance, labeldistance=label_distance, rotatelabels=True)
+        for label, percent in zip(labels, percents):
+            percent.set_rotation(label.get_rotation())
+        title = self.generate_pie_title()
+        fig.suptitle(title)
+        plt.rcParams["figure.constrained_layout.use"] = True
+        return fig
+
+    def size_of_png(self):
         """ uses number of wedges to determine necessary image size and chart parameters
         returns a 3-tuple of (
             tuple of (width_inches: int, height_inches: int),
@@ -33,7 +57,7 @@ class Pie(Plot):
         fig_size_inches = (-1,-1)
         pct_distance = -1.0
         label_distance = -1.0
-        num_labels = len(labels)
+        num_labels = len(self.labels)
         match num_labels:
             case 0:
                 raise NoRevisionsException("No revisions matching filter parameters")
@@ -55,7 +79,7 @@ class Pie(Plot):
                 label_distance = 1.2
         return (fig_size_inches, pct_distance, label_distance)
 
-    def generate_pie_title(self):
+    def generate_pie_title(self) -> str:
         """ Generates a title for the graph depending on what was requested """
         title = ""
         if not self.history.titles is None:
@@ -68,37 +92,17 @@ class Pie(Plot):
             title += f"to {datetime.fromisoformat(self.history.rvend)}\n"
         return title
 
-    def plot_graph(self):
-        """ sets up the pychart.Figure object and returns it """
-
-        labels = tuple(set(self.x_axis))
-        sizes = [self.x_axis.count(category) for category in labels]
-        fig_size_inches, pct_distance, label_distance = self.size_of_png(labels)
-
-        fig, axes = plt.subplots(layout="constrained", figsize=fig_size_inches)
-
-        _, labels, percents = axes.pie(sizes, labels=labels, autopct=make_autopct(sizes),
-               pctdistance=pct_distance, labeldistance=label_distance, rotatelabels=True)
-        for label, percent in zip(labels, percents):
-            percent.set_rotation(label.get_rotation())
-
-        if not self.history.titles is None and not self.history.user is None:
-            raise BadRequestException(
-                "Specifying both user and article title - pie chart redundant"
-                )
-        title = self.generate_pie_title()
-        fig.suptitle(title)
-        plt.rcParams["figure.constrained_layout.use"] = True
-        return fig
-
-def make_autopct(values):
+def make_autopct(values) -> str:
     """ see
     https://stackoverflow.com/questions/6170246/
     how-do-i-use-matplotlib-autopct
-    enables pie chart to display both percent and raw count for each wedge
+    takes in a list of values
+    returns a function which processes each element of the list,
+    returning a string containing formatted percent and count values
+    for each value
     """
-    def make_percent_and_count_string(count):
+    def make_percent_and_count_string(value):
         total = sum(values)
-        val = int(round(count*total/100.0))
-        return f"{count:.2f}% ({val:d})"
+        val = int(round(value*total/100.0))
+        return f"{value:.2f}% ({val:d})"
     return make_percent_and_count_string

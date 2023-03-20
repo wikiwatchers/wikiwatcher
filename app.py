@@ -90,7 +90,7 @@ def get_article_history(title):
                     chart = Pie(revisions)
                 case _:
                     raise BadRequestException("Invalid choice of visualization")
-            FigureCanvas(chart.graph).print_png(output)
+            FigureCanvas(chart.get_graph()).print_png(output)
             return Response(output.getvalue(), mimetype="image/png")
         return revisions.revisions_as_json()
     except BadRequestException as bre:
@@ -149,7 +149,7 @@ def get_user_history(username):
                     chart = Pie(revisions)
                 case _:
                     raise BadRequestException("Invalid choice of visualization")
-            FigureCanvas(chart.graph).print_png(output)
+            FigureCanvas(chart.get_graph()).print_png(output)
             return Response(output.getvalue(), mimetype="image/png")
         return revisions.revisions_as_json()
     except BadRequestException as bre:

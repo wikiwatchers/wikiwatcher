@@ -21,13 +21,12 @@ class Histogram(Plot):
         self.title = "Number of Edits per Date"
 
         self.x_axis = self.get_x_axis_data()
-        self.graph = self.plot_graph()
 
-    def get_x_axis_data(self):
+    def get_x_axis_data(self, revision_property: str = "timestamp"):
         """pulls the datetime from each history object
         turns the datetime into a format useable by matplotlib
         then puts it into a numpy array"""
-        timestamp_list = super().get_x_axis_data("timestamp")
+        timestamp_list = super().get_x_axis_data(revision_property)
         new_datetime = []
         for each_timestamp in timestamp_list:
             new_datetime.append(mdates.date2num(parser.isoparse(each_timestamp)))
@@ -43,7 +42,7 @@ class Histogram(Plot):
         num = int((bound_max - bound_min) / bin_width) + 1
         self.num_bins = np.linspace(bound_min, bound_max, num)
 
-    def plot_graph(self):
+    def get_graph(self):
         """graphs the histogram using matplot lib"""
         fig, axe = plt.subplots(layout="constrained")
         self.set_num_bins()
