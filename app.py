@@ -17,7 +17,6 @@ from src.articlehistory import ArticleHistory
 from src.exceptions import BadRequestException
 from src.histogram import Histogram
 from src.pie import Pie
-from src.requests import add_params_to_url
 
 app = Flask("WikiWatcher")
 mem_cache = Cache(app, config={"CACHE-TYPE": "simple"})
@@ -35,6 +34,13 @@ def parse_tags(tagstring):
         return None
     tagstring = tagstring[1:-1]
     return tagstring.split(",")
+
+def add_params_to_url(parameter, value, base_url, operator):
+    """ adds parameters to URL """
+    base_url += parameter
+    base_url += value
+    base_url += operator
+    return base_url
 
 @app.route("/")
 def index():
@@ -123,7 +129,7 @@ def formrequest():
                                     base_url, "&")
 
     if request.args.get("tags"):
-        tags = "[" + request.args.get("tags") + "]"
+        tags = "[" + request.args.get("tags").replace(", ",",") + "]"
         base_url = add_params_to_url("tags=", tags, base_url, "&")
 
     if request.args.get("visualize") and request.args.get("visualize") != "":
