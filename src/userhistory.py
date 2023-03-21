@@ -1,13 +1,13 @@
 """defines user history class"""
 import requests
 try:
-    from src.revision import Revision, URL
-    from src.history import History
-    from src.exceptions import BadRequestException
-except ModuleNotFoundError:
     from revision import Revision, URL
     from history import History
     from exceptions import BadRequestException
+except ModuleNotFoundError:
+    from src.revision import Revision, URL
+    from src.history import History
+    from src.exceptions import BadRequestException
 import mwparserfromhell as mwp
 
 class UserHistory(History):

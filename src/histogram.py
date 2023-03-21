@@ -19,15 +19,14 @@ class Histogram(Plot):
         self.y_axis_label = "Number of edits"
         self.x_axis_label = "Date"
         self.title = "Number of Edits per Date"
-
         self.x_axis = self.get_x_axis_data()
         self.graph = self.plot_graph()
 
-    def get_x_axis_data(self):
+    def get_x_axis_data(self, revision_property: str ="timestamp"):
         """pulls the datetime from each history object
         turns the datetime into a format useable by matplotlib
         then puts it into a numpy array"""
-        timestamp_list = super().get_x_axis_data("timestamp")
+        timestamp_list = super().get_x_axis_data(revision_property)
         new_datetime = []
         for each_timestamp in timestamp_list:
             new_datetime.append(mdates.date2num(parser.isoparse(each_timestamp)))
