@@ -92,7 +92,7 @@ def formrequest():
                                     request.args.get("title"),
                                     base_url, "&")
 
-    if request.args.get("starttime")
+    if request.args.get("starttime"):
         start_time = dateutil.parser.parse(request.args.get("starttime"))
         base_url = add_params_to_url("startyear=",
                                     str(start_time.year),
