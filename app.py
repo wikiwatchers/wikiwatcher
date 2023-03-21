@@ -37,9 +37,11 @@ def parse_tags(tagstring):
 
 def add_params_to_url(parameter, value, base_url, operator):
     """ adds parameters to URL """
-    base_url += parameter
-    base_url += value
-    base_url += operator
+    if value:
+        print(parameter + "parameter exists!")
+        base_url += parameter
+        base_url += value
+        base_url += operator
     return base_url
 
 @app.route("/")
@@ -77,22 +79,20 @@ def formrequest():
                                         request.args.get("title"),
                                         base_url, "?")
 
-    if request.args.get("keyword"):
-        base_url = add_params_to_url("keyword=",
+    
+    base_url = add_params_to_url("keyword=",
                                     request.args.get("keyword"),
                                     base_url, "&")
 
     if endpoint != "User History":
-        if request.args.get("user"):
-            base_url = add_params_to_url("user=",
+        base_url = add_params_to_url("user=",
                                     request.args.get("user"),
                                     base_url, "&")
-        if request.args.get("title"):
-            base_url = add_params_to_url("titles=",
+        base_url = add_params_to_url("titles=",
                                     request.args.get("title"),
                                     base_url, "&")
 
-    if request.args.get("starttime") and request.args.get("endtime"):
+    if request.args.get("starttime")
         start_time = dateutil.parser.parse(request.args.get("starttime"))
         base_url = add_params_to_url("startyear=",
                                     str(start_time.year),
@@ -109,7 +109,8 @@ def formrequest():
         base_url = add_params_to_url("startsecond=",
                                     str(start_time.second),
                                     base_url, "&")
-        
+
+    if request.args.get("endtime"):
         end_time = dateutil.parser.parse(request.args.get("endtime"))
         base_url = add_params_to_url("endyear=",
                                     str(end_time.year),
