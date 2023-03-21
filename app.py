@@ -76,7 +76,7 @@ def formrequest():
             base_url = add_params_to_url("compareRevisions/",
                                         request.args.get("title"),
                                         base_url, "?")
-    
+
     if request.args.get("keyword"):
         base_url = add_params_to_url("keyword=",
                                     request.args.get("keyword"),
@@ -161,8 +161,7 @@ def formrequest():
                                             "revisions_per_user",
                                             base_url, "")
 
-    if base_url[-1] == "&":
-        base_url = base_url.rstrip("&")
+    base_url = base_url.rstrip("&")
 
     return redirect(base_url)
 
