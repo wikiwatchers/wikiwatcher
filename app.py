@@ -78,8 +78,7 @@ def formrequest():
             base_url = add_params_to_url("compareRevisions/",
                                         request.args.get("title"),
                                         base_url, "?")
-
-    
+  
     base_url = add_params_to_url("keyword=",
                                     request.args.get("keyword"),
                                     base_url, "&")
