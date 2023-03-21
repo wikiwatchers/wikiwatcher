@@ -10,6 +10,8 @@ try:
     from src.exceptions import BadRequestException
     from src.plot import Plot
     from src.history import History
+    from src.userhistory import UserHistory
+    from src.articlehistory import ArticleHistory
 except ModuleNotFoundError:
     from exceptions import NoRevisionsException
     from plot import Plot
@@ -22,7 +24,10 @@ class Pie(Plot):
     def __init__(self, history):
         super().__init__(history)
 
-        self.x_axis = self.get_x_axis_data("user")
+        if isinstance(self.history, UserHistory):
+            self.x_axis = self.get_x_axis_data("title")
+        elif isinstance(self.history, ArticleHistory):
+            self.x_axis = self.get_x_axis_data("user")
         self.labels = tuple(set(self.x_axis))
         self.sizes = [self.x_axis.count(category) for category in self.labels]
 
@@ -40,9 +45,11 @@ class Pie(Plot):
                textprops={"fontsize": fontsize})
         for label, percent in zip(labels, percents):
             percent.set_rotation(label.get_rotation())
+            if len(label.get_text()) > 20:
+                label.set_text(label.get_text()[0:21] + "...")
         title = self.generate_pie_title()
         fig.suptitle(title)
-        plt.rcParams["figure.constrained_layout.use"] = True
+        #plt.rcParams["figure.constrained_layout.use"] = True
         return fig
 
     def size_of_png(self):
@@ -57,28 +64,28 @@ class Pie(Plot):
         fig_size_inches = (-1,-1)
         pct_distance = -1.0
         label_distance = -1.0
-        fontsize = 14
+        fontsize = 12
         num_labels = len(self.labels)
         match num_labels:
             case _ if 1 < num_labels < 10:
-                fig_size_inches = (6,6)
-                pct_distance = 1.4
-                label_distance = 1.8
-            case _ if 10 < num_labels < 20:
                 fig_size_inches = (8,8)
                 pct_distance = 1.4
                 label_distance = 1.8
-            case _ if 20 < num_labels < 30:
+            case _ if 10 < num_labels < 20:
                 fig_size_inches = (10,10)
+                pct_distance = 1.4
+                label_distance = 1.8
+            case _ if 20 < num_labels < 30:
+                fig_size_inches = (12,12)
                 pct_distance = 1.3
                 label_distance = 1.6
             case _ if 30 < num_labels < 100:
-                fig_size_inches = (14,14)
+                fig_size_inches = (16,16)
                 pct_distance = 1.2
                 label_distance = 1.4
                 fontsize -= 2
             case _:
-                fig_size_inches = (18,18)
+                fig_size_inches = (20,20)
                 pct_distance = 1.1
                 label_distance = 1.2
                 fontsize -= 4
