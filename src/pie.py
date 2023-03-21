@@ -24,9 +24,9 @@ class Pie(Plot):
     def __init__(self, history):
         super().__init__(history)
 
-        if type(self.history) == UserHistory:
+        if isinstance(self.history, UserHistory):
             self.x_axis = self.get_x_axis_data("title")
-        elif type(self.history) == ArticleHistory:
+        elif isinstance(self.history, ArticleHistory):
             self.x_axis = self.get_x_axis_data("user")
         self.labels = tuple(set(self.x_axis))
         self.sizes = [self.x_axis.count(category) for category in self.labels]
