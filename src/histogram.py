@@ -19,7 +19,6 @@ class Histogram(Plot):
         self.y_axis_label = "Number of edits"
         self.x_axis_label = "Date"
         self.title = "Number of Edits per Date"
-
         self.x_axis = self.get_x_axis_data()
 
     def get_x_axis_data(self, revision_property: str = "timestamp"):

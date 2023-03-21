@@ -1,13 +1,13 @@
 """defines the collection class for article history"""
-import requests
 try:
     from src.revision import Revision, URL
     from src.history import History
-    from src.exceptions import NoRevisionsException
+    from src.exceptions import NoRevisionsException, BadRequestException
 except ModuleNotFoundError:
     from revision import Revision, URL
     from history import History
-
+    from exceptions import NoRevisionsException, BadRequestException
+import requests
 class ArticleHistory(History):
     """article revision collection class"""
 
@@ -43,6 +43,8 @@ class ArticleHistory(History):
             "rvdir": "newer",
             "rvlimit": "500"
         } | self.base_params
+        if self.titles is None:
+            raise BadRequestException("Title Missing")
 
         rev = session.get(url=URL, params=params)
         data = rev.json()
@@ -60,6 +62,9 @@ class ArticleHistory(History):
                 separator_index = wp_continue_timestamp_and_id.index("|")
                 self.rvstart = wp_continue_timestamp_and_id[:separator_index]
                 self.call_wikipedia_api()
-
         except KeyError:
             print("Error accessing API with given parameters")
+
+if __name__ == "__main__":
+    art = ArticleHistory(titles="fdjaklfgd;jsa")
+    print(art)

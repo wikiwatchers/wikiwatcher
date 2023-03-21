@@ -1,14 +1,13 @@
 """defines user history class"""
 import requests
 try:
-    from src.revision import Revision, URL
-    from src.history import History
-    from src.exceptions import BadRequestException
-except ModuleNotFoundError:
     from revision import Revision, URL
     from history import History
     from exceptions import NoRevisionsException, BadRequestException
-import mwparserfromhell as mwp
+except ModuleNotFoundError:
+    from src.revision import Revision, URL
+    from src.history import History
+    from src.exceptions import NoRevisionsException, BadRequestException
 
 class UserHistory(History):
     """ UserHistory object parses json user contributions """
