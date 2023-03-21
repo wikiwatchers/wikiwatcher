@@ -10,6 +10,8 @@ try:
     from src.exceptions import BadRequestException
     from src.plot import Plot
     from src.history import History
+    from src.userhistory import UserHistory
+    from src.articlehistory import ArticleHistory
 except ModuleNotFoundError:
     from exceptions import NoRevisionsException
     from plot import Plot
@@ -22,7 +24,10 @@ class Pie(Plot):
     def __init__(self, history):
         super().__init__(history)
 
-        self.x_axis = self.get_x_axis_data("user")
+        if type(self.history) == UserHistory:
+            self.x_axis = self.get_x_axis_data("title")
+        elif type(self.history) == ArticleHistory:
+            self.x_axis = self.get_x_axis_data("user")
         self.labels = tuple(set(self.x_axis))
         self.sizes = [self.x_axis.count(category) for category in self.labels]
 
