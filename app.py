@@ -76,19 +76,19 @@ def formrequest():
             base_url = add_params_to_url("compareRevisions/",
                                         request.args.get("title"),
                                         base_url, "?")
-
+    
     if request.args.get("keyword"):
         base_url = add_params_to_url("keyword=",
                                     request.args.get("keyword"),
                                     base_url, "&")
 
-    if endpoint != "User History" and request.args.get("user"):
-        base_url = add_params_to_url("user=",
+    if endpoint != "User History":
+        if request.args.get("user"):
+            base_url = add_params_to_url("user=",
                                     request.args.get("user"),
                                     base_url, "&")
-
-    if endpoint == "User History" and request.args.get("title"):
-        base_url = add_params_to_url("titles=",
+        if request.args.get("title"):
+            base_url = add_params_to_url("titles=",
                                     request.args.get("title"),
                                     base_url, "&")
 
@@ -145,7 +145,21 @@ def formrequest():
         base_url = add_params_to_url("tags=", tags, base_url, "&")
 
     if request.args.get("visualize") and request.args.get("visualize") != "":
-        base_url = add_params_to_url("visualize=", request.args.get("visualize"), base_url, "")
+        visualize = request.args.get("visualize")
+        match visualize:
+            case "histogram":
+                base_url = add_params_to_url("visualize=",
+                                            "revisions_per_time",
+                                            base_url, "")
+            case "pie":
+                if endpoint == "User History":
+                    base_url = add_params_to_url("visualize=",
+                                            "revisions_per_article",
+                                            base_url, "")
+                else:
+                    base_url = add_params_to_url("visualize=",
+                                            "revisions_per_user",
+                                            base_url, "")
 
     if base_url[-1] == "&":
         base_url = base_url.rstrip("&")
