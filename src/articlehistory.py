@@ -2,11 +2,11 @@
 try:
     from src.revision import Revision, URL
     from src.history import History
-    from src.exceptions import BadRequestException
+    from src.exceptions import NoRevisionsException, BadRequestException
 except ModuleNotFoundError:
     from revision import Revision, URL
     from history import History
-    from exceptions import BadRequestException
+    from exceptions import NoRevisionsException, BadRequestException
 import requests
 class ArticleHistory(History):
     """article revision collection class"""
@@ -64,12 +64,6 @@ class ArticleHistory(History):
                 self.call_wikipedia_api()
         except KeyError:
             print("Error accessing API with given parameters")
-
-    def get_secondary_category(self):
-        """ returns a list of users who have made revisions to the article -
-        should only be called after self.revisions has been filled
-        """
-        return [rev.user for rev in self.revisions]
 
 if __name__ == "__main__":
     art = ArticleHistory(titles="fdjaklfgd;jsa")

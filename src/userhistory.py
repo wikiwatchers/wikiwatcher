@@ -3,12 +3,11 @@ import requests
 try:
     from revision import Revision, URL
     from history import History
-    from exceptions import BadRequestException
+    from exceptions import NoRevisionsException, BadRequestException
 except ModuleNotFoundError:
     from src.revision import Revision, URL
     from src.history import History
-    from src.exceptions import BadRequestException
-import mwparserfromhell as mwp
+    from src.exceptions import NoRevisionsException, BadRequestException
 
 class UserHistory(History):
     """ UserHistory object parses json user contributions """
@@ -57,9 +56,3 @@ class UserHistory(History):
                 self.call_wikipedia_api()
         except BadRequestException:
             print("Data not found")
-
-    def get_secondary_category(self):
-        """ returns a list of articles which have been edited by the user -
-        should only be called after self.revisions has been filled
-        """
-        return [rev.title for rev in self.revisions]
